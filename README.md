@@ -27,6 +27,7 @@ Para tener las librerias de python, primero se debe tener python 3.12.0 o superi
 Para instalar todas las dependencias de python ejecuta:
 ```sh
 pip install -r requirements.txt
+```
 
 ## Paleta de colores
 
