@@ -1,8 +1,32 @@
 ![Logo](https://github.com/chava-utc/howky_asistent/blob/main/cross_asistent/static/img/UTC_logo-plano.webp)
 
-# Proyecto Cross
+# Proyecto Asistente Howky
 
 Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativos, alumnos y visitantes, ademas de dar una nueva imagen a la UTC al recibir a los vistantes con esta aplicacion en las entradas de la universidad
+
+
+## Librerias
+- Javascript:
+  - ModelViewer
+  - Mapbox
+  - FullCalendar
+  - TinyMCE
+  - JQuery.Validate
+  - JQuery Datatables
+
+- Python:
+  - Django
+  - django-environ
+  - pillow
+  - gunicorn
+  - whitenoise
+  - nltk
+  - openai
+ 
+Para tener las librerias de python, primero se debe tener python 3.12.0 o superior y pip.
+Para instalar todas las dependencias de python ejecuta:
+```sh
+pip install -r requirements.txt
 
 ## Paleta de colores
 
