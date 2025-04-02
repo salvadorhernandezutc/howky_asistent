@@ -1,4 +1,4 @@
-![Logo](https://github.com/Stranger11ac/cross_django/blob/main/cross_asistent/static/img/UTC_logo-plano.webp)
+![Logo](https://github.com/chava-utc/howky_asistent/blob/main/cross_asistent/static/img/UTC_logo-plano.webp)
 
 # Proyecto Cross
 
