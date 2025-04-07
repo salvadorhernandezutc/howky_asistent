@@ -478,6 +478,12 @@ main.full_page {
     z-index: 0;
 }
 
+main.full_screen {
+    min-height: 100vh;
+    height: 100vh;
+    z-index: 0;
+}
+
 main.main_anchor {
     position: relative;
     overflow: hidden;
@@ -675,6 +681,12 @@ main.main_anchor {
     background: var(--mdb-body-bg);
 }
 
+.full_screen .asistent_group.open {
+    z-index: 2;
+    height: inherit;
+    background: var(--mdb-body-bg);
+}
+
 .asistent_group .box_asistent {
     position: relative;
     width: 100%;
@@ -694,6 +706,9 @@ main.main_anchor {
     width: 100%;
     opacity: 1;
     visibility: visible;
+}
+.full_screen .asistent_group.open .box_asistent #asistent_model {
+    height: inherit;
 }
 
 .asistent_group.open.open_keyboard .box_asistent #asistent_model {

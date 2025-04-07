@@ -24,7 +24,15 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
   - openai
  
 Para tener las librerias de python, primero se debe tener python 3.12.0 o superior y pip.
-Para instalar todas las dependencias de python ejecuta:
+Para instalar todas las dependencias de python ANTES se debe tener RUST instalado, esto se puede verificar con:
+```sh
+rustc --version
+```
+```sh
+cargo --version
+```
+De no tenerlo entonces se requiere su instalacion.
+Posteriormente se instalan todas las dependencias:
 ```sh
 pip install -r requirements.txt
 ```

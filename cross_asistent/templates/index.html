@@ -14,67 +14,33 @@
 </button>
 {% endif %}
 {% endblock %}
-{% block content %}
-<main class="main_anchor full_page">
-    {% if not hawkyAlways %}
-    <!-- Carrousel -->
-    <div class="swiper-container" id="top">
-        <div class="swiper-wrapper">
-            {% for banner in banners %}
-            <div class="swiper-slide">
-                <div class="slide-inner" style="background-image: url({{banner.imagen}});">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="slider-content">
-                                    {% if not banner.onlyImg %}
-                                    <h2>
-                                        {% autoescape off %} {{ banner.titulo }} {% endautoescape %}
-                                    </h2>
-                                    <!-- <div class="div-dec"></div> -->
-                                    <p class="slider-content_desc">{{ banner.descripcion }}</p>
-                                    {% endif %}
-                                    <div class="buttons">
-                                        {% if banner.redirigir %}
-                                        <a href="{{banner.redirigir}}" target="_blank" rel="noopener noreferrer" class="btn_slide btn btn_detail btn-lg">
-                                            Ver más <i class="fa-solid fa-up-right-from-square ms-1"></i>
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="swiper_buttons_nav">
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-        </div>
-    </div>
-    {% endif %}
 
+{% block navbar %}
+<!-- Index Sin Navbar -->
+{% endblock %}
+
+{% block content %}
+<main class="main_anchor full_screen">
     <!-- Asistente -->
     <section href="#asistente" class="asistent_group {% if hawkyAlways %}open open_controls{% endif %}">
         <div class="box_asistent">
-            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral"
-                camera-orbit="0deg 90deg 20m" animation-name="{{anim_default}}" poster="{% static 'img/hawky.0011.webp' %}"
-                data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="" {% if not active_areas %}camera-controls{% endif %}>
+            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="0deg 90deg 20m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="" {% if not active_areas %}camera-controls{% endif %}>
                 {% if active_areas %}
                 <div init-wave-click id="model_areas" class="model_areas slide_areas show"></div>
                 {% endif %}
                 <!-- Audio y animacion -->
                 <div class="box_asistent_controls controls_vertical-left controls_hide">
                     <div class="d-flex flex-column gap_10 pop_buttons">
-                        <button class="btn bg_blue-green btn-floating p-4 speak_btn text-white" style="--delay:5;">
+                        <button class="btn bg_blue-green btn-floating p-4 text-white" title="Cambiar Esena" style="--delay:5;" data-mdb-modal-init data-mdb-target="#configModal">
+                            <i class="fa-solid fa-gear fs-20"></i>
+                        </button>
+                        <button class="btn bg_blue-green btn-floating p-4 speak_btn text-white" style="--delay:6;">
                             <i class="fa-solid fa-volume-high fs-15"></i>
                         </button>
-                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="pauseAnim" title="Pausar Animacion" style="--delay:6;">
+                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="pauseAnim" title="Pausar Animacion" style="--delay:7;">
                             <i class="fa-regular fa-circle-pause fs-20"></i>
                         </button>
-                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="changeScene" title="Cambiar Esena" style="--delay:7;">
+                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="changeScene" title="Cambiar Esena" style="--delay:8;">
                             <i class="fa-solid fa-earth-africa fs-20"></i>
                         </button>
                     </div>
