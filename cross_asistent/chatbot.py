@@ -10,14 +10,10 @@ import nltk
 import json
 import re
 
-nltk.download('punkt')
-nltk.download('stopwords')
-
-now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
-allowed_words = {'más', 'una', 'un', 'como'}
-stop_words = set(stopwords.words('spanish'))
-
 def tokenize_and_clean(text):
+    allowed_words = {'más', 'una', 'un', 'como'}
+    stop_words = set(stopwords.words('spanish'))
+
     tokens = re.findall(r'\b\w+\b', text.lower())
     tokens = [word for word in tokens if word.isalnum() and (word not in stop_words or word in allowed_words)]
     return tokens
@@ -45,6 +41,11 @@ def chatgpt(question, instructions):
     return response.choices[0].message.content
 
 def chatbot(request):
+    nltk.download('punkt')
+    nltk.download('stopwords')
+
+    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body)

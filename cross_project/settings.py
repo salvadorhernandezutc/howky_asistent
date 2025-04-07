@@ -6,13 +6,14 @@ from cryptography.fernet import Fernet
 env = environ.Env()
 environ.Env.read_env()
 
-encryption_key = env("ENCRYPTION_KEY").encode()
-fernet = Fernet(encryption_key)
-encrypted_api_key = env("OPENAI_API_KEY").encode()
-decrypted_api_key = fernet.decrypt(encrypted_api_key).decode()
+# encryption_key = env("ENCRYPTION_KEY").encode()
+# fernet = Fernet(encryption_key)
+# encrypted_api_key = env("OPENAI_API_KEY").encode()
+# decrypted_api_key = fernet.decrypt(encrypted_api_key).decode()
+# OPENAI_API_KEY = decrypted_api_key
 
 
-OPENAI_API_KEY = decrypted_api_key
+OPENAI_API_KEY = env("OPENAI_API_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
