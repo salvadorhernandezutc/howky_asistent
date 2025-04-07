@@ -61,10 +61,12 @@ $(document).ready(function () {
 
             if (asistentGroup.hasClass("open_keyboard")) {
                 $("#changeScene").addClass("none").css("--delay", "7");
+                $("#floatSettings").addClass("none").css("--delay", "7");
                 modelViewer.attr("environment-image", "");
                 modelViewer.attr("skybox-image", "");
             } else {
                 $("#changeScene").removeClass("none").css("--delay", "3");
+                $("#floatSettings").removeClass("none").css("--delay", "3");
                 if (hdrSaved != "") {
                     modelViewer.attr("environment-image", `/media/hdri/${hdrSaved}.hdr`);
                     modelViewer.attr("skybox-image", `/media/hdri/${hdrSaved}.hdr`);
