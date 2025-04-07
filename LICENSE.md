@@ -2,15 +2,13 @@ MIT License
 
 ---
 
-**LICENCIA DE USO PRIVADO / PRIVATE USE LICENSE**
+## LICENCIA DE USO PRIVADO / PRIVATE USE LICENSE
 
-**Copyright © 2024 @chava-utc, Universidad Tecnológica de Coahuila**
+### Copyright © 2024 @chava-utc, Universidad Tecnológica de Coahuila
 
-**Versión: 1.0 | Fecha: 2025**
+### Versión: 1.0 | Fecha: 2025
 
 ---
-
-**ESPAÑOL**
 
 **Artículo 1 – Propiedad Intelectual**  
 Este software, incluyendo todo su código fuente, documentación, diseño y elementos asociados, es propiedad exclusiva de @chava-utc y de la Universidad Tecnológica de Coahuila (UTC). Todos los derechos están reservados.
@@ -29,8 +27,6 @@ Los derechos de autor sobre este software están vigentes desde el año 2024 y p
 
 ---
 
-**ENGLISH**
-
 **Article 1 – Intellectual Property**  
 This software, including all its source code, documentation, design, and related components, is the exclusive property of @chava-utc and the Universidad Tecnológica de Coahuila (UTC). All rights are reserved.
 
@@ -45,5 +41,3 @@ Be advised that any individual or entity who uses, copies, distributes, modifies
 
 **Article 5 – Copyright Validity**  
 The copyright protection of this software is effective as of the year 2024 and remains in force in accordance with applicable intellectual property laws.
-
----
