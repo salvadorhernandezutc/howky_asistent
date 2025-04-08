@@ -60,8 +60,8 @@ $(document).ready(function () {
             const hdrSaved = localStorage.getItem("model_hdr");
 
             if (asistentGroup.hasClass("open_keyboard")) {
-                $("#changeScene").addClass("none").css("--delay", "7");
-                $("#floatSettings").addClass("none").css("--delay", "7");
+                $("#changeScene").addClass("none").css("--delay", "8");
+                $("#floatSettings").addClass("none").css("--delay", "5");
                 modelViewer.attr("environment-image", "");
                 modelViewer.attr("skybox-image", "");
             } else {
