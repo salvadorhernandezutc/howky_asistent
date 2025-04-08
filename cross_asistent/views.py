@@ -53,22 +53,9 @@ def index(request):
     
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
-    banners_all = models.Banners.objects.filter(visible=True)
-    banners_modificados = []
-
-    for banner in banners_all:
-        banners_modificados.append({
-            'id': banner.id,
-            'titulo': banner.titulo,
-            'descripcion': banner.descripcion,
-            'redirigir': banner.redirigir,
-            'imagen': banner.imagen.url,
-            'onlyImg': banner.solo_imagen,
-        })
     
     return render(request, 'index.html', {
         'active_page': 'inicio',
-        'banners': banners_modificados,
         'img_qr': configuraciones[f'qr_image_{idConfig}'],
         'btn_qr': configuraciones[f'qr_button_{idConfig}'],
         'model_3D': hawkySettings[f'qr_image_{idHawky}'],
@@ -273,7 +260,6 @@ def singout(request):
 @login_required
 @never_cache
 def vista_programador(request):
-    banners_all = models.Banners.objects.all()
     users = User.objects.all().order_by('-id')
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
@@ -288,7 +274,6 @@ def vista_programador(request):
         'user':request.user,
         'active_page':'home',
         'pages':functions.pages,
-        'banners_all':banners_all,
         'settingsall':settingsall,
         'categorias':categoriasFilter,
         'preguntas_sending':questions_all[:8], # limitar a los primeros 8 registros
@@ -335,63 +320,6 @@ def ver_perfil(request):
         'active_page': 'perfil',
         'pages': functions.pages
     })
-
-# Banners ----------------------------------------------------------
-@login_required
-@never_cache
-def banners_page(request):
-    if request.method == 'POST':
-        tituloPOST = request.POST.get('contenidoWord')
-        soloImagenPOST = request.POST.get('soloImagen')
-        expiracionPOST = request.POST.get('expiracion')
-        if soloImagenPOST == None:
-            soloImagenPOST = False
-        if not expiracionPOST:
-            expiracionPOST = None
-        
-        if tituloPOST:
-            banner = models.Banners(
-                titulo = request.POST.get('contenidoWord'),
-                descripcion = request.POST.get('descripcion'),
-                redirigir = request.POST.get('redirigir'),
-                imagen = request.FILES.get('imagen'),
-                solo_imagen = soloImagenPOST,
-                expiracion = expiracionPOST
-            )
-            banner.save()
-            
-            return JsonResponse({
-                'success': True,
-                'functions': 'reload',
-                'message': f'El banner <span>{tituloPOST}</span> fue creado exitosamente 🥳🎉🎈.'
-            }, status=200)
-        else:
-            return JsonResponse({
-                'success': False,
-                'message': f'El parecer no se envio contenido ⚠️😯🤔😥.'
-            }, status=400)
-    
-    configuraciones = obtener_configuraciones(1)
-    banners_all = models.Banners.objects.all()
-    banners_modificados = []
-
-    for banner in banners_all:
-        banners_modificados.append({
-            'id': banner.id,
-            'titulo': banner.titulo,
-            'descripcion': banner.descripcion,
-            'redirigir': banner.redirigir,
-            'imagen': banner.imagen.url or '/static/img/default_image.webp',
-            'expiracion': banner.expiracion if not banner.expiracion == None else '',
-            'visible': banner.visible,
-            'onlyImg': banner.solo_imagen,
-        })
-    context = { 'banners': banners_modificados,
-               **configuraciones,
-               'active_page': 'banner',
-               'pages': functions.pages,
-               'banners_cound': banners_all.count() }
-    return render(request, 'admin/banners.html', context)
 
 # Base de Datos ----------------------------------------------------------
 @login_required
@@ -557,13 +485,11 @@ def update_create_pleace_map(request):
 def vista_galeria(request):
     imagenes_galeria = models.galeria.objects.exclude(imagen__exact='')
     imagenes_database = models.Database.objects.exclude(imagen__exact='')
-    imagenes_banners = models.Banners.objects.exclude(imagen__exact='')
 
     return render(request, 'admin/galeria.html', {
         'pages': functions.pages,
         'imagenes_galeria': imagenes_galeria,
         'imagenes_database': imagenes_database,
-        'imagenes_banners': imagenes_banners,
     })
 
 #Paginas de error -----------------------------------------------

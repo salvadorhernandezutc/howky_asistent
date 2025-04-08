@@ -26,12 +26,6 @@ def create_filename_path(filename, setname, sufix, length, lenghtrandom, strpath
 
 
 # Funciones para enviar el archivo a su carpeta correspondiente
-def set_imgBanner_path(instance, filename):
-    newName = instance.titulo.strip().replace(' ', '')
-    thispath = os.path.join('imagenes/banners/')
-    filename.replace('_p', '_')
-    return create_filename_path(filename, newName, 'banner', 15, 5, thispath)
-
 def set_imgDB_path(instance, filename):
     categoria = instance.categoria.categoria
     instanceTitulo = instance.titulo.strip().replace(' ', '')
@@ -76,23 +70,6 @@ def set_pdfDB_path(instance, filename):
     thispath = os.path.join('documentos/')
     return create_filename_path(filename, newName, 'db_doc', 18, 10, thispath)
 
-
-class Banners(models.Model):
-    titulo = models.CharField(max_length=150, null=True, blank=True)
-    descripcion = models.CharField(max_length=350, null=True, blank=True)
-    redirigir = models.TextField(null=True, blank=True)
-    imagen = models.ImageField(upload_to=set_imgBanner_path, max_length=120, blank=True, null=True)
-    expiracion = models.DateField(blank=True, null=True)
-    solo_imagen = models.BooleanField(default=False)
-    visible = models.BooleanField(default=True)
-        
-    def __str__(self):
-        return self.titulo
-    
-    def delete(self, *args, **kwargs):
-        if self.imagen:
-            self.imagen.delete()
-        super(Banners, self).delete(*args, **kwargs)
 
 class Categorias(models.Model):
     categoria = models.CharField(max_length=50)
@@ -236,13 +213,11 @@ def delete_files(instance, fields):
             file.delete(save=False)
 
 # Señal para eliminar archivos antes de eliminar el objeto
-@receiver(pre_delete, sender=Banners)
 @receiver(pre_delete, sender=Database)
 @receiver(pre_delete, sender=Articulos)
 @receiver(pre_delete, sender=galeria)
 def delete_files_on_object_delete(sender, instance, **kwargs):
     fields_to_delete = {
-        Banners: ['imagen'],
         Database: ['imagen', 'documento'],
         Articulos: ['encabezado'],
         galeria: ['imagen'],

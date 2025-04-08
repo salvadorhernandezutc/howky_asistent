@@ -24,7 +24,7 @@
     <!-- Asistente -->
     <section href="#asistente" class="asistent_group {% if hawkyAlways %}open open_controls{% endif %}">
         <div class="box_asistent">
-            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="0deg 90deg 20m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="" {% if not active_areas %}camera-controls{% endif %}>
+            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="0deg 90deg 20m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="">
                 {% if active_areas %}
                 <div init-wave-click id="model_areas" class="model_areas slide_areas show"></div>
                 {% endif %}
@@ -95,21 +95,6 @@
         </div>
     </section>
 </main>
-
-<!-- Modal: imagen de QR -->
-<div class="modal fade" id="modalqr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">Escanea el código QR</h2>
-                <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <img src="{{img_qr}}" alt="qr" class="img-fluid img-rounded" />
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 

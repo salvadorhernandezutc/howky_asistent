@@ -21,7 +21,6 @@ ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
 
 # Plantilla links programador / administrador ----------------------------------------------------------
 pages = [
-        {'name': 'banner', 'url': 'upload_banner', 'display_name': 'Banners', 'icon':'fa-solid fa-image', 'access':'all'},
         {'name': 'database', 'url': 'database_page', 'display_name': 'Database', 'icon':'fa-solid fa-database', 'access':'all'},
         {'name': 'mapa', 'url': 'update_mapa', 'display_name': 'Mapa', 'icon':'fa-solid fa-map-location-dot', 'access':'staff'},
         {'name': 'calendario', 'url': 'calendario_page', 'display_name': 'Calendario', 'icon':'fa-solid fa-calendar-days', 'access':'all'},
@@ -171,127 +170,6 @@ def editar_usuario(request, user_id):
         return JsonResponse({'success': True, 'message': messagereturn}, status=200)
     return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
 
-# Banners ----------------------------------------------------------
-@login_required
-@never_cache
-def banner_update(request):
-    if request.method == 'POST':
-        banner_id = request.POST.get('banner_id')
-        tituloPOST = request.POST.get('contenidoWord')
-        
-        banner = get_object_or_404(models.Banners, id=banner_id)
-        banner.solo_imagen = request.POST.get('soloImagen', 'False') == 'True'
-            
-        new_image = request.FILES.get('imagen')
-        if not new_image == None:
-            banner.imagen = new_image
-        
-        new_expir = request.POST.get('expiracion')
-        if new_expir:
-            banner.expiracion = new_expir
-            banner.visible = True
-        else:
-            banner.expiracion = None
-        
-        banner.titulo = tituloPOST
-        banner.descripcion = request.POST.get('descripcion')
-        banner.redirigir = request.POST.get('redirigir')
-        banner.save()
-        
-        return JsonResponse({
-            'success': True,
-            'functions': 'reload',
-            'message': f'El banner <u>{tituloPOST}</u> fue modificado exitosamente 🥳🎉🎈.'
-        }, status=200)
-    
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
-
-@login_required
-@never_cache
-def banner_delete(request):
-    if request.method == 'POST':
-        banner_id = request.POST.get('banner_id')
-        banner = get_object_or_404(models.Banners, id=banner_id)
-        banner.delete()
-        return JsonResponse({'success': True, 'message': 'Banner eliminado exitosamente.', 'icon': 'warning', 'position':'top'}, status=200)
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
-
-@login_required
-@never_cache
-@csrf_exempt
-def banners_visibility_now(request):
-    if request.method == 'POST':        
-        banneridPOST = request.POST.get('banner_id')
-        returnJson = None
-        if banneridPOST:
-            expired_banners = models.Banners.objects.filter(id=banneridPOST)
-            update_visibility = request.POST.get('banner_visible')
-            update_exp = True
-            returnJson = {'success': True,'functions': 'reload','message': f'Se cambió la visibilidad del banner <span>#{banneridPOST}</span> exitosamente 🫡🥳🎉.'}
-        else:
-            now = timezone.now()
-            expired_banners = models.Banners.objects.filter(expiracion__lte=now, visible=True)
-
-            if expired_banners.exists():
-                update_visibility = False
-                update_exp = False                
-                returnJson = {'success': True,'message': 'Se actualizaron los banners caducados','position': 'top-end'}
-        if expired_banners:
-            for banner in expired_banners:
-                banner.visible = update_visibility
-                if update_exp:
-                    banner.expiracion = None
-                banner.save()
-        if returnJson:
-            return JsonResponse(returnJson, status=201)
-        return JsonResponse({}, status=200)
-
-@login_required
-@never_cache
-def banners_list(request):
-    listBanners = models.Banners.objects.all()
-    datos_modificados = []
-    for dato in listBanners:
-        if dato.imagen:
-            imagen_url = dato.imagen.url
-        else:
-            imagen_url = ''
-            
-        datos_modificados.append({
-            'id': dato.id,
-            'titulo': dato.titulo,
-            'descripcion': dato.descripcion,
-            'redirigir': dato.redirigir,
-            'imagen': imagen_url,
-            'expiracion': dato.expiracion,
-            'solo_imagen': dato.solo_imagen,
-            'visible': dato.visible,
-        })
-    data = {'infobanners': datos_modificados}
-    return JsonResponse(data)
-
-@login_required
-@never_cache
-def banners_getitem(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)            
-            idPOST = data.get('id')
-            dbItem = get_object_or_404(models.Banners, id=idPOST)
-            data = {
-                'id':dbItem.id,
-                'titulo':dbItem.titulo,
-                'descripcion':dbItem.descripcion,
-                'redirigir':dbItem.redirigir,
-                'expiracion':dbItem.expiracion,
-                'solo_imagen':dbItem.solo_imagen,
-                'visible':dbItem.visible,
-            }
-            return JsonResponse(data)
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Ocurrió un error 😯😥 <br>{str(e)}'}, status=400)
-
-    return JsonResponse({'error': 'Método no válido'}, status=400)
 
 # Categorias ----------------------------------------------------------
 @login_required

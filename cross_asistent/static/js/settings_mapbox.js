@@ -449,6 +449,16 @@ window.addEventListener("load", () => {
         $("[data-namePleace]").text("");
     });
 
+    // Controles de localizacion ########################################
+    const locateUser = new mapboxgl.GeolocateControl({
+        positionOPtions: {enableHighAccuracy: true},
+        trackUserLocation: true,
+        ShowUserHeading: true,
+    });
+
+    mapMapbox.addControl(locateUser);
+
+
     // Crear nuevo menu de botones personalizados ########################################
     mapMapbox.addControl(new mapboxgl.NavigationControl());
     class CustomControl {
@@ -586,7 +596,8 @@ window.addEventListener("load", () => {
         profile: "mapbox/walking",
         controls: {
             inputs: false,
-            instructions: false,
+            instructions: true,
+            language: "es",
             profileSwitcher: false,
         },
         alternatives: true,
