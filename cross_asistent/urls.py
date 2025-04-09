@@ -65,15 +65,7 @@ urlpatterns = [
     path('administracion/mapa/modificar/', views.update_create_pleace_map, name='upload_map'),
     path('administracion/mapa/eliminar/', functions.delete_pleaceMap, name='del_pleace_map'),
     path('administracion/mapa/elimiina/database/', functions.delete_pleaceMap_DB, name='del_pleace_mapdb'),
-    
-    # Galeria ----------------------------------------------------------
-    path('administracion/galeria/', views.vista_galeria, name='vista_galeria'),
-    path('administracion/galeria/subir/', functions.upload_image, name='send_imgsblog'),
-    path('administracion/galeria/lista/', functions.lista_imagenes, name='lista_imagenes'),
-    path('administracion/galeria/create/', functions.galeria_create, name='galeria_create'),
-    path('administracion/galeria/eliminar/', functions.galeria_delete, name='eliminar_imagen'),
-    path('administracion/galeria/subir_multiples_imagenes/', functions.galeria_upload_images, name='galery_up_images'),
-    
+        
     # configuraciones ----------------------------------------------------------
     path('administracion/configuraciones/actualizar/', functions.settings_update, name='update_settings'),
     path('administracion/configuraciones/get_variables/', functions.get_env, name='get_env'),
@@ -86,8 +78,6 @@ urlpatterns = [
     path('administracion/importar/database/', imex_port.import_database, name='import_database'),
     path('administracion/export/mapa/', imex_port.export_mapa, name='export_mapa'),
     path('administracion/importar/mapa/', imex_port.import_mapa, name='import_mapa'),
-    path('administracion/export/banners/', imex_port.export_banner, name='export_banner'),
-    path('administracion/importar/banners/', imex_port.import_Banners, name='import_banners'),
     path('administracion/export/preguntas/', imex_port.export_preguntas, name='export_preguntas'),
     path('administracion/importar/preguntas/', imex_port.import_Preguntas, name='import_preguntas'),
     path('administracion/export/articulo/', imex_port.export_articulos, name='export_articulos'),

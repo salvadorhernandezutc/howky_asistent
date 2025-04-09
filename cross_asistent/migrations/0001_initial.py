@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('titulo', models.CharField(blank=True, max_length=150, null=True)),
                 ('descripcion', models.CharField(blank=True, max_length=350, null=True)),
                 ('redirigir', models.CharField(blank=True, max_length=200, null=True)),
-                ('imagen', models.ImageField(blank=True, null=True, upload_to=cross_asistent.models.set_imgBanner_path)),
+                ('imagen', models.ImageField(blank=True, null=True)),
                 ('expiracion', models.DateTimeField(blank=True, null=True)),
                 ('solo_imagen', models.BooleanField(default=False)),
                 ('visible', models.BooleanField(default=True)),

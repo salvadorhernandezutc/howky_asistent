@@ -46,7 +46,6 @@ error_messages = {
     504: 'El servidor no pudo obtener una respuesta a tiempo. Revisa tu conexión e intenta nuevamente más tarde.'
 }
 
-
 def index(request):
     if not request.user.is_staff:
         logout(request)
@@ -478,19 +477,6 @@ def update_create_pleace_map(request):
             )
 
             return JsonResponse({'success': True, 'message': 'Se creó un nuevo edificio en el mapa y en la base de datos de forma exitosa 🎉🎉🎉', 'functions':'reload'}, status=200)
-
-#Galeria ----------------------------------------------------------
-@login_required
-@never_cache
-def vista_galeria(request):
-    imagenes_galeria = models.galeria.objects.exclude(imagen__exact='')
-    imagenes_database = models.Database.objects.exclude(imagen__exact='')
-
-    return render(request, 'admin/galeria.html', {
-        'pages': functions.pages,
-        'imagenes_galeria': imagenes_galeria,
-        'imagenes_database': imagenes_database,
-    })
 
 #Paginas de error -----------------------------------------------
 def error_code_info(setCode):

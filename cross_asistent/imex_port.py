@@ -62,33 +62,6 @@ def export_database(request):
         )
     return JsonResponse({'success': False, 'message': 'Acción no permitida. 🧐😠🤥'}, status=400)
 
-@login_required
-@never_cache
-def export_banner(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
-    
-    if request.user.is_staff:
-        banners = models.Banners.objects.all()  
-        rows = [
-            [
-                banner.titulo or '',
-                banner.descripcion or '',
-                banner.redirigir or '',
-                banner.imagen.url.replace('/media/', '') if banner.imagen else '',
-                banner.expiracion or '',
-                True if banner.solo_imagen else False,
-                True if banner.visible else False,
-            ]
-            for banner in banners
-        ]
-        
-        return create_csv_response(
-            f"UTC_banner_{now}.csv",
-            ['Titulo', 'Descripcion', 'Redirigir', 'Imagen', 'Expiracion', 'Solo Imagen', 'Visible'],
-            rows
-        )
-    
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
 
 @login_required
 @never_cache
@@ -206,19 +179,6 @@ def import_categorias(request):
         'categoria': 0,
         'descripcion': 1,
     }, 'Categorías importadas correctamente. 🎉😁🫡')
-
-@login_required
-@never_cache
-def import_Banners(request):
-    return import_csv_data(request, models.Banners, {
-        'titulo': 0,
-        'descripcion': 1,
-        'redirigir': 2,
-        'imagen': 3,
-        'expiracion': lambda row: parse_date(row[4]),
-        'solo_imagen': lambda row: parse_boolean(row[5]),
-        'visible': lambda row: parse_boolean(row[6]),
-    }, 'Banners importados correctamente. 🎉😁🫡')
 
 @login_required
 @never_cache

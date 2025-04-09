@@ -21,10 +21,9 @@ ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
 
 # Plantilla links programador / administrador ----------------------------------------------------------
 pages = [
-        {'name': 'database', 'url': 'database_page', 'display_name': 'Database', 'icon':'fa-solid fa-database', 'access':'all'},
+        {'name': 'database', 'url': 'database_page', 'display_name': 'Base de Datos', 'icon':'fa-solid fa-database', 'access':'all'},
         {'name': 'mapa', 'url': 'update_mapa', 'display_name': 'Mapa', 'icon':'fa-solid fa-map-location-dot', 'access':'staff'},
         {'name': 'calendario', 'url': 'calendario_page', 'display_name': 'Calendario', 'icon':'fa-solid fa-calendar-days', 'access':'all'},
-        {'name': 'galería', 'url': 'vista_galeria', 'display_name': 'Galeria', 'icon':'fa-regular fa-images', 'access':'staff'},
     ]
 
 # Editar Perfil ----------------------------------------------------------
@@ -637,102 +636,6 @@ def settings_update(request):
         except Exception as e:
             return JsonResponse({'success': False, 'message': f'Ocurrio un error. {str(e)}'}, status=404)
     return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
-
-# Galeria ----------------------------------------------------------
-@login_required
-@never_cache
-def galeria_create(request):
-    if request.method == 'POST':
-        try:
-            imagenPOST = request.FILES.get('imagen')
-            if imagenPOST:
-                nueva_imagen = models.galeria.objects.create(imagen=imagenPOST)
-                nueva_imagen.save()
-                return JsonResponse({'success': True, 'image_url': nueva_imagen.imagen.url, 'message': 'Imagen subida exitosamente.'}, status=200)
-            else:
-                return JsonResponse({'success': False, 'message': 'No se seleccionó ninguna imagen.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Ocurrió un error 😯😥 <br>{str(e)}'}, status=400)
-    
-    return JsonResponse({'error': 'Método no válido'}, status=400)
-
-@login_required
-@never_cache
-def upload_image(request):
-    if request.method == 'POST':
-        try:
-            image_file = request.FILES['file']
-            imagen_articulo = models.galeria(imagen=image_file)
-            imagen_articulo.save()
-            image_url = imagen_articulo.imagen.url
-
-            return JsonResponse({'location': image_url})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'error': 'Error al subir la imagen'}, status=400)
-
-@login_required
-@never_cache
-def lista_imagenes(request):
-    if request.method == 'GET':
-        try:
-            imagenes = models.galeria.objects.all()
-            imagenes_modificadas = []
-
-            for imagen in imagenes:
-                imagen_url = imagen.imagen.url
-                imagenes_modificadas.append({
-                    'id': imagen.id,
-                    'url': imagen_url
-                })
-            return JsonResponse({'imagenes': imagenes_modificadas})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-@never_cache
-@csrf_exempt
-@login_required
-def galeria_delete(request):
-    if request.method == 'POST':
-        try:
-            imagen_id = request.POST.get('id')
-            uuidPOST = request.POST.get('uuid')
-            imagen = get_object_or_404(models.galeria, id=imagen_id, uuid=uuidPOST)
-            imagen.delete()
-            return JsonResponse({
-                'success': True,
-                'message': f'Se eliminó la imagen <u>"#{imagen_id}"</u> de la galeria exitosamente. ⚠️😯😬🎉',
-                'icon': 'warning',
-                'position': 'top',
-            }, status=200)
-            
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
-
-@login_required
-@never_cache
-def galeria_upload_images(request):
-    if request.method == 'POST':
-        try:
-            uuidPOST = request.POST.get('uuid')
-            imagesPOST = request.FILES.getlist('images')
-                        
-            if imagesPOST:
-                for oneimage in imagesPOST:
-                    galeria_instance = models.galeria.objects.create(
-                        uuid=uuidPOST,
-                        imagen=oneimage,
-                    )
-                    galeria_instance.save()
-                    
-                return JsonResponse({'functions': 'submit'}, status=200)
-            else:
-                return JsonResponse({'success': False, 'message': 'No se Enviaron datos. ⚠️⚠️⚠️😯😥🤔'}, status=200)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'}, status=405)
-
 
 # Variables del Entorno env ----------------------------------------------------------
 @login_required

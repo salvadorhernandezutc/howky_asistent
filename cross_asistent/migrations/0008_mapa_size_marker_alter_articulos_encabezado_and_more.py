@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='banners',
             name='imagen',
-            field=models.ImageField(blank=True, max_length=120, null=True, upload_to=cross_asistent.models.set_imgBanner_path),
+            field=models.ImageField(blank=True, max_length=120, null=True),
         ),
         migrations.AlterField(
             model_name='configuraciones',

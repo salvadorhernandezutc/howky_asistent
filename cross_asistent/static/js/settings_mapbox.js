@@ -451,13 +451,12 @@ window.addEventListener("load", () => {
 
     // Controles de localizacion ########################################
     const locateUser = new mapboxgl.GeolocateControl({
-        positionOPtions: {enableHighAccuracy: true},
+        positionOPtions: { enableHighAccuracy: true },
         trackUserLocation: true,
         ShowUserHeading: true,
     });
 
     mapMapbox.addControl(locateUser);
-
 
     // Crear nuevo menu de botones personalizados ########################################
     mapMapbox.addControl(new mapboxgl.NavigationControl());
@@ -596,7 +595,7 @@ window.addEventListener("load", () => {
         profile: "mapbox/walking",
         controls: {
             inputs: false,
-            instructions: true,
+            instructions: false,
             language: "es",
             profileSwitcher: false,
         },
@@ -975,11 +974,9 @@ window.addEventListener("load", () => {
 
                         const imageItemGalery = `<div id="img_galery_${
                             item.id
-                        }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${
-                            imgName[0]
-                        }</p><p class="size-file m-0">(${imgName[1]}) ${formatBytes(
-                            item.img_size
-                        )}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
+                        }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
+                            imgName[1]
+                        }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
                             item.id
                         }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
                             item.id
