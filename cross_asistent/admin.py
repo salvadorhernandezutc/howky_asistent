@@ -8,9 +8,6 @@ class DatabaseAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'categoria', 'uuid')
     search_fields = ('titulo', 'informacion', 'uuid')
 
-class ArticulosAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'autor', 'creacion')
-
 class MapaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'color', 'door_cords')
 
@@ -31,7 +28,6 @@ class UserProfileAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(models.Categorias, CategoriasAdmin)
 admin.site.register(models.Database, DatabaseAdmin)
-admin.site.register(models.Articulos, ArticulosAdmin)
 admin.site.register(models.Mapa, MapaAdmin)
 admin.site.register(models.galeria)
 admin.site.register(models.Preguntas, PreguntasAdmin)

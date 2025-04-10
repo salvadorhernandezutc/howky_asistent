@@ -9,8 +9,6 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('preguntas_frecuentes/', views.fqt_questions, name='faq'),
     path('preguntar/', views.fqt_questions_send, name='enviar_preguntas'),
-    path('blogs/', views.blogs, name='blog'),
-    path('blogs/<int:Articulos_id>/', views.mostrar_blog, name='mostrar_blog'),
     path('calendario/', views.calendario, name='calendario'),
     path('calendario/eventos/', functions.calendario_eventos, name='calendario_eventos'),
     path('mapa/', views.map, name='map'),
@@ -54,11 +52,6 @@ urlpatterns = [
     
     path('administracion/preguntas/eliminar/', functions.preguntas_deleted, name='question_deleted'),
     path('database/actualizar_frecuencia/', functions.frequesnce_update, name='update_frequencies_database'),
-
-    # Blog ----------------------------------------------------------
-    path('administracion/blog/crear/', views.blog_page, name='create_blog'),
-    path('administracion/blog/editar/', functions.blog_change, name='blog_get'),
-    path('administracion/blog/eliminar/', functions.blog_delete, name='blog_delete'),
     
     # Mapa ----------------------------------------------------------
     path('administracion/mapa/', views.map_page, name='update_mapa'),
@@ -80,8 +73,6 @@ urlpatterns = [
     path('administracion/importar/mapa/', imex_port.import_mapa, name='import_mapa'),
     path('administracion/export/preguntas/', imex_port.export_preguntas, name='export_preguntas'),
     path('administracion/importar/preguntas/', imex_port.import_Preguntas, name='import_preguntas'),
-    path('administracion/export/articulo/', imex_port.export_articulos, name='export_articulos'),
-    path('administracion/importar/articulos/', imex_port.import_Articulos, name='import_articulos'),
     path('administracion/export/configuracion/', imex_port.export_configuraciones, name='export_configuraciones'),
     path('administracion/importar/configuraciones/', imex_port.import_Configuraciones, name='import_configuraciones'),
 ]

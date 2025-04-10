@@ -304,7 +304,9 @@ $(document).ready(function () {
                 alertSToast("center", timerOut + 8000, "error", errorMessage);
             });
     }
-    getModelSettings();
+    if ($("#hawkySettings").length) {
+        getModelSettings();
+    }
     // Vuelta de registro #########################################
     setTimeout(() => {
         reloadModel.click();

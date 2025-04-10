@@ -92,80 +92,6 @@ def fqt_questions_send(request):
             print(f'Hay un error en: {e}')
             return JsonResponse({'error':True, 'success': False, 'message': 'Ups! 😥😯 hubo un error y tu pregunta no se pudo registrar. Por favor intente de nuevo más tarde.'}, status=400)
 
-def blogs(request):
-    if not request.user.is_staff:
-        logout(request)
-    
-    configuraciones = obtener_configuraciones(idConfig)
-    blogs = models.Articulos.objects.all().order_by('-id')
-    blogs_modificados = []
-
-    for oneblog in blogs:
-        imagen_url = oneblog.encabezado
-        if not imagen_url == '':
-            img = oneblog.encabezado.url
-            imgClass = 'item_img-url'
-        else:
-            img = '/static/img/default_image.webp'
-            imgClass = 'item_title-full'
-
-        blogs_modificados.append({
-            'id': oneblog.id,
-            'titulo': oneblog.titulo,
-            'autor': oneblog.autor,
-            'imagen': img,
-            'class': imgClass,
-        })
-
-    return render(request, 'blogs_all.html', {
-        'blogs_all': blogs_modificados,
-        'active_page': 'blog',
-        'copyright_year': configuraciones[f'copyright_year_{idConfig}'],
-        'utc_link': configuraciones[f'utc_link_{idConfig}'],
-    })
-
-def mostrar_blog(request, Articulos_id):
-    if not request.user.is_staff:
-        logout(request)
-    
-    configuraciones = obtener_configuraciones(idConfig)
-    
-    articulo = get_object_or_404(models.Articulos, pk=Articulos_id)
-    autor_username = articulo.autor
-    if articulo.encabezado:
-        encabezado_url = articulo.encabezado.url
-    else:
-        encabezado_url = ''
-    
-    try:
-        user_profile = models.UserProfile.objects.get(user__username=autor_username)
-        userdef = User.objects.get(username=autor_username)
-        user_picture = user_profile.profile_picture
-        if user_picture:
-            foto_autor = user_picture.url
-        else:
-            foto_autor = ''
-            
-        if user_profile.blog_firma:
-            firma_autor = user_profile.blog_firma.lower()
-        else:
-            firma_autor = f'{userdef.first_name.lower()} {userdef.last_name.lower()}'
-    except models.UserProfile.DoesNotExist:
-        firma_autor = 'Editorial Universidad Tecnológica de Coahuila'
-        foto_autor = '/static/img/UTC_logo.webp'
-    except User.DoesNotExist:
-        firma_autor = 'Editorial Universidad Tecnológica de Coahuila'
-        foto_autor = ''
-
-    return render(request, 'blog.html', {
-        'articulo': articulo,
-        'foto_autor': foto_autor,
-        'firma_autor': firma_autor,
-        'encabezado_url': encabezado_url,
-        'copyright_year': configuraciones[f'copyright_year_{idConfig}'],
-        'utc_link': configuraciones[f'utc_link_{idConfig}'],
-    })
-
 def calendario(request):
     if not request.user.is_staff:
         logout(request)
@@ -263,11 +189,6 @@ def vista_programador(request):
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
     
-    if request.user.is_staff:
-        num_blogs = models.Articulos.objects.all().count()
-    else:
-        num_blogs = models.Articulos.objects.filter(autor=request.user).count()
-    
     contexto = {
         'users':users,
         'user':request.user,
@@ -278,7 +199,6 @@ def vista_programador(request):
         'preguntas_sending':questions_all[:8], # limitar a los primeros 8 registros
         'preguntas_count':questions_all.count(),
         'num_preguntas':databaseall.count(),
-        'num_blogs': num_blogs,
         **configuraciones,
         **hawkySettings,
         'copyright_year': configuraciones[f'copyright_year_{idConfig}'],
@@ -310,9 +230,6 @@ def ver_perfil(request):
         request.user.userprofile.profile_picture = request.user.userprofile.profile_picture.url
     else:
         request.user.userprofile.profile_picture = '/static/img/UTC_logo-plano.webp'
-    
-    if not perfil_extencion.blog_firma:
-        perfil_extencion.blog_firma = ''
                 
     return render(request, 'admin/perfil.html', {
         'user_profile': perfil_extencion,
@@ -338,57 +255,6 @@ def calendario_page(request):
         'calendar_btnsYear': bool(configuraciones[f'calendar_btnsYear_{idConfig}']),
     }
     return render(request, 'admin/calendario.html', context)
-
-# Blogs ----------------------------------------------------------
-@login_required
-@never_cache
-def blog_page(request):
-    if request.method == 'POST':
-        try:
-            autorPOST = request.POST.get('autor')
-            tituloPOST = request.POST.get('titulo')
-            contenidoWordPOST = request.POST.get('contenidoWord')
-            encabezadoImgPOST = request.FILES.get('encabezadoImg')
-            blogUpdate = request.POST.get('blogNewUpdate')
-            
-            if not blogUpdate == None and not blogUpdate == 'newBlog':
-                blogUpdate = get_object_or_404(models.Articulos, id=blogUpdate)
-                blogUpdate.autor = autorPOST
-                blogUpdate.titulo = tituloPOST
-                blogUpdate.contenido = contenidoWordPOST
-                if encabezadoImgPOST:
-                    blogUpdate.encabezado = encabezadoImgPOST
-                blogUpdate.save()
-                jsonMessage='Excelente 🥳🎈🎉. Tu articulo fue <span>modificado</span> de forma exitosa. 😁🫡'                
-            else:
-                articulo = models.Articulos(
-                    autor=autorPOST,
-                    titulo=tituloPOST,
-                    contenido=contenidoWordPOST,
-                    encabezado=encabezadoImgPOST,
-                )
-                articulo.save()
-                jsonMessage='Excelente 🥳🎈🎉. Tu artículo ya fue publicado. Puedes editarlo cuando gustes. 🧐😊'
-                                
-            user_perfil = request.user.userprofile
-            if request.POST.get('new_firma'):
-                user_perfil.blog_firma = request.POST.get('new_firma')
-                user_perfil.save()
-
-            return JsonResponse({'success': True, 'functions':'reload', 'message': jsonMessage}, status=200)
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Ocurrió un error😯😥 <br>{str(e)}'}, status=400)
-        
-    allblogs = models.Articulos.objects.all()
-    yourBlogs = models.Articulos.objects.filter(autor = request.user)
-    blogsTiple=[]
-    for oneBlog in yourBlogs:
-        blogsTiple.append({
-            'id': oneBlog.id,
-            'titulo': oneBlog.titulo,
-        })
-    
-    return render(request, 'admin/blog.html', {'active_page':'blog','pages':functions.pages, 'blogsTiple':blogsTiple, 'allblogs':allblogs})
 
 #Mapa ----------------------------------------------------------
 @login_required

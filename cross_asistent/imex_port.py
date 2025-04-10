@@ -62,28 +62,6 @@ def export_database(request):
         )
     return JsonResponse({'success': False, 'message': 'Acción no permitida. 🧐😠🤥'}, status=400)
 
-
-@login_required
-@never_cache
-def export_articulos(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
-
-    if request.user.is_staff:
-        articulos = models.Articulos.objects.all()
-        rows = [
-            [
-                articulo.encabezado.url.replace('/media/', '') or '',
-                articulo.titulo or '',
-                articulo.contenido or '',
-                articulo.autor or '',
-                articulo.creacion or '',
-                articulo.actualizacion or '',
-            ]
-            for articulo in articulos
-        ]
-        return create_csv_response(f"UTC_articulos_{now}.csv",['Encabezado', 'Titulo', 'Contenido', 'Autor', 'Creación', 'Actualización'],rows)
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
-
 @login_required
 @never_cache
 def export_preguntas(request):
@@ -151,7 +129,6 @@ def export_mapa(request):
         )
     return JsonResponse({'success': False, 'message': 'Acción no permitida. 🧐😠🤥'}, status=400)
 
-
 @login_required
 @never_cache
 def import_database(request):
@@ -179,18 +156,6 @@ def import_categorias(request):
         'categoria': 0,
         'descripcion': 1,
     }, 'Categorías importadas correctamente. 🎉😁🫡')
-
-@login_required
-@never_cache
-def import_Articulos(request):
-    return import_csv_data(request, models.Articulos, {
-        'encabezado': 0,
-        'titulo': 1,
-        'contenido': 2,
-        'autor': 3,
-        'creacion': lambda row: parse_date(row[4]),
-        'actualizacion': lambda row: parse_date(row[5]),
-    }, 'Articulos importados correctamente. 🎉😁🫡')
 
 @login_required
 @never_cache

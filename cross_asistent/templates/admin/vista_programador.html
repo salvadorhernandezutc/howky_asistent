@@ -12,26 +12,10 @@
 <main class="container container-fluid pt-4 pb-5 {% if not user.is_authenticated %}main_container{% endif %}">
   <section class="row">
     <!-- targetas de totales -->
-    <div class="col-md-6 col-xl-8">
-      <div class="row">
-        <!-- Tus Articulos -->
-        <div class="col-6 col-xl-4 mb-4">
-          <a href="{% url 'create_blog' %}" class="card">
-            <div class="card-body p-3">
-              <h6 class="card-title d-flex justify-content-between m-0">
-                <!-- titulo y total -->
-                <div>
-                  <i class="fa-solid fa-newspaper position-absolute bottom-0 start-0 opacity-25 text_detail fs-25 m-1"></i>
-                  {{ user.is_staff|yesno:"Blogs,Tus Blogs" }}:
-                </div>
-                <strong class="text_detail ms-auto">{{ num_blogs }}</strong>
-              </h6>
-            </div>
-          </a>
-        </div>
+      <div class="row pe-0">
         {% if user.is_staff %}
         <!-- total de usuarios -->
-        <div class="col-6 mb-4">
+        <div class="col-4 mb-4">
           <a href="#tabla_usuarios" class="card">
             <div class="card-body p-3">
               <h6 class="card-title d-flex justify-content-between align-items-center m-0">
@@ -47,7 +31,7 @@
         </div>
         {% endif %}
         <!-- Total de preguntas -->
-        <div class="{% if user.is_staff %}col-6{% endif %} mb-4">
+        <div class="{% if user.is_staff %}col-4{% endif %} mb-4">
           <a href="#preguntasEnviadas" class="card">
             <div class="card-body p-3">
               <h6 class="card-title d-flex justify-content-between align-items-center m-0">
@@ -62,7 +46,7 @@
           </a>
         </div>
         <!-- database -->
-        <div class="mb-4">
+        <div class="col-4 mb-4 pe-0">
           <a href="{% url 'database_page' %}" class="card">
             <div class="card-body p-3">
               <h6 class="card-title d-flex justify-content-between align-items-center m-0">
@@ -77,7 +61,6 @@
           </a>
         </div>
       </div>
-    </div>
     <!-- Base de datos -->
     <div>
       <div class="card">

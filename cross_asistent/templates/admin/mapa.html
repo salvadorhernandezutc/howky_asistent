@@ -168,13 +168,7 @@
                     <i class="fa-solid fa-location-dot fs-10"></i>
                 </button>
             </div>
-            <button id="btnOpenGalery" class="btn btn_detail btn-block mt-4 none" data-notmarker type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#pleaceGalery" aria-controls="pleaceGalery">
-                <div class="d-flex justify-content-between">
-                    <div><i class="fa-regular fa-images me-1"></i> Galeria:</div>
-                    <div><span id="galeryCount">2</span> Imagenes</div>
-                </div>
-            </button>
+            
             <!-- TinyMCE: Contenido de texto -->
             <div class="mt-4" data-notmarker>
                 <textarea id="textTiny" class="form-control" name="contenidoWord"
@@ -217,26 +211,6 @@
         </div>
     </div>
 </form>
-
-<!-- OffCanvas: Galeria de imagenes -->
-<section class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="pleaceGalery" aria-labelledby="pleaceGaleryLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasLabel">Galeria de <span class="name_pleace"></span></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body" id="offcanvasContent">
-        <form action="{% url 'galery_up_images' %}" method="post" id="formToGalery" data-submit-form data-submit-blur="galeryUpImages">
-            <div id="drop-area">
-                Arrastra y suelta tus imágenes aquí o haz clic para seleccionarlas.
-                <input type="text" name="uuid" id="uuid" class="d-none" data-uuid data-new-uid="{{UID}}" readonly required>
-                <input type="file" name="images" id="file-input" class="d-none input_change" accept="image/jpeg, image/png, image/jpg" multiple required>
-            </div>
-            <button type="submit" id="galeryUpImages" class="d-none" data-reset_form="formToGalery">Enviar</button>
-        </form>
-        <section id="image-list" class="image-list d-flex my-3"></section>
-        <section id="image-list-galery" class="image-list d-flex my-3" data-galery-del="{% url 'eliminar_imagen' %}"></section>
-    </div>
-</section>
 
 <!-- OffCanvas: Cambiar estilo -->
 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">

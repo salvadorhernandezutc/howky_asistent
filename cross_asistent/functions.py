@@ -429,37 +429,6 @@ def calendario_eventos(request):
     
     return JsonResponse(eventos_json, safe=False)
 
-# Blogs ----------------------------------------------------------
-@login_required
-@never_cache
-def blog_change(request):
-    if request.method == 'GET':
-        blogIdGET = request.GET.get('id')
-        if (blogIdGET):
-            blogGet = get_object_or_404(models.Articulos, id=blogIdGET)
-            blogEncabezado = blogGet.encabezado
-            if blogEncabezado:
-                blogEncabezado = blogGet.encabezado.url
-            else:
-                blogEncabezado = ''
-            data = {
-                'titulo': blogGet.titulo,
-                'contenido': blogGet.contenido,
-                'encabezado': blogEncabezado,
-            }
-            return JsonResponse(data)
-    return JsonResponse({'success': False}, status=400)
-
-@login_required
-@never_cache
-def blog_delete(request):
-    if request.method == 'POST':
-        idPOST = request.POST.get('blogIdDelete')
-        blogId = get_object_or_404(models.Articulos, id=idPOST)
-        blogId.delete()
-        return JsonResponse({'success': True, 'functions': 'reload', 'message': f'El blog "{blogId.titulo}" <u>se elimino</u> exitosamente. 😯😬🎉', 'icon': 'warning'}, status=200)
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
-
 # Mapa ----------------------------------------------------------
 def mapa_data(request):
     mapas = models.Mapa.objects.filter(is_marker=False)

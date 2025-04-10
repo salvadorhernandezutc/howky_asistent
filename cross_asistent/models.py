@@ -112,22 +112,6 @@ class Database(models.Model):
                 old_info.imagen.delete(save=False)
         super().save(*args, **kwargs)
 
-class Articulos(models.Model):
-    encabezado = models.ImageField(upload_to=set_imgBlog_path, max_length=120, blank=True, null=True)
-    titulo = models.CharField(max_length=200)
-    contenido = models.TextField()
-    autor = models.CharField(max_length=100)
-    creacion = models.DateField(auto_now_add=True)
-    actualizacion = models.DateField(auto_now=True, blank=True, null=True)
-    
-    def __str__(self):
-        return self.titulo
-    
-    def delete(self, *args, **kwargs):
-        if self.encabezado:
-            self.encabezado.delete()
-        super(Articulos, self).delete(*args, **kwargs)
-
 class Mapa(models.Model):
     uuid = models.CharField(max_length=25)
     nombre = models.CharField(max_length=200)
@@ -214,12 +198,10 @@ def delete_files(instance, fields):
 
 # Señal para eliminar archivos antes de eliminar el objeto
 @receiver(pre_delete, sender=Database)
-@receiver(pre_delete, sender=Articulos)
 @receiver(pre_delete, sender=galeria)
 def delete_files_on_object_delete(sender, instance, **kwargs):
     fields_to_delete = {
         Database: ['imagen', 'documento'],
-        Articulos: ['encabezado'],
         galeria: ['imagen'],
     }
     delete_files(instance, fields_to_delete[sender])
