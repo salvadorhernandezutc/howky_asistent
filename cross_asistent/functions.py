@@ -1,23 +1,27 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError, transaction
+from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.utils import timezone
+from functools import wraps
 from . import models
 import datetime
 import json
-import os
-import environ
-env = environ.Env()
-environ.Env.read_env()
-from django.conf import settings
-from cryptography.fernet import Fernet
 
-ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
+# Decorador de Accesos ----------------------------------------------------------
+def access_required(group_name):
+    def decorator(view_func):
+        @wraps(view_func)
+        @login_required
+        def _wrapped_view(request, *args, **kwargs):
+            if request.user.is_superuser and request.user.groups.filter(name=group_name).exists():
+                return view_func(request, *args, **kwargs)
+            return redirect('singout')
+        return _wrapped_view
+    return decorator
 
 # Plantilla links programador / administrador ----------------------------------------------------------
 pages = [
@@ -168,7 +172,6 @@ def editar_usuario(request, user_id):
             
         return JsonResponse({'success': True, 'message': messagereturn}, status=200)
     return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=403)
-
 
 # Categorias ----------------------------------------------------------
 @login_required

@@ -7,8 +7,6 @@ window.addEventListener("load", () => {
     const formRoute = document.querySelector("#form_route");
     const selectOrigin = formRoute.querySelector("#origen");
     const selectDestiny = formRoute.querySelector("#destino");
-    // const resetRoutBtn = formRoute.querySelector("[data-reset_form]");
-    // const delRoutBtn = formRoute.querySelector("[data-del_route]");
     let colorlabels = "#000";
     let offcanvasOpen = false;
     let formChanges = false;
@@ -856,6 +854,44 @@ window.addEventListener("load", () => {
                     currentRoute = mapMapbox.getSource("directions")._data;
                 }
             }
+            function getParamsFromURL() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    origin: params.get("origin"),
+                    destiny: params.get("destiny"),
+                };
+            }
+
+            const { origin, destiny } = getParamsFromURL();
+            if (origin && destiny && origin !== destiny) {
+                // alertSToast("center", 8000, "info", `${origin}  /  ${destiny}`);
+                const origenFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === origen);
+                const destiFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === destino);
+
+                alertSToast("center", 8000, "info", `${origenFeature}  /  ${destiFeature}`);
+
+                if (origenFeature && destiFeature) {
+                    selectDestiny.querySelectorAll("option").forEach((option) => {
+                        option.disabled = option.value === origin;
+                    });
+                    selectOrigin.querySelectorAll("option").forEach((option) => {
+                        option.disabled = option.value === destiny;
+                    });
+
+                    const originOption = selectOrigin.querySelector(`option[value="${origin}"]`);
+                    if (originOption) {
+                        originOption.selected = true;
+                        selectOrigin.dispatchEvent(new Event("change"));
+                    }
+                    const destinyOption = selectDestiny.querySelector(`option[value="${destiny}"]`);
+                    if (destinyOption) {
+                        destinyOption.selected = true;
+                        selectDestiny.dispatchEvent(new Event("change"));
+                    }
+
+                    calcularRuta();
+                }
+            }
 
             mapMapbox.on("load", function () {
                 createEdificios();
@@ -1027,11 +1063,7 @@ window.addEventListener("load", () => {
             selectOrigin.addEventListener("change", function () {
                 const seleccionOrigen = this.value;
                 selectDestiny.querySelectorAll("option").forEach((option) => {
-                    if (option.value === seleccionOrigen) {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
+                    option.disabled = option.value === seleccionOrigen;
                 });
 
                 if (document.getElementById("destino").value) {
@@ -1041,11 +1073,7 @@ window.addEventListener("load", () => {
             selectDestiny.addEventListener("change", function () {
                 const seleccionDestino = this.value;
                 selectOrigin.querySelectorAll("option").forEach((option) => {
-                    if (option.value === seleccionDestino) {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
+                    option.disabled = option.value === seleccionDestino;
                 });
 
                 if (document.getElementById("origen").value) {
