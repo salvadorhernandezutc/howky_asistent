@@ -7,8 +7,8 @@ window.addEventListener("load", () => {
     const formRoute = document.querySelector("#form_route");
     const selectOrigin = formRoute.querySelector("#origen");
     const selectDestiny = formRoute.querySelector("#destino");
-    const resetRoutBtn = formRoute.querySelector("[data-reset_form]");
-    const delRoutBtn = formRoute.querySelector("[data-del_route]");
+    // const resetRoutBtn = formRoute.querySelector("[data-reset_form]");
+    // const delRoutBtn = formRoute.querySelector("[data-del_route]");
     let colorlabels = "#000";
     let offcanvasOpen = false;
     let formChanges = false;
@@ -952,56 +952,56 @@ window.addEventListener("load", () => {
                     setColorInput();
 
                     // Galeria #############################################
-                    if (window.innerWidth <= 800) {
-                        setTimeout(() => {
-                            var canvasGalery = document.getElementById("pleaceGalery");
-                            var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                            if (bsOffcanvasGalery) {
-                                bsOffcanvasGalery.hide();
-                            }
-                        }, 100);
-                    }
+                    // if (window.innerWidth <= 800) {
+                    //     setTimeout(() => {
+                    //         var canvasGalery = document.getElementById("pleaceGalery");
+                    //         var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
+                    //         if (bsOffcanvasGalery) {
+                    //             bsOffcanvasGalery.hide();
+                    //         }
+                    //     }, 100);
+                    // }
 
-                    const imageListGalery = document.getElementById("image-list-galery");
-                    const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
-                    document.getElementById("image-list").innerHTML = "";
-                    imageListGalery.innerHTML = "";
+                    // const imageListGalery = document.getElementById("image-list-galery");
+                    // const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
+                    // document.getElementById("image-list").innerHTML = "";
+                    // imageListGalery.innerHTML = "";
 
-                    galeryObj.forEach((item) => {
-                        const imgFile = item.imagen;
-                        let imgName = imgFile.replace("/media/imagenes/", "");
-                        imgName = imgName.split(".");
+                    // galeryObj.forEach((item) => {
+                    //     const imgFile = item.imagen;
+                    //     let imgName = imgFile.replace("/media/imagenes/", "");
+                    //     imgName = imgName.split(".");
 
-                        const imageItemGalery = `<div id="img_galery_${
-                            item.id
-                        }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
-                            imgName[1]
-                        }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
-                            item.id
-                        }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
-                            item.id
-                        }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
-                        imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
+                    //     const imageItemGalery = `<div id="img_galery_${
+                    //         item.id
+                    //     }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
+                    //         imgName[1]
+                    //     }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
+                    //         item.id
+                    //     }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
+                    //         item.id
+                    //     }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
+                    //     imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
 
-                        const thisItem = document.querySelector(`#img_galery_${item.id}`);
-                        const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
-                        const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
+                    //     const thisItem = document.querySelector(`#img_galery_${item.id}`);
+                    //     const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
+                    //     const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
 
-                        setTimeout(() => {
-                            thisItem.classList.add("visible");
-                            setTimeout(() => {
-                                thisItemImg.classList.remove("unfocus-5");
-                            }, item.id * 40);
-                        }, item.id * 20);
+                    //     setTimeout(() => {
+                    //         thisItem.classList.add("visible");
+                    //         setTimeout(() => {
+                    //             thisItemImg.classList.remove("unfocus-5");
+                    //         }, item.id * 40);
+                    //     }, item.id * 20);
 
-                        delGaleryButton.addEventListener("click", () => {
-                            thisItem.classList.remove("visible");
-                            setTimeout(() => {
-                                thisItem.remove();
-                            }, 1000);
-                        });
-                    });
-                    $("[data-submit-galery]").submit(jsonSubmit);
+                    //     delGaleryButton.addEventListener("click", () => {
+                    //         thisItem.classList.remove("visible");
+                    //         setTimeout(() => {
+                    //             thisItem.remove();
+                    //         }, 1000);
+                    //     });
+                    // });
+                    // $("[data-submit-galery]").submit(jsonSubmit);
                 }
 
                 offcanvasInstance.show();

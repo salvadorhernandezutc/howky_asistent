@@ -9,7 +9,7 @@
 {% include 'base/widget_links-admin.html' with pages=pages %}
 {% endblock %}
 {% block content %}
-<main class="container container-fluid pt-4 pb-5 {% if not user.is_authenticated %}main_container{% endif %}">
+<main class="container container-fluid pt-4 pb-5">
   <section class="row">
     <!-- targetas de totales -->
       <div class="row pe-0">
@@ -580,33 +580,6 @@
               <div id="flush-collapseImport" class="accordion-collapse collapse" aria-labelledby="flush-headingimport" data-mdb-parent="#settingsAccordion">
                 <div class="accordion-body px-1 pb-0">
                   <div class="row px-0">
-                    <!-- Articulos -->
-                    <div class="col-12 col-md-6 mt-4 mt-lg-0">
-                      <div class="card">
-                        <div class="card-body">
-                          <h3 class="text-center">Articulos</h3>
-                          <hr class="hr_divisor my-4 bg_detail">
-                          <form method="POST" enctype="multipart/form-data" action="{% url 'import_articulos' %}" data-submit-form>
-                            {% csrf_token %}
-                            <input type="file" name="file" accept=".csv" class="form-control">
-                            <div class="row">
-                              <div class="col-12 col-lg order-2 order-lg-1 mt-3">
-                                <button type="button" class="btn btn-secondary btn-block" data-transfer-click="ArticleDownload">
-                                  <i class="fa-solid fa-cloud-arrow-down"></i> Descargar CSV
-                                </button>
-                              </div>
-                              <div class="col-12 col-lg order-1 order-lg-2 mt-3">
-                                <button type="submit" class="btn btn_detail btn-block">Enviar CSV <i class="fa-solid fa-cloud-arrow-up"></i></button>
-                              </div>
-                            </div>
-                          </form>
-
-                          <form action="{% url 'export_articulos' %}" method="get" class="d-none">
-                            <button type="submit" id="ArticleDownload">Descargar</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
                     <!-- Preguntas Enviadas -->
                     <div class="col-12 col-md-6 mt-4">
                       <div class="card">

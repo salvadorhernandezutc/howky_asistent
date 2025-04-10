@@ -485,11 +485,6 @@ $(document).ready(function () {
 // #################################### Funciones JAVASCRIPT ####################################
 // ##############################################################################################
 
-// Cerrar la sesion ##########################################################
-if (document.querySelector("main").classList.contains("main_container")) {
-    window.location.href = "/logout";
-}
-
 // Crear cadena de caracteres random ###############################3
 function cadenaRandom(longitud, caracteres) {
     var cadenaAleatoria = "";
