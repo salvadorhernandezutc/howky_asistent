@@ -11,7 +11,7 @@ import json
 import re
 
 def tokenize_and_clean(text):
-    allowed_words = {'más', 'una', 'un', 'como'}
+    allowed_words = {'más', 'una', 'un', 'como', 'que', 'qué'}
     stop_words = set(stopwords.words('spanish'))
 
     tokens = re.findall(r'\b\w+\b', text.lower())

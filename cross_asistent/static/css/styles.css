@@ -27,13 +27,6 @@
     /* Colorxd */
     --whiteA: rgba(255, 255, 255, 0);
     --whiteA1: rgba(255, 255, 255, 0.1);
-    --whiteA2: rgba(255, 255, 255, 0.2);
-    --whiteA3: rgba(255, 255, 255, 0.3);
-    --whiteA4: rgba(255, 255, 255, 0.4);
-    --whiteA5: rgba(255, 255, 255, 0.5);
-    --whiteA6: rgba(255, 255, 255, 0.6);
-    --whiteA7: rgba(255, 255, 255, 0.7);
-    --whiteA8: rgba(255, 255, 255, 0.8);
     --whiteA9: rgba(255, 255, 255, 0.9);
 
     /* Color white transparent-> "alpha chanel" */
@@ -44,13 +37,7 @@
     --darkA4: rgba(0, 0, 0, 0.4);
     --darkA5: rgba(0, 0, 0, 0.5);
     --darkA6: rgba(0, 0, 0, 0.6);
-    --darkA7: rgba(0, 0, 0, 0.7);
     --darkA8: rgba(0, 0, 0, 0.8);
-    --darkA9: rgba(0, 0, 0, 0.9);
-
-    /* font */
-    --ft1: Century Gothic, Helvetica, sans-serif;
-    --ft2: "Comfortaa", Helvetica, sans-serif;
 
     /* Transitions */
     --transitionEase: 0.3s all ease;
@@ -166,7 +153,7 @@ html,
 body {
     min-height: 100vh;
     width: 100%;
-    font-family: var(--ft2);
+    font-family: "Comfortaa", Helvetica, sans-serif;
     scroll-behavior: smooth;
     position: relative;
     overflow-x: hidden !important;
@@ -678,13 +665,11 @@ main.main_anchor {
 .asistent_group.open {
     z-index: 2;
     height: var(--full_page);
-    background: var(--mdb-body-bg);
 }
 
 .full_screen .asistent_group.open {
     z-index: 2;
     height: inherit;
-    background: var(--mdb-body-bg);
 }
 
 .asistent_group .box_asistent {
@@ -696,6 +681,9 @@ main.main_anchor {
 }
 
 .asistent_group .box_asistent #asistent_model {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 90%;
     transition: all 0.5s ease;
@@ -947,7 +935,6 @@ main.main_anchor {
     display: grid !important;
     grid-template-rows: repeat(var(--grid-row), 1fr);
     grid-template-columns: repeat(var(--grid-column), 1fr);
-    /*## Esto hace que los elementos llenen huecos automáticamente ##*/
     grid-auto-flow: row dense;
     transition: 0.3s ease;
     transition-delay: 0s;
@@ -982,14 +969,14 @@ main.main_anchor {
 }
 
 @media (min-width: 992px) {
-    .asistent_group {
+    /* .asistent_group {
         width: 40vw;
         height: 70vh;
     }
 
     .asistent_group.open {
         width: 100vw;
-    }
+    } */
 
     .asistent_group .box_asistent {
         justify-content: flex-end;
@@ -999,8 +986,8 @@ main.main_anchor {
         position: absolute;
         left: 5%;
         width: 20vw;
-        bottom: 3vh;
-        height: 20vh;
+        bottom: 4vh;
+        height: 16vh;
         margin-bottom: 0;
         visibility: visible;
         opacity: 1;

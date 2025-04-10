@@ -65,8 +65,8 @@ $(document).ready(function () {
                 modelViewer.attr("environment-image", "");
                 modelViewer.attr("skybox-image", "");
             } else {
-                $("#changeScene").removeClass("none").css("--delay", "3");
-                $("#floatSettings").removeClass("none").css("--delay", "3");
+                $("#changeScene").removeClass("none").css("--delay", "1");
+                $("#floatSettings").removeClass("none").css("--delay", "1");
                 if (hdrSaved != "") {
                     modelViewer.attr("environment-image", `/media/hdri/${hdrSaved}.hdr`);
                     modelViewer.attr("skybox-image", `/media/hdri/${hdrSaved}.hdr`);
@@ -95,11 +95,16 @@ $(document).ready(function () {
 
         // Posicion de controles del asistente ######################################
         const verticalCtrlsCheckbox = $("#vesticalCtrls");
-        const boxControls = $(".box_asistent_controls");
+        const boxControls = $("#asistentNavigation");
 
-        const isVertical = localStorage.getItem("Vertical-controls") === "true";
-        boxControls.toggleClass("controls_vertical", isVertical);
-        verticalCtrlsCheckbox.prop("checked", isVertical);
+        const isVertical = localStorage.getItem("Vertical-controls");
+        if (isVertical === "true") {
+            verticalCtrlsCheckbox.prop("checked", "checked");
+            boxControls.addClass("controls_vertical");
+        } else if (isVertical === "false") {
+            verticalCtrlsCheckbox.prop("checked", "");
+            boxControls.removeClass("controls_vertical");
+        }
 
         verticalCtrlsCheckbox.on("click", function () {
             const isChecked = verticalCtrlsCheckbox.is(":checked");

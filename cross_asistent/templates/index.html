@@ -5,15 +5,6 @@
 <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
 <script type="module" src="{% static 'js/model-viewer.min.js' %}"></script>
 {% endblock %}
-{% block toggleMenu %} <span></span> {% endblock %}
-{% block link_default %} <span></span> {% endblock %}
-{% block qrBTN %}
-{% if btn_qr %}
-<button type="button" class="btn btn_detail btn-floating p-0 me-2 me-md-0 ms-md-2" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#modalqr">
-    <i class="fa-solid fa-qrcode fs-14"></i>
-</button>
-{% endif %}
-{% endblock %}
 
 {% block navbar %}
 <!-- Index Sin Navbar -->
@@ -31,16 +22,16 @@
                 <!-- Audio y animacion -->
                 <div class="box_asistent_controls controls_vertical-left controls_hide">
                     <div class="d-flex flex-column gap_10 pop_buttons">
-                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="floatSettings" title="Cambiar Esena" style="--delay:5;" data-mdb-modal-init data-mdb-target="#configModal">
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="floatSettings" title="Cambiar Esena" style="--delay:5;" data-mdb-modal-init data-mdb-target="#configModal">
                             <i class="fa-solid fa-gear fs-20"></i>
                         </button>
-                        <button class="btn bg_blue-green btn-floating p-4 speak_btn text-white" style="--delay:6;">
+                        <button class="btn btn_detail btn-floating p-4 speak_btn text-white" style="--delay:6;">
                             <i class="fa-solid fa-volume-high fs-15"></i>
                         </button>
-                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="pauseAnim" title="Pausar Animacion" style="--delay:7;">
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="pauseAnim" title="Pausar Animacion" style="--delay:7;">
                             <i class="fa-regular fa-circle-pause fs-20"></i>
                         </button>
-                        <button class="btn bg_blue-green btn-floating p-4 text-white" id="changeScene" title="Cambiar Esena" style="--delay:8;">
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="changeScene" title="Cambiar Esena" style="--delay:8;">
                             <i class="fa-solid fa-earth-africa fs-20"></i>
                         </button>
                     </div>
@@ -48,7 +39,7 @@
             </model-viewer>
             <!-- camera-controls -->
             <!-- Controles iniciales -->
-            <div class="box_asistent_controls">
+            <div class="box_asistent_controls controls_vertical" id="asistentNavigation">
                 <div class="controls_buttons">
                     <button type="button" class="btn btn_controls text-white toggle_controls">
                         <i class="fa-regular fa-keyboard"></i>
@@ -113,7 +104,7 @@
     </div>
 </div>
 <div class="mt-4">
-    <input class="form-check-input" type="checkbox" id="vesticalCtrls" />
+    <input class="form-check-input" type="checkbox" id="vesticalCtrls" checked />
     <label class="form-check-label" for="vesticalCtrls">Controles en Vertical</label>
 </div>
 {% endblock %}

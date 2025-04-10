@@ -44,12 +44,9 @@ $(document).ready(function () {
     });
 
     const hdrSaved = localStorage.getItem("model_hdr");
-    if (hdrSaved != "") {
+    if (hdrSaved) {        
         modelViewer.attr("environment-image", `/media/hdri/${hdrSaved}.hdr`);
         modelViewer.attr("skybox-image", `/media/hdri/${hdrSaved}.hdr`);
-    } else {
-        modelViewer.attr("environment-image", "");
-        modelViewer.attr("skybox-image", "");
     }
 
     // Pausar modelo #########################################
