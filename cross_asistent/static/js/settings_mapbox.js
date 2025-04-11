@@ -31,6 +31,15 @@ window.addEventListener("load", () => {
         ],
     });
 
+    // Controles de localizacion ########################################
+    const locateUser = new mapboxgl.GeolocateControl({
+        positionOPtions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+        ShowUserHeading: true,
+    });
+
+    mapMapbox.addControl(locateUser);
+
     // Cambiar Estilo con switch de tema ######################################
     $("#switchTheme").click(function () {
         if ($("#switchTheme").is(":checked")) {
@@ -1253,6 +1262,11 @@ window.addEventListener("load", () => {
                 $("#route-info").slideUp("slow", () => {
                     $("#route-info").empty();
                 });
+
+                const params = new URLSearchParams(window.location.search);
+                params.delete("origin");
+                params.delete("destiny");
+                history.replaceState({}, "", `${location.pathname}?${params.toString()}`);
             });
         })
         .catch((error) => {
