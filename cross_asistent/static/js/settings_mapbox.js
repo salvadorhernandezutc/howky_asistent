@@ -447,15 +447,6 @@ window.addEventListener("load", () => {
         $("[data-namePleace]").text("");
     });
 
-    // Controles de localizacion ########################################
-    const locateUser = new mapboxgl.GeolocateControl({
-        positionOPtions: { enableHighAccuracy: true },
-        trackUserLocation: true,
-        ShowUserHeading: true,
-    });
-
-    mapMapbox.addControl(locateUser);
-
     // Crear nuevo menu de botones personalizados ########################################
     mapMapbox.addControl(new mapboxgl.NavigationControl());
     class CustomControl {
@@ -594,12 +585,188 @@ window.addEventListener("load", () => {
         controls: {
             inputs: false,
             instructions: false,
-            language: "es",
             profileSwitcher: false,
         },
         alternatives: true,
         interactive: false,
     });
+    function saveRouteLayers() {
+        if (mapMapbox.getSource("directions")) {
+            currentRoute = mapMapbox.getSource("directions")._data;
+        }
+    }
+
+    // Agregar nuevo menu
+    mapMapbox.addControl(new CustomControl(), "top-right");
+
+    // Cursor segun el evento ###########################################
+    mapMapbox.getCanvas().style.cursor = "default";
+    function setCursor(cursorStyle) {
+        mapMapbox.getCanvas().style.cursor = cursorStyle;
+    }
+
+    mapMapbox.on("dragstart", () => setCursor("move"));
+    mapMapbox.on("dragend", () => setCursor("default"));
+    mapMapbox.on("mousedown", () => setCursor("pointer"));
+    mapMapbox.on("mouseup", () => setCursor("default"));
+    mapMapbox.on("mouseover", () => setCursor("default"));
+
+    // Agregar marcador al hacer click cuando se es usuario y no es editor #################################################
+    function addMarkerToMap(lngLat) {
+        if (currentMarker) {
+            currentMarker.remove();
+        }
+        let savedColor = localStorage.getItem("data-color_rgb");
+        currentMarker = new mapboxgl.Marker({
+            color: savedColor || "#3b71ca",
+            draggable: false,
+        })
+            .setLngLat(lngLat)
+            .addTo(mapMapbox);
+    }
+    if (mapElement.classList.contains("map_user")) {
+        mapMapbox.on("click", function (e) {
+            const lngLat = e.lngLat;
+            addMarkerToMap(lngLat);
+        });
+    }
+
+    // Cambiar estilo del mapa ########################################################
+    inputsLayer.forEach((input) => {
+        input.addEventListener("click", function (layer) {
+            const layerId = layer.target.id;
+            updateLabelsAndInputs(layerId);
+            saveRouteLayers();
+
+            setMapStyle(layerId);
+        });
+    });
+
+    // Cargar datos de Marcadores ####################
+    const dataMarkers = document.querySelector("#map").getAttribute("data-mapa_markers");
+    fetch(dataMarkers)
+        .then((response) => response.json())
+        .then((data) => {
+            function createMarkers() {
+                data.forEach((item) => {
+                    const nameImage = item.nombre.replace(" ", "");
+
+                    if (!mapMapbox.getSource(item.uuid)) {
+                        mapMapbox.addSource(item.uuid, {
+                            type: "geojson",
+                            data: {
+                                type: "FeatureCollection",
+                                features: [
+                                    {
+                                        type: "Feature",
+                                        properties: {
+                                            uuid: item.uuid,
+                                            nombre: item.nombre,
+                                            imagen: item.imagen,
+                                            ismarker: item.ismarker,
+                                            icon_size: item.icon_size,
+                                            sizemarker: item.sizemarker,
+                                            edges: [[item.edges[0], item.edges[1], item.edges[2], item.edges[3]]],
+                                        },
+                                        geometry: {
+                                            type: "Point",
+                                            coordinates: item.door_coords,
+                                        },
+                                    },
+                                ],
+                            },
+                        });
+                    }
+
+                    if (!mapMapbox.hasImage(nameImage)) {
+                        mapMapbox.loadImage(item.imagen, (error, image) => {
+                            if (error) throw error;
+                            mapMapbox.addImage(nameImage, image);
+                        });
+                    }
+
+                    if (!mapMapbox.getLayer(`points${nameImage}`)) {
+                        mapMapbox.addLayer({
+                            id: `points${nameImage}`,
+                            type: "symbol",
+                            source: item.uuid,
+                            layout: {
+                                "icon-image": nameImage,
+                                "icon-size": item.icon_size,
+                                "icon-allow-overlap": true,
+                            },
+                        });
+                        // mapMapbox.moveLayer("places-label", `points${nameImage}`);
+                    }
+                });
+            }
+            mapMapbox.on("load", () => {
+                createMarkers();
+            });
+            mapMapbox.on("style.load", () => {
+                createMarkers();
+            });
+            mapMapbox.on("click", (e) => {
+                if (mapElement.classList.contains("map_editing")) {
+                    const features = mapMapbox.queryRenderedFeatures(e.point, {
+                        layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
+                    });
+
+                    if (features.length) {
+                        const feature = features[0];
+                        const { nombre, imagen, uuid, ismarker, icon_size, edges } = feature.properties;
+                        const coordinates = feature.geometry.coordinates.slice();
+
+                        const offcanvasContent = document.getElementById("offcanvasContent");
+                        document.getElementById("imagen_actual").src = imagen;
+
+                        $("#btnDeletedPleace").show();
+                        $("[data-namePleace]").text(nombre);
+
+                        offcanvasContent.querySelector("#isNewEdif").value = "notnew";
+
+                        if (ismarker) {
+                            $("#ismarker").val("True");
+                            $("#checkIsmarker").attr("checked", "checked");
+                            $("#sizemarkerdiv").slideDown("fast");
+                            $("[data-notmarker]").slideUp();
+                            $('[for="puertaCordsEdificio"]').text("Ubicacion:");
+                        } else {
+                            $("#ismarker").val("False");
+                            $("#checkIsmarker").removeAttr("checked");
+                        }
+
+                        $("#hidename").slideUp();
+                        $("[data-uuid]").addClass("active").val(uuid);
+                        $("#nombreEdificio").addClass("active").val(nombre);
+                        $("#sizemarker").addClass("active").val(icon_size);
+                        $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
+
+                        $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
+                        $("#fotoEdificio").attr("required", false);
+
+                        $("#esquina1").addClass("active").val(edges[0]);
+                        $("#esquina2").addClass("active").val(edges[1]);
+                        $("#esquina3").addClass("active").val(edges[2]);
+                        $("#esquina4").addClass("active").val(edges[3]);
+
+                        var canvasGalery = document.getElementById("pleaceGalery");
+                        var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
+                        if (bsOffcanvasGalery) {
+                            bsOffcanvasGalery.hide();
+                        }
+
+                        offcanvasInstance.show();
+                        offcanvasOpen = true;
+                    }
+                }
+            });
+        })
+        .catch((error) => {
+            console.error("Error al obtener Marcadores del mapa:");
+            console.error(error);
+            alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
+        });
 
     // Cargar datos de lugares ##################################################################
     const dataPleaces = document.querySelector("#map").getAttribute("data-mapa_edif");
@@ -667,18 +834,6 @@ window.addEventListener("load", () => {
                     });
                     mapMapbox.moveLayer("places-label");
                 }
-            }
-            function createMarker(lngLat) {
-                if (currentMarker) {
-                    currentMarker.remove();
-                }
-                let savedColor = localStorage.getItem("data-color_rgb");
-                currentMarker = new mapboxgl.Marker({
-                    color: savedColor || "#3b71ca",
-                    draggable: false,
-                })
-                    .setLngLat(lngLat)
-                    .addTo(mapMapbox);
             }
             function calcularRuta() {
                 const origen = selectOrigin.value;
@@ -849,49 +1004,6 @@ window.addEventListener("load", () => {
                     mapMapbox.moveLayer("places-label");
                 }
             }
-            function saveRouteLayers() {
-                if (mapMapbox.getSource("directions")) {
-                    currentRoute = mapMapbox.getSource("directions")._data;
-                }
-            }
-            function getParamsFromURL() {
-                const params = new URLSearchParams(window.location.search);
-                return {
-                    origin: params.get("origin"),
-                    destiny: params.get("destiny"),
-                };
-            }
-
-            const { origin, destiny } = getParamsFromURL();
-            if (origin && destiny && origin !== destiny) {
-                // alertSToast("center", 8000, "info", `${origin}  /  ${destiny}`);
-                const origenFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === origen);
-                const destiFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === destino);
-
-                alertSToast("center", 8000, "info", `${origenFeature}  /  ${destiFeature}`);
-
-                if (origenFeature && destiFeature) {
-                    selectDestiny.querySelectorAll("option").forEach((option) => {
-                        option.disabled = option.value === origin;
-                    });
-                    selectOrigin.querySelectorAll("option").forEach((option) => {
-                        option.disabled = option.value === destiny;
-                    });
-
-                    const originOption = selectOrigin.querySelector(`option[value="${origin}"]`);
-                    if (originOption) {
-                        originOption.selected = true;
-                        selectOrigin.dispatchEvent(new Event("change"));
-                    }
-                    const destinyOption = selectDestiny.querySelector(`option[value="${destiny}"]`);
-                    if (destinyOption) {
-                        destinyOption.selected = true;
-                        selectDestiny.dispatchEvent(new Event("change"));
-                    }
-
-                    calcularRuta();
-                }
-            }
 
             mapMapbox.on("load", function () {
                 createEdificios();
@@ -901,19 +1013,12 @@ window.addEventListener("load", () => {
                 addRouteLayer();
             });
 
-            if (mapElement.classList.contains("map_user")) {
-                mapMapbox.on("click", function (e) {
-                    const lngLat = e.lngLat;
-                    createMarker(lngLat);
-                });
-            }
-
             // Abrir offcanvas: Informacion del edificio
             mapMapbox.on("click", "places-layer", (e) => {
                 const feature = e.features[0];
                 const { nombre, informacion, imagen_url, galery_count, galery_items } = feature.properties;
                 const { coordinates } = feature.geometry;
-                let galeryObj = JSON.parse(galery_items);
+                // let galeryObj = JSON.parse(galery_items);
 
                 const offcanvasContent = document.getElementById("offcanvasContent");
                 document.getElementById("imagen_actual").src = `/media/${imagen_url}`;
@@ -922,21 +1027,21 @@ window.addEventListener("load", () => {
                     document.getElementById("lateralTitle").innerText = nombre;
                     offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
 
-                    const imageGaleryCont = document.getElementById("offcanvasGalery");
-                    imageGaleryCont.innerHTML = "";
+                    // const imageGaleryCont = document.getElementById("offcanvasGalery");
+                    // imageGaleryCont.innerHTML = "";
 
-                    galeryObj.forEach((item) => {
-                        const imageGalery = `<img loading="lazy" src="${item.imagen}" id="img_${item.id}" class="img-fluid img-rounded unfocus-4 none">`;
-                        imageGaleryCont.insertAdjacentHTML("beforeend", imageGalery);
-                        const thisItem = $(`#img_${item.id}`);
+                    // galeryObj.forEach((item) => {
+                    //     const imageGalery = `<img loading="lazy" src="${item.imagen}" id="img_${item.id}" class="img-fluid img-rounded unfocus-4 none">`;
+                    //     imageGaleryCont.insertAdjacentHTML("beforeend", imageGalery);
+                    //     const thisItem = $(`#img_${item.id}`);
 
-                        setTimeout(() => {
-                            thisItem.slideDown();
-                            setTimeout(() => {
-                                thisItem.removeClass("unfocus-4");
-                            }, item.id * 40);
-                        }, item.id * 20);
-                    });
+                    //     setTimeout(() => {
+                    //         thisItem.slideDown();
+                    //         setTimeout(() => {
+                    //             thisItem.removeClass("unfocus-4");
+                    //         }, item.id * 40);
+                    //     }, item.id * 20);
+                    // });
                 } else if (mapElement.classList.contains("map_editing")) {
                     $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
                     $(".error.bg-danger").slideUp("fast");
@@ -987,72 +1092,63 @@ window.addEventListener("load", () => {
                     tinymce.get("textTiny").setContent(informacion);
                     setColorInput();
 
-                    // Galeria #############################################
-                    // if (window.innerWidth <= 800) {
-                    //     setTimeout(() => {
-                    //         var canvasGalery = document.getElementById("pleaceGalery");
-                    //         var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                    //         if (bsOffcanvasGalery) {
-                    //             bsOffcanvasGalery.hide();
-                    //         }
-                    //     }, 100);
-                    // }
+                //     // Galeria #############################################
+                //     if (window.innerWidth <= 800) {
+                //         setTimeout(() => {
+                //             var canvasGalery = document.getElementById("pleaceGalery");
+                //             var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
+                //             if (bsOffcanvasGalery) {
+                //                 bsOffcanvasGalery.hide();
+                //             }
+                //         }, 100);
+                //     }
 
-                    // const imageListGalery = document.getElementById("image-list-galery");
-                    // const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
-                    // document.getElementById("image-list").innerHTML = "";
-                    // imageListGalery.innerHTML = "";
+                //     const imageListGalery = document.getElementById("image-list-galery");
+                //     const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
+                //     document.getElementById("image-list").innerHTML = "";
+                //     imageListGalery.innerHTML = "";
 
-                    // galeryObj.forEach((item) => {
-                    //     const imgFile = item.imagen;
-                    //     let imgName = imgFile.replace("/media/imagenes/", "");
-                    //     imgName = imgName.split(".");
+                //     galeryObj.forEach((item) => {
+                //         const imgFile = item.imagen;
+                //         let imgName = imgFile.replace("/media/imagenes/", "");
+                //         imgName = imgName.split(".");
 
-                    //     const imageItemGalery = `<div id="img_galery_${
-                    //         item.id
-                    //     }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
-                    //         imgName[1]
-                    //     }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
-                    //         item.id
-                    //     }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
-                    //         item.id
-                    //     }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
-                    //     imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
+                //         const imageItemGalery = `<div id="img_galery_${
+                //             item.id
+                //         }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
+                //             imgName[1]
+                //         }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
+                //             item.id
+                //         }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
+                //             item.id
+                //         }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
+                //         imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
 
-                    //     const thisItem = document.querySelector(`#img_galery_${item.id}`);
-                    //     const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
-                    //     const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
+                //         const thisItem = document.querySelector(`#img_galery_${item.id}`);
+                //         const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
+                //         const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
 
-                    //     setTimeout(() => {
-                    //         thisItem.classList.add("visible");
-                    //         setTimeout(() => {
-                    //             thisItemImg.classList.remove("unfocus-5");
-                    //         }, item.id * 40);
-                    //     }, item.id * 20);
+                //         setTimeout(() => {
+                //             thisItem.classList.add("visible");
+                //             setTimeout(() => {
+                //                 thisItemImg.classList.remove("unfocus-5");
+                //             }, item.id * 40);
+                //         }, item.id * 20);
 
-                    //     delGaleryButton.addEventListener("click", () => {
-                    //         thisItem.classList.remove("visible");
-                    //         setTimeout(() => {
-                    //             thisItem.remove();
-                    //         }, 1000);
-                    //     });
-                    // });
-                    // $("[data-submit-galery]").submit(jsonSubmit);
+                //         delGaleryButton.addEventListener("click", () => {
+                //             thisItem.classList.remove("visible");
+                //             setTimeout(() => {
+                //                 thisItem.remove();
+                //             }, 1000);
+                //         });
+                //     });
+                //     $("[data-submit-galery]").submit(jsonSubmit);
                 }
 
                 offcanvasInstance.show();
                 offcanvasOpen = true;
             });
 
-            inputsLayer.forEach((input) => {
-                input.addEventListener("click", function (layer) {
-                    const layerId = layer.target.id;
-                    updateLabelsAndInputs(layerId);
-                    saveRouteLayers();
-
-                    setMapStyle(layerId);
-                });
-            });
             const nombresEdificios = geojsonEdificios.features.map((feature) => feature.properties.nombre).sort();
             nombresEdificios.forEach((nombre) => {
                 const option = new Option(nombre, nombre);
@@ -1063,7 +1159,11 @@ window.addEventListener("load", () => {
             selectOrigin.addEventListener("change", function () {
                 const seleccionOrigen = this.value;
                 selectDestiny.querySelectorAll("option").forEach((option) => {
-                    option.disabled = option.value === seleccionOrigen;
+                    if (option.value === seleccionOrigen) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
                 });
 
                 if (document.getElementById("destino").value) {
@@ -1073,7 +1173,11 @@ window.addEventListener("load", () => {
             selectDestiny.addEventListener("change", function () {
                 const seleccionDestino = this.value;
                 selectOrigin.querySelectorAll("option").forEach((option) => {
-                    option.disabled = option.value === seleccionDestino;
+                    if (option.value === seleccionDestino) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
                 });
 
                 if (document.getElementById("origen").value) {
@@ -1122,145 +1226,4 @@ window.addEventListener("load", () => {
             console.error(error);
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
-
-    // Cargar datos de Marcadores ####################
-    const dataMarkers = document.querySelector("#map").getAttribute("data-mapa_markers");
-    fetch(dataMarkers)
-        .then((response) => response.json())
-        .then((data) => {
-            function createMarkers() {
-                data.forEach((item) => {
-                    const nameImage = item.nombre.replace(" ", "");
-
-                    if (!mapMapbox.getSource(item.uuid)) {
-                        mapMapbox.addSource(item.uuid, {
-                            type: "geojson",
-                            data: {
-                                type: "FeatureCollection",
-                                features: [
-                                    {
-                                        type: "Feature",
-                                        properties: {
-                                            uuid: item.uuid,
-                                            nombre: item.nombre,
-                                            imagen: item.imagen,
-                                            ismarker: item.ismarker,
-                                            icon_size: item.icon_size,
-                                            sizemarker: item.sizemarker,
-                                            edges: [[item.edges[0], item.edges[1], item.edges[2], item.edges[3]]],
-                                        },
-                                        geometry: {
-                                            type: "Point",
-                                            coordinates: item.door_coords,
-                                        },
-                                    },
-                                ],
-                            },
-                        });
-                    }
-
-                    if (!mapMapbox.hasImage(nameImage)) {
-                        mapMapbox.loadImage(item.imagen, (error, image) => {
-                            if (error) throw error;
-                            mapMapbox.addImage(nameImage, image);
-                        });
-                    }
-
-                    if (!mapMapbox.getLayer(`points${nameImage}`)) {
-                        mapMapbox.addLayer({
-                            id: `points${nameImage}`,
-                            type: "symbol",
-                            source: item.uuid,
-                            layout: {
-                                "icon-image": nameImage,
-                                "icon-size": item.icon_size,
-                                "icon-allow-overlap": true,
-                            },
-                        });
-                        // mapMapbox.moveLayer("places-label", `points${nameImage}`);
-                    }
-                });
-            }
-            mapMapbox.on("load", () => {
-                createMarkers();
-            });
-            mapMapbox.on("style.load", () => {
-                createMarkers();
-            });
-            mapMapbox.on("click", (e) => {
-                if (mapElement.classList.contains("map_editing")) {
-                    const features = mapMapbox.queryRenderedFeatures(e.point, {
-                        layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
-                    });
-
-                    if (features.length) {
-                        const feature = features[0];
-                        const { nombre, imagen, uuid, ismarker, icon_size, edges } = feature.properties;
-                        const coordinates = feature.geometry.coordinates.slice();
-
-                        const offcanvasContent = document.getElementById("offcanvasContent");
-                        document.getElementById("imagen_actual").src = imagen;
-
-                        $("#btnDeletedPleace").show();
-                        $("[data-namePleace]").text(nombre);
-
-                        offcanvasContent.querySelector("#isNewEdif").value = "notnew";
-
-                        if (ismarker) {
-                            $("#ismarker").val("True");
-                            $("#checkIsmarker").attr("checked", "checked");
-                            $("#sizemarkerdiv").slideDown("fast");
-                            $("[data-notmarker]").slideUp();
-                            $('[for="puertaCordsEdificio"]').text("Ubicacion:");
-                        } else {
-                            $("#ismarker").val("False");
-                            $("#checkIsmarker").removeAttr("checked");
-                        }
-
-                        $("#hidename").slideUp();
-                        $("[data-uuid]").addClass("active").val(uuid);
-                        $("#nombreEdificio").addClass("active").val(nombre);
-                        $("#sizemarker").addClass("active").val(icon_size);
-                        $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
-
-                        $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
-                        $("#fotoEdificio").attr("required", false);
-
-                        $("#esquina1").addClass("active").val(edges[0]);
-                        $("#esquina2").addClass("active").val(edges[1]);
-                        $("#esquina3").addClass("active").val(edges[2]);
-                        $("#esquina4").addClass("active").val(edges[3]);
-
-                        var canvasGalery = document.getElementById("pleaceGalery");
-                        var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                        if (bsOffcanvasGalery) {
-                            bsOffcanvasGalery.hide();
-                        }
-
-                        offcanvasInstance.show();
-                        offcanvasOpen = true;
-                    }
-                }
-            });
-        })
-        .catch((error) => {
-            console.error("Error al obtener Marcadores del mapa:");
-            console.error(error);
-            alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
-        });
-
-    // Agregar nuevo menu
-    mapMapbox.addControl(new CustomControl(), "top-right");
-
-    // Cursor segun el evento ###########################################
-    mapMapbox.getCanvas().style.cursor = "default";
-    function setCursor(cursorStyle) {
-        mapMapbox.getCanvas().style.cursor = cursorStyle;
-    }
-
-    mapMapbox.on("dragstart", () => setCursor("move"));
-    mapMapbox.on("dragend", () => setCursor("default"));
-    mapMapbox.on("mousedown", () => setCursor("pointer"));
-    mapMapbox.on("mouseup", () => setCursor("default"));
-    mapMapbox.on("mouseover", () => setCursor("default"));
 });

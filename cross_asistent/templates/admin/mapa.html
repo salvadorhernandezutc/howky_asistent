@@ -2,9 +2,11 @@
 {% load static %}
 {% block title %}Mapa | Administracion{% endblock %}
 {% block link_home %}{% url 'vista_programador' %}{% endblock %}
+
 {% block link_default %}
 {% include 'base/widget_links-admin.html' %}
 {% endblock %}
+
 {% block extra_head %}
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" rel="stylesheet">
