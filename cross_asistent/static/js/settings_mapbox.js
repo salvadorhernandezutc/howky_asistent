@@ -1004,6 +1004,13 @@ window.addEventListener("load", () => {
                     mapMapbox.moveLayer("places-label");
                 }
             }
+            function getParamsFromURL() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    origin: params.get("origin"),
+                    destiny: params.get("destiny"),
+                };
+            }
 
             mapMapbox.on("load", function () {
                 createEdificios();
@@ -1092,57 +1099,57 @@ window.addEventListener("load", () => {
                     tinymce.get("textTiny").setContent(informacion);
                     setColorInput();
 
-                //     // Galeria #############################################
-                //     if (window.innerWidth <= 800) {
-                //         setTimeout(() => {
-                //             var canvasGalery = document.getElementById("pleaceGalery");
-                //             var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                //             if (bsOffcanvasGalery) {
-                //                 bsOffcanvasGalery.hide();
-                //             }
-                //         }, 100);
-                //     }
+                    //     // Galeria #############################################
+                    //     if (window.innerWidth <= 800) {
+                    //         setTimeout(() => {
+                    //             var canvasGalery = document.getElementById("pleaceGalery");
+                    //             var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
+                    //             if (bsOffcanvasGalery) {
+                    //                 bsOffcanvasGalery.hide();
+                    //             }
+                    //         }, 100);
+                    //     }
 
-                //     const imageListGalery = document.getElementById("image-list-galery");
-                //     const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
-                //     document.getElementById("image-list").innerHTML = "";
-                //     imageListGalery.innerHTML = "";
+                    //     const imageListGalery = document.getElementById("image-list-galery");
+                    //     const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
+                    //     document.getElementById("image-list").innerHTML = "";
+                    //     imageListGalery.innerHTML = "";
 
-                //     galeryObj.forEach((item) => {
-                //         const imgFile = item.imagen;
-                //         let imgName = imgFile.replace("/media/imagenes/", "");
-                //         imgName = imgName.split(".");
+                    //     galeryObj.forEach((item) => {
+                    //         const imgFile = item.imagen;
+                    //         let imgName = imgFile.replace("/media/imagenes/", "");
+                    //         imgName = imgName.split(".");
 
-                //         const imageItemGalery = `<div id="img_galery_${
-                //             item.id
-                //         }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
-                //             imgName[1]
-                //         }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
-                //             item.id
-                //         }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
-                //             item.id
-                //         }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
-                //         imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
+                    //         const imageItemGalery = `<div id="img_galery_${
+                    //             item.id
+                    //         }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
+                    //             imgName[1]
+                    //         }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
+                    //             item.id
+                    //         }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
+                    //             item.id
+                    //         }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
+                    //         imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
 
-                //         const thisItem = document.querySelector(`#img_galery_${item.id}`);
-                //         const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
-                //         const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
+                    //         const thisItem = document.querySelector(`#img_galery_${item.id}`);
+                    //         const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
+                    //         const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
 
-                //         setTimeout(() => {
-                //             thisItem.classList.add("visible");
-                //             setTimeout(() => {
-                //                 thisItemImg.classList.remove("unfocus-5");
-                //             }, item.id * 40);
-                //         }, item.id * 20);
+                    //         setTimeout(() => {
+                    //             thisItem.classList.add("visible");
+                    //             setTimeout(() => {
+                    //                 thisItemImg.classList.remove("unfocus-5");
+                    //             }, item.id * 40);
+                    //         }, item.id * 20);
 
-                //         delGaleryButton.addEventListener("click", () => {
-                //             thisItem.classList.remove("visible");
-                //             setTimeout(() => {
-                //                 thisItem.remove();
-                //             }, 1000);
-                //         });
-                //     });
-                //     $("[data-submit-galery]").submit(jsonSubmit);
+                    //         delGaleryButton.addEventListener("click", () => {
+                    //             thisItem.classList.remove("visible");
+                    //             setTimeout(() => {
+                    //                 thisItem.remove();
+                    //             }, 1000);
+                    //         });
+                    //     });
+                    //     $("[data-submit-galery]").submit(jsonSubmit);
                 }
 
                 offcanvasInstance.show();
@@ -1155,35 +1162,62 @@ window.addEventListener("load", () => {
                 document.getElementById("origen").add(option);
                 document.getElementById("destino").add(option.cloneNode(true));
             });
-
             selectOrigin.addEventListener("change", function () {
                 const seleccionOrigen = this.value;
+
                 selectDestiny.querySelectorAll("option").forEach((option) => {
-                    if (option.value === seleccionOrigen) {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
+                    option.disabled = option.value === seleccionOrigen;
                 });
 
-                if (document.getElementById("destino").value) {
+                const params = new URLSearchParams(window.location.search);
+                params.set("origin", seleccionOrigen);
+                history.replaceState({}, "", `${location.pathname}?${params}`);
+
+                if (selectDestiny.value) {
                     calcularRuta();
                 }
             });
+
             selectDestiny.addEventListener("change", function () {
                 const seleccionDestino = this.value;
+
                 selectOrigin.querySelectorAll("option").forEach((option) => {
-                    if (option.value === seleccionDestino) {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
+                    option.disabled = option.value === seleccionDestino;
                 });
 
-                if (document.getElementById("origen").value) {
+                const params = new URLSearchParams(window.location.search);
+                params.set("destiny", seleccionDestino);
+                history.replaceState({}, "", `${location.pathname}?${params}`);
+
+                if (selectOrigin.value) {
                     calcularRuta();
                 }
             });
+
+            const { origin, destiny } = getParamsFromURL();
+            if (origin && destiny && origin !== destiny) {
+                const origenValido = geojsonEdificios.features.find((f) => f.properties.nombre === origin);
+                const destinoValido = geojsonEdificios.features.find((f) => f.properties.nombre === destiny);
+
+                if (origenValido && destinoValido) {
+                    const originOption = selectOrigin.querySelector(`option[value="${origin}"]`);
+                    const destinyOption = selectDestiny.querySelector(`option[value="${destiny}"]`);
+
+                    if (originOption) {
+                        originOption.selected = true;
+                        selectOrigin.dispatchEvent(new Event("change"));
+                    }
+
+                    setTimeout(() => {
+                        if (destinyOption) {
+                            destinyOption.selected = true;
+                            selectDestiny.dispatchEvent(new Event("change"));
+                        }
+
+                        calcularRuta();
+                    }, 1000);
+                }
+            }
 
             document.querySelector("[data-reset_form]").addEventListener("click", function () {
                 formRoute.querySelectorAll("option").forEach((option) => {
