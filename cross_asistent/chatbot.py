@@ -49,6 +49,10 @@ def buscar_por_tags(pregunta):
     resultados = sorted(resultados, key=lambda x: x[1], reverse=True)
     return [item for item, score in resultados if score > 0][:3]
 
+# Para el sistema de como ir a tal edificio dentro del campus se necesita cargar la lista de lugares del mapa
+# despues se compara el lugar de la lista con la pregunta y se obtiene el lugar que más se asemeje a la pregunta
+# y se le pasa a la IA para que genere la respuesta.
+
 def chatbot(request):
     if request.method == 'POST':
         try:
