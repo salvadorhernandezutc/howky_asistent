@@ -87,6 +87,7 @@ class Database(models.Model):
     frecuencia = models.IntegerField(default=0)
     documento = models.FileField(upload_to=set_pdfDB_path, max_length=120, blank=True, null=True)
     imagen = models.ImageField(upload_to=set_imgDB_path, max_length=120, blank=True, null=True)
+    tags = models.TextField(blank=True, null=True, help_text='Palabras Clave. Separar por comas')
     uuid = models.CharField(max_length=25)
     evento_fecha_inicio = models.DateTimeField(blank=True, null=True)
     evento_fecha_fin = models.DateTimeField(blank=True, null=True)
@@ -94,6 +95,12 @@ class Database(models.Model):
     evento_lugar = models.CharField(max_length=200, blank=True, null=True, default='Campus UTC')
     evento_className = models.CharField(max_length=100, blank=True, null=True, default='event_detail')
     fecha_modificacion = models.DateTimeField(auto_now=True)
+
+    def get_atg_list(self):
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',')]
+        return []
+    
     
     def __str__(self):
         return self.titulo

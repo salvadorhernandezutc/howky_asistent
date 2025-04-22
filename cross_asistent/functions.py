@@ -273,6 +273,7 @@ def database_create(request):
             redirigirPOST = request.POST.get('redirigir')
             documentoPOST = request.FILES.get('documento')
             imagenPOST = request.FILES.get('imagen')
+            tagsPOST = request.POST.get('tags')
             evento_fecha_inicioPOST = request.POST.get('eStart')
             evento_fecha_finPOST = request.POST.get('eEnd')
             evento_allDayPOST = request.POST.get('eAllDay')
@@ -301,6 +302,7 @@ def database_create(request):
                 frecuencia=frecuenciaVAL,
                 documento=documentoPOST,
                 imagen=imagenPOST,
+                tags=tagsPOST,
                 uuid=f'{categoriaIdPOST}_{models.generate_random_string(6)}',
                 evento_fecha_inicio=evento_fecha_inicioPOST or None,
                 evento_fecha_fin=evento_fecha_finPOST or None,

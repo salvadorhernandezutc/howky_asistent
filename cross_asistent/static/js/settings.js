@@ -455,6 +455,7 @@ $(document).ready(function () {
         }
         setRangeVal();
 
+        // Crear Efecto de Honda en un boton ####################
         $("[init-wave-click]").on("click", function (event) {
             var wave = $('<div class="wave"></div>');
             var offset = $(this).offset();
@@ -470,6 +471,102 @@ $(document).ready(function () {
 
             $(this).append(wave);
             setTimeout(() => wave.remove(), 1000);
+        });
+
+        // Función para obtener los parámetros de la URL
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split("&");
+
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i].split("=");
+                if (pair.length === 2) {
+                    const key = decodeURIComponent(pair[0]);
+                    const value = decodeURIComponent(pair[1]);
+                    params[key] = value;
+                }
+            }
+
+            return params;
+        }
+
+        // Función principal que evalúa el parámetro "tab"
+        function activarTabDesdeParametro() {
+            const params = getUrlParams();
+            console.log(params);
+
+            if (params.hasOwnProperty("tab")) {
+                const selector = params["tab"];
+                const $element = $(`#${selector}`);
+
+                if ($element.length) {
+                    $element.click();
+                }
+            }
+        }
+
+        if ($("[data-valparams]").length) {
+            activarTabDesdeParametro();
+        }
+
+        // Sistema para Crear Tags / Etiquetas ###############################
+        const $addTagsInput = $("#addTags");
+        const $textareaTags = $("#tags");
+        const $tagContainer = $("#allTags");
+
+        function addTag(tag) {
+            tag = tag.trim();
+
+            if (!tag || getTags().includes(tag)) {
+                $addTagsInput.addClass("is-invalid");
+                setTimeout(() => {
+                    $addTagsInput.removeClass("is-invalid");
+                }, 2000);
+                return; // No agregar si está vacío o ya existe
+            }
+
+            // Agrega al textarea
+            const tags = getTags();
+            tags.push(tag);
+            $textareaTags.val(tags.join(","));
+
+            // Agrega visualmente
+            const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_"); // id seguro
+            const $tagSpan = $(`
+            <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
+                ${tag}
+                <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
+            </span>
+        `);
+            $tagContainer.append($tagSpan);
+            $addTagsInput.val("");
+        }
+
+        function getTags() {
+            const val = $textareaTags.val().trim();
+            return val ? val.split(",") : [];
+        }
+
+        function removeTag(tag) {
+            let tags = getTags().filter((t) => t !== tag);
+            $textareaTags.val(tags.join(","));
+
+            const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_");
+            $(`#tag-${tagId}`).remove();
+        }
+
+        $addTagsInput.on("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " " || e.key === "," || e.key === "." || e.key === ";" || e.key === ":" || e.key === " ") {
+                e.preventDefault();
+                const tag = $addTagsInput.val();
+                addTag(tag);
+            }
+        });
+
+        $tagContainer.on("click", ".btn-close", function () {
+            const tag = $(this).data("tag");
+            removeTag(tag);
         });
 
         //
@@ -563,7 +660,7 @@ function jsonSubmit(e) {
         .then(async (response) => {
             if (!response.ok) {
                 const data = await response.json();
-                console.error(data)
+                console.error(data);
                 throw new Error(data.error || "Error en el formato recivido");
             }
             return response.json();

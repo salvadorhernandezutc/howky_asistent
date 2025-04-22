@@ -14,8 +14,8 @@
 <main class="main_anchor full_screen">
     <!-- Asistente -->
     <section href="#asistente" class="asistent_group {% if hawkyAlways %}open open_controls{% endif %}">
-        <div class="box_asistent">
-            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="0deg 90deg 20m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="">
+        <div class="box_asistent" id="hawkySettings">
+            <model-viewer id="asistent_model" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="15deg 70deg 5m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="">
                 {% if active_areas %}
                 <div init-wave-click id="model_areas" class="model_areas slide_areas show"></div>
                 {% endif %}

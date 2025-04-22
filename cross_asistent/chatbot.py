@@ -1,27 +1,12 @@
 from .views import obtener_configuraciones
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.utils import timezone
-from nltk.corpus import stopwords
 from django.conf import settings
+from django.urls import reverse
 from .models import Database
 import openai
-import nltk
 import json
 import re
-
-def tokenize_and_clean(text):
-    allowed_words = {'más', 'una', 'un', 'como', 'que', 'qué'}
-    stop_words = set(stopwords.words('spanish'))
-
-    tokens = re.findall(r'\b\w+\b', text.lower())
-    tokens = [word for word in tokens if word.isalnum() and (word not in stop_words or word in allowed_words)]
-    return tokens
-
-def similarity_score(input_tokens, title_tokens):
-    matches = set(input_tokens) & set(title_tokens)
-    return len(matches)
-
 
 def chatgpt(question, instructions):
     client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -40,66 +25,6 @@ def chatgpt(question, instructions):
     print()
     return response.choices[0].message.content
 
-def chatbot(request):
-    nltk.download('punkt')
-    nltk.download('stopwords')
-
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
-
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            question = data.get('question', '').strip()
-            input_tokens = tokenize_and_clean(question)
-            results_in_db = Database.objects.all()
-            
-            best_match = None
-            best_score = 0
-
-            print('Pregunta: ',question)
-            print()
-            print('Tokens: ',input_tokens)
-            print()
-            
-            for result in results_in_db:
-                title_tokens = tokenize_and_clean(result.titulo)
-                score = similarity_score(input_tokens, title_tokens)
-
-                if score > best_score:
-                    best_score = score
-                    best_match = result
-
-            if best_match and best_score > 0:
-                system_prompt = f"Eres Hawky, asistente virtual de la Universidad Tecnologica de Coahuila (la UTC). Utiliza emojis. No saludar, No preguntar. Responde con esta información, respeta la información: {best_match.informacion}. hoy:{now}. Responde preguntas solo relacionadas con la universidad."
-                answer = chatgpt(question, system_prompt)
-                
-                respuesta = {
-                    "blank": True,
-                    "informacion": answer,
-                    "titulo": best_match.titulo,
-                    "redirigir": best_match.redirigir,
-                    "imagenes": best_match.imagen.url if best_match.imagen else None
-                }
-                
-                print('titlo: ',best_match.titulo)
-                print()
-                print('Info: ',best_match.informacion)
-                print()
-                print('Imagen: ',best_match.imagen)
-                print()
-                return JsonResponse({'success': True, 'answer': respuesta})
-            else:
-                respuesta_default = {"informacion": "Lo siento, no encontré información relacionada con lo que me pides 🤔. Intenta ser mas claro o puedes buscar más información en la página de preguntas frecuentes o, si gustas, también puedes enviarnos tus dudas. 😊😁","redirigir": "preguntas_frecuentes/","blank": False,}
-                return JsonResponse({'success': True, 'answer': respuesta_default})
-    
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'message': 'Ocurrió un error. Al parecer no se permite este método. Código #400'})
-        except KeyError as e:
-            return JsonResponse({'success': False, 'message': f'Error en la clave del JSON: {str(e)}'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Error inesperado: {str(e)}'})
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'}, status=405)
-
 def modelsettings(request):
     if request.method == 'POST':
         try:
@@ -111,3 +36,56 @@ def modelsettings(request):
         except Exception as e:
             return JsonResponse({'success': False, 'message': f'#{quest_id} no encontrada.'}, status=404)
     return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
+
+def buscar_por_tags(pregunta):
+    pregunta_tokens = re.findall(r'\b\w+\b', pregunta.lower())
+    resultados = []
+
+    for item in Database.objects.all():
+        item_tags = item.get_tag_list()
+        coincidencias = set(pregunta_tokens) & set(item_tags)
+        resultados.append((item, len(coincidencias)))
+
+    resultados = sorted(resultados, key=lambda x: x[1], reverse=True)
+    return [item for item, score in resultados if score > 0][:3]
+
+def chatbot(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            pregunta = data.get('question', '').strip()
+            ahora = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+
+            mejores_resultados = buscar_por_tags(pregunta)
+
+            if mejores_resultados:
+                bloques_info = "\n\n".join([f"Tema relacionado:\n{r.informacion}" for r in mejores_resultados])
+                system_prompt = (
+                    f"Eres Hawky, asistente virtual de la Universidad Tecnológica de Coahuila (UTC). "
+                    f"Usa emojis, no saludes, no repreguntes. "
+                    f"Responde únicamente en base a la siguiente información:\n\n{bloques_info}\n\n"
+                    f"Hoy es {ahora}."
+                )
+                respuesta_gpt = chatgpt(pregunta, system_prompt)
+
+                respuesta = {
+                    "blank": True,
+                    "informacion": respuesta_gpt,
+                    "titulo": mejores_resultados[0].titulo,
+                    "redirigir": mejores_resultados[0].redirigir,
+                    "imagenes": mejores_resultados[0].imagen.url if mejores_resultados[0].imagen else None
+                }
+
+            else:
+                baseUrl = reverse('faq')
+                pill = 'pills-create-quest-tab'
+                respuesta = {
+                    "informacion": "Lo siento, no encontré información relacionada con lo que me pides 🤔. "
+                                   "Puedes consultar la página oficial de la UTC o escribirnos directamente. 😊",
+                    "redirigir": f"{baseUrl}?tab={pill}",
+                    "blank": False,
+                }
+            
+            return JsonResponse({'success': True, 'answer': respuesta})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})

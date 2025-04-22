@@ -112,17 +112,24 @@
                   <input type="file" class="form-control" id="imagenes" name="imagen" accept="image/jpeg, image/png, image/webp*">
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="form-outline mb-4" data-mdb-input-init>
+                  <i class="fa-solid fa-heading trailing"></i>
+                  <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing" required />
+                  <label class="form-label" for="addTags">Etiquetas:</label>
+                </div>
+              </div>
+              <div class="col-md-6 mb-4 row ps-4 pe-0" id="allTags" style="gap: 20px;">
+                <textarea id="tags" name="tags" class="d-none"></textarea>
+              </div>
             </div>
-            <div class="row">
-              <div class="col d-none d-md-block"></div>
-              <div class="col d-none d-lg-block"></div>
-              <div class="col">
+            <div class="row justify-content-end">
+              <div class="col-3">
                 <a href="{% url 'database_page' %}" class="btn btn-secondary btn-block">más</a>
               </div>
-              <div class="col">
+              <div class="col-3">
                 <button type="submit" class="btn btn_detail btn-block">Guardar</button>
               </div>
-
             </div>
           </form>
         </div>
