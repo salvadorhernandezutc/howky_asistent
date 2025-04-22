@@ -96,7 +96,7 @@ class Database(models.Model):
     evento_className = models.CharField(max_length=100, blank=True, null=True, default='event_detail')
     fecha_modificacion = models.DateTimeField(auto_now=True)
 
-    def get_atg_list(self):
+    def get_tag_list(self):
         if self.tags:
             return [tag.strip() for tag in self.tags.split(',')]
         return []

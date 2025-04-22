@@ -509,7 +509,6 @@ $(document).ready(function () {
         if ($("[data-valparams]").length) {
             activarTabDesdeParametro();
         }
-
         // Sistema para Crear Tags / Etiquetas ###############################
         const $addTagsInput = $("#addTags");
         const $textareaTags = $("#tags");
@@ -534,20 +533,22 @@ $(document).ready(function () {
             // Agrega visualmente
             const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_"); // id seguro
             const $tagSpan = $(`
-            <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
-                ${tag}
-                <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
-            </span>
-        `);
+                <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
+                    ${tag}
+                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
+                </span>
+            `);
             $tagContainer.append($tagSpan);
             $addTagsInput.val("");
         }
 
+        // Función para obtener las etiquetas del textarea
         function getTags() {
             const val = $textareaTags.val().trim();
-            return val ? val.split(",") : [];
+            return val ? val.split(",").map((tag) => tag.trim()) : [];
         }
 
+        // Función para eliminar etiquetas
         function removeTag(tag) {
             let tags = getTags().filter((t) => t !== tag);
             $textareaTags.val(tags.join(","));
@@ -556,6 +557,29 @@ $(document).ready(function () {
             $(`#tag-${tagId}`).remove();
         }
 
+        // Actualiza el contenedor de etiquetas cuando cambia el contenido del textarea
+        function updateTagContainer() {
+            $tagContainer.empty(); // Limpiar las etiquetas visuales actuales
+
+            const tags = getTags();
+            tags.forEach((tag) => {
+                const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_"); // id seguro
+                const $tagSpan = $(`
+                    <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
+                        ${tag}
+                        <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
+                    </span>
+                    `);
+                $tagContainer.append($tagSpan);
+            });
+        }
+
+        // Actualiza el contenedor de etiquetas cuando cambie el textarea
+        $textareaTags.on("input", function () {
+            updateTagContainer();
+        });
+
+        // Evento para agregar etiquetas al presionar Enter o teclas de separación
         $addTagsInput.on("keydown", function (e) {
             if (e.key === "Enter" || e.key === " " || e.key === "," || e.key === "." || e.key === ";" || e.key === ":" || e.key === " ") {
                 e.preventDefault();
@@ -564,6 +588,7 @@ $(document).ready(function () {
             }
         });
 
+        // Evento para eliminar etiquetas
         $tagContainer.on("click", ".btn-close", function () {
             const tag = $(this).data("tag");
             removeTag(tag);
