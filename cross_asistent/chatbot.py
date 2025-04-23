@@ -1,12 +1,26 @@
 from .views import obtener_configuraciones
 from django.http import JsonResponse
+from .models import Database, Mapa
+from urllib.parse import urlencode
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
-from .models import Database
+from django.db.models import Q
 import openai
 import json
 import re
+
+def modelsettings(request):
+    if request.method == 'POST':
+        try:
+            quest_id = request.POST.get('idSetings')
+            hawkySettings = obtener_configuraciones(quest_id)
+            modelData = hawkySettings[f'redes_sociales_{quest_id}']
+            parsed_data = json.loads(modelData)
+            return JsonResponse(parsed_data, status=200)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'#{quest_id} no encontrada.'}, status=404)
+    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
 
 def chatgpt(question, instructions):
     client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -28,23 +42,16 @@ def chatgpt(question, instructions):
 
     return response.choices[0].message.content
 
-def modelsettings(request):
-    if request.method == 'POST':
-        try:
-            quest_id = request.POST.get('idSetings')
-            hawkySettings = obtener_configuraciones(quest_id)
-            modelData = hawkySettings[f'redes_sociales_{quest_id}']
-            parsed_data = json.loads(modelData)
-            return JsonResponse(parsed_data, status=200)
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'#{quest_id} no encontrada.'}, status=404)
-    return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
-
 def buscar_por_tags(pregunta):
     pregunta_tokens = re.findall(r'\b\w+\b', pregunta.lower())
+    query = Q()
+    for token in pregunta_tokens:
+        query |= Q(tags__icontains=token)
+    
+    posibles = Database.objects.filter(query)
     resultados = []
 
-    for item in Database.objects.all():
+    for item in posibles:
         item_tags = item.get_tag_list()
         coincidencias = set(pregunta_tokens) & set(item_tags)
         resultados.append((item, len(coincidencias)))
@@ -56,9 +63,19 @@ def buscar_por_tags(pregunta):
 
     return [item for item, score in resultados if score > 0][:3]
 
-# Para el sistema de como ir a tal edificio dentro del campus se necesita cargar la lista de lugares del mapa
-# despues se compara el lugar de la lista con la pregunta y se obtiene el lugar que más se asemeje a la pregunta
-# y se le pasa a la IA para que genere la respuesta.
+def is_map(best_results, question):
+    tag_map = any("mapa" in r.get_tag_list() for r in best_results)
+
+    if tag_map:
+        tokens_question = set(re.findall(r'\b\w+\b', question.lower()))
+        places_name = Mapa.objects.filter(is_marker=False)
+
+        for destiny in places_name:
+            tokens_name = set(re.findall(r'\b\w+\b', destiny.nombre.lower()))
+            if tokens_name & tokens_question:
+                return destiny.nombre
+            
+    return False
 
 def chatbot(request):
     if request.method == 'POST':
@@ -79,10 +96,18 @@ def chatbot(request):
                 )
                 respuesta_gpt = chatgpt(pregunta, system_prompt)
 
+                destiny_map = is_map(mejores_resultados, pregunta)
+                base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
+
+                if destiny_map:
+                    map_url = reverse('map')
+                    params = urlencode({'origin': 'Caseta 1', 'destiny': destiny_map})
+                    base_url = f"{map_url}?{params}"
+
                 respuesta = {
                     "titulo": mejores_resultados[0].titulo,
                     "informacion": respuesta_gpt,
-                    "redirigir": mejores_resultados[0].redirigir,
+                    "redirigir": base_url,
                     "imagenes": mejores_resultados[0].imagen.url if mejores_resultados[0].imagen else None
                 }
 
