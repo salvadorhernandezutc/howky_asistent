@@ -509,6 +509,7 @@ $(document).ready(function () {
         if ($("[data-valparams]").length) {
             activarTabDesdeParametro();
         }
+
         // Sistema para Crear Tags / Etiquetas ###############################
         const $addTagsInput = $("#addTags");
         const $textareaTags = $("#tags");
@@ -542,10 +543,21 @@ $(document).ready(function () {
             $addTagsInput.val("");
         }
 
-        // Función para obtener las etiquetas del textarea
         function getTags() {
             const val = $textareaTags.val().trim();
-            return val ? val.split(",").map((tag) => tag.trim()) : [];
+
+            if (!val) return [];
+
+            // Reemplaza espacios múltiples y otros delimitadores por comas
+            const cleaned = val
+                .replace(/[\s;:.]+/g, ",") // reemplaza espacios, punto y coma, dos puntos, punto
+                .replace(/,+/g, ",") // evita comas repetidas
+                .replace(/^,|,$/g, ""); // elimina comas al inicio o al final
+
+            return cleaned
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag !== "");
         }
 
         // Función para eliminar etiquetas
