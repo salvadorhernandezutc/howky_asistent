@@ -4,8 +4,10 @@ from .models import Database, Mapa
 from urllib.parse import urlencode
 from django.utils import timezone
 from django.conf import settings
+from unidecode import unidecode
 from django.urls import reverse
 from django.db.models import Q
+import random
 import openai
 import json
 import re
@@ -63,19 +65,25 @@ def buscar_por_tags(pregunta):
 
     return [item for item, score in resultados if score > 0][:3]
 
-def is_map(best_results, question):
-    tag_map = any("mapa" in r.get_tag_list() for r in best_results)
+def extraer_origen_destino(question):
+    pregunta_normalizada = unidecode(question.lower())
+    lugares = Mapa.objects.filter(is_marker=False)
 
-    if tag_map:
-        tokens_question = set(re.findall(r'\b\w+\b', question.lower()))
-        places_name = Mapa.objects.filter(is_marker=False)
+    coincidencias = []
+    for lugar in lugares:
+        nombre_normalizado = unidecode(lugar.nombre.lower())
+        if nombre_normalizado in pregunta_normalizada:
+            posicion = pregunta_normalizada.find(nombre_normalizado)
+            coincidencias.append((posicion, lugar.nombre))
 
-        for destiny in places_name:
-            tokens_name = set(re.findall(r'\b\w+\b', destiny.nombre.lower()))
-            if tokens_name & tokens_question:
-                return destiny.nombre
-            
-    return False
+    coincidencias.sort()  # ordena por posición en la pregunta
+
+    if not coincidencias:
+        return None, None
+    elif len(coincidencias) == 1:
+        return "Caseta 1", coincidencias[0][1]
+    else:
+        return coincidencias[0][1], coincidencias[1][1]
 
 def chatbot(request):
     if request.method == 'POST':
@@ -94,19 +102,33 @@ def chatbot(request):
                     f"Responde únicamente en base a la siguiente información:\n\n{bloques_info}\n\n"
                     f"Hoy es {ahora}."
                 )
-                respuesta_gpt = chatgpt(pregunta, system_prompt)
+                info_respuesta = None
+                base_url = None
 
-                destiny_map = is_map(mejores_resultados, pregunta)
-                base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
+                origen, destino = extraer_origen_destino(pregunta)
+                if destino:
+                    try:
+                        this_info = json.loads(mejores_resultados[0].informacion)
+                        if isinstance(this_info, list):
+                            info_random = random.choice(this_info)
+                        else:
+                            info_random = mejores_resultados[0].informacion
+                    except:
+                        info_random = mejores_resultados[0].informacion
 
-                if destiny_map:
+                    info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n 👇👇👇"
+
                     map_url = reverse('map')
-                    params = urlencode({'origin': 'Caseta 1', 'destiny': destiny_map})
+                    params = urlencode({'origin': origen or 'Caseta 1', 'destiny': destino})
                     base_url = f"{map_url}?{params}"
+                
+                else:
+                    info_respuesta = chatgpt(pregunta, system_prompt)
+                    base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
 
                 respuesta = {
                     "titulo": mejores_resultados[0].titulo,
-                    "informacion": respuesta_gpt,
+                    "informacion": info_respuesta,
                     "redirigir": base_url,
                     "imagenes": mejores_resultados[0].imagen.url if mejores_resultados[0].imagen else None
                 }
