@@ -50,19 +50,6 @@ const initDataTable = async () => {
     }
 
     dataTableIsInitialized = true;
-
-    // <label for="filterCategory">Filtrar por Categoría:</label>
-    // <select id="filterCategory">
-    //     <option value="">Todas</option>
-    //     <option value="Preguntas">Preguntas</option>
-    //     <option value="OtraCategoria">Otra Categoría</option>
-    //     <!-- Agrega más opciones según tus categorías -->
-    // </select>
-    // Filtro de categoría
-    // $("#filterCategory").on("change", function() {
-    //     const selectedCategory = $(this).val();
-    //     dataTable.column(1).search(selectedCategory).draw();  // Filtrar la columna de categoría (índice 1)
-    // });
 };
 
 // Tabla de Dase de Datos (models.Database)
@@ -226,6 +213,7 @@ if (tableDatabaseObj) {
             thisModal.find("#editcateg").text(data.categoria);
             thisModal.find("#edittitulo").val(data.titulo);
             thisModal.find("#editinfo").val(data.informacion);
+            thisModal.find("#tags").val(data.tags).click();
 
             if (data.redirigir != null || data.redirigir != "") {
                 thisModal.find("#editredirigir").val(data.redirigir);

@@ -11,10 +11,6 @@
 
 {% block content %}
 <main class="container container-fluid py-5">
-    <div class="mb-5">
-        <h1 class="text-center">Base de Datos <i class="fa-solid fa-database ms-1"></i></h1>
-        <hr class="hr_divisor mx-4 mx-md-0" />
-    </div>
     <div class="row">
         <!-- Formulario: Crear Database -->
         <section class="col-lg-8">
@@ -68,11 +64,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <button type="submit" class="btn btn_detail btn-block">Guardar</button>
+                        <div class="row tag-group">
+                            <div class="col-md-6">
+                                <div class="form-outline mb-4" data-mdb-input-init>
+                                    <i class="fa-solid fa-tag trailing"></i>
+                                    <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
+                                    <label class="form-label" for="addTags">Etiquetas:</label>
+                                </div>
                             </div>
+                            <div class="col-md-6 mb-4 row ps-4 pe-0 allTags" id="allTags" style="gap: 20px;"></div>
+                            <textarea id="tags" name="tags" class="d-none tags" required></textarea>
                         </div>
+                        <button type="submit" class="btn btn_detail btn-block">Guardar</button>
                     </form>
                 </div>
             </section>
@@ -127,7 +130,7 @@
                             </thead>
                             <tbody>
                                 {% for question in preguntas_sending %}
-                                <tr class="results_item table_odd_items">
+                                <tr class="table_odd_items">
                                     <td class="text-center d-none d-md-table-cell">{{question.id}}</td>
                                     <td>
                                         <div class="accordion accordion-borderless" id="questionList">
@@ -436,6 +439,17 @@
                                 <input type="file" class="form-control" id="imagenes" name="imagen" accept="image/jpeg, image/png, image/webp*">
                             </div>
                         </div>
+                    </div>
+                    <div class="row tag-group">
+                        <div class="col-md-6">
+                            <div class="form-outline mb-4" data-mdb-input-init>
+                                <i class="fa-solid fa-tag trailing"></i>
+                                <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
+                                <label class="form-label" for="addTags">Agregar Etiquetas:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4 row ps-4 pe-0 allTags" id="allTags" style="gap: 20px;"></div>
+                        <textarea id="tags" name="tags" class="d-none tags" required></textarea>
                     </div>
                     <div class="row">
                         <div class="col">

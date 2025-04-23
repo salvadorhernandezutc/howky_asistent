@@ -23,6 +23,9 @@ def chatgpt(question, instructions):
     print(f"Compl:{response.usage.completion_tokens}")
     print(f"Total:{response.usage.total_tokens}")
     print()
+
+    print(f"Respuesta: {response.choices[0].message.content}")
+
     return response.choices[0].message.content
 
 def modelsettings(request):
@@ -47,6 +50,10 @@ def buscar_por_tags(pregunta):
         resultados.append((item, len(coincidencias)))
 
     resultados = sorted(resultados, key=lambda x: x[1], reverse=True)
+    print(f"Pregunta: {pregunta}")
+    print(f"Tokens: {pregunta_tokens}")
+    print(f"Resultados: {resultados}")
+
     return [item for item, score in resultados if score > 0][:3]
 
 # Para el sistema de como ir a tal edificio dentro del campus se necesita cargar la lista de lugares del mapa
@@ -73,12 +80,14 @@ def chatbot(request):
                 respuesta_gpt = chatgpt(pregunta, system_prompt)
 
                 respuesta = {
-                    "blank": True,
-                    "informacion": respuesta_gpt,
                     "titulo": mejores_resultados[0].titulo,
+                    "informacion": respuesta_gpt,
                     "redirigir": mejores_resultados[0].redirigir,
                     "imagenes": mejores_resultados[0].imagen.url if mejores_resultados[0].imagen else None
                 }
+
+                print(f'Bloques: {bloques_info}')
+                print(f'Respuesta: {respuesta}')
 
             else:
                 baseUrl = reverse('faq')

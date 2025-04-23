@@ -329,6 +329,7 @@ def database_getitem(request):
                 'titulo':dbItem.titulo,
                 'informacion':dbItem.informacion,
                 'redirigir':dbItem.redirigir,
+                'tags':dbItem.tags,
             }
             return JsonResponse(data)
         except Exception as e:
@@ -350,6 +351,7 @@ def database_update(request):
             evento_allDayPOST = request.POST.get('eAllDay')
             evento_lugarPOST = request.POST.get('ePleace')
             evento_classNamePOST = request.POST.get('eColor')
+            tagsPOST = request.POST.get('tags')
             
             dbUpdate = get_object_or_404(models.Database, id=idPOST)
             dbUpdate.categoria = categoriaGET
@@ -376,6 +378,7 @@ def database_update(request):
             dbUpdate.evento_allDay = evento_allDayPOST if not evento_allDayPOST == None else False
             dbUpdate.evento_lugar = evento_lugarPOST or ''
             dbUpdate.evento_className = evento_classNamePOST or 'event_detail'
+            dbUpdate.tags = tagsPOST or ''
             dbUpdate.save()
                         
             dbMessage = f'Se actualizó "{request.POST.get("titulo")}" en la base de datos exitosamente 🫡😁🎉'

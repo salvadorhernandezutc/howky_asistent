@@ -7,10 +7,6 @@
 {% endblock %}
 {% block content %}
 <main class="container container-fluid py-5">
-    <div class="mb-5">
-        <h1 class="text-center">Calendario <i class="fa-solid fa-calendar-days ms-1"></i></h1>
-        <hr class="hr_divisor mx-4 mx-md-0" />
-    </div>
     <section class="row">
         <!-- Formulario: Nuevo Evento -->
         <div class="col-12 col-md-4 mb-4 mb-md-0">
@@ -37,45 +33,58 @@
                             <label class="form-label" for="redirigir">url / liga: <small>(opcional)</small></label>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-xl-6">
                                 <div class="form-outline mb-4" data-mdb-input-init>
                                     <input type="datetime-local" id="eStart" name="eStart" class="form-control active" min="2024-01-01T00:00" required />
                                     <label class="form-label" for="eStart">Inicio:</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-xl-6">
                                 <div class="form-outline mb-4" data-mdb-input-init>
                                     <input type="datetime-local" id="eEnd" name="eEnd" class="form-control active" min="2024-01-01T00:00" required />
                                     <label class="form-label" for="eEnd">Fin:</label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" value="True" id="eAllDay" name="eAllDay" />
-                            <label class="form-check-label" for="eAllDay">Dura Todo el dia</label>
+                            <div class="col-xl-6 d-flex align-items-center mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="True" id="eAllDay" name="eAllDay" />
+                                    <label class="form-check-label" for="eAllDay">Todo el dia</label>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="form-outline mb-4">
+                                    <select class="form-select" id="eColor" name="eColor" data-select_addClass required>
+                                        <option selected disabled hidden>Color:</option>
+                                        <option value="event_detail">Por Defecto</option>
+                                        <!-- <option value="customColor">Personalizado</option> -->
+                                        <option value="bg_calendar_green">Verde Lima</option>
+                                        <option value="bg_calendar_naranja">Naranja</option>
+                                        <option value="bg_calendar_azulcielo">Azul Cielo</option>
+                                        <option value="bg_calendar_morado">Morado</option>
+                                        <option value="bg_calendar_rosa">Rosa</option>
+                                        <option value="bg_calendar_rojo">Rojo</option>
+                                        <option value="bg_calendar_amarillo">Amarillo</option>
+                                        <option value="bg_calendar_azulfuerte">Azul Fuerte</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-outline mb-4" data-mdb-input-init>
                             <input type="text" id="ePleace" name="ePleace" class="form-control active text-end" value="Campus UTC" required />
                             <label class="form-label" for="ePleace">Lugar:</label>
                         </div>
-                        <div class="form-outline mb-4">
-                            <select class="form-select" id="eColor" name="eColor" data-select_addClass required>
-                                <option selected disabled hidden>Seleccione Color de Fondo:</option>
-                                <option value="event_detail">Color por Defecto</option>
-                                <!-- <option value="customColor">Personalizado</option> -->
-                                <option value="bg_calendar_green">Verde Lima</option>
-                                <option value="bg_calendar_naranja">Naranja</option>
-                                <option value="bg_calendar_azulcielo">Azul Cielo</option>
-                                <option value="bg_calendar_morado">Morado</option>
-                                <option value="bg_calendar_rosa">Rosa</option>
-                                <option value="bg_calendar_rojo">Rojo</option>
-                                <option value="bg_calendar_amarillo">Amarillo</option>
-                                <option value="bg_calendar_azulfuerte">Azul Fuerte</option>
-                            </select>
-                        </div>
                         <div class="mb-4">
                             <label for="imagen" class="form-label">Imágen: <small>(opcional)</small></label>
                             <input type="file" class="form-control" id="imagen" name="imagen" accept="image/jpeg, image/png, image/webp*">
+                        </div>
+                        <div class="tag-group">
+                            <div class="form-outline mb-4" data-mdb-input-init>
+                                <i class="fa-solid fa-tag trailing"></i>
+                                <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
+                                <label class="form-label" for="addTags">Agregar Etiquetas:</label>
+                            </div>
+                            <div class="mb-4 row px-3 allTags" id="allTags" style="gap: 20px;"></div>
+                            <textarea id="tags" name="tags" class="d-none tags" required></textarea>
                         </div>
                         <div>
                             <button type="submit" class="btn btn_detail btn-block">Guardar <i class="fa-solid fa-paper-plane ms-1"></i></button>

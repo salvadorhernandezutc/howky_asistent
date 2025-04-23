@@ -510,100 +510,107 @@ $(document).ready(function () {
             activarTabDesdeParametro();
         }
 
-        // Sistema para Crear Tags / Etiquetas ###############################
-        const $addTagsInput = $("#addTags");
-        const $textareaTags = $("#tags");
-        const $tagContainer = $("#allTags");
+        // Sistema para Crear Tags / Etiquetas (Modulos) ###############################
+        function initTagGroup($group) {
+            const $addTagsInput = $group.find(".addTags");
+            const $textareaTags = $group.find(".tags");
+            const $tagContainer = $group.find(".allTags");
 
-        function addTag(tag) {
-            tag = tag.trim();
+            function getTags() {
+                const val = $textareaTags.val().trim();
+                if (!val) return [];
 
-            if (!tag || getTags().includes(tag)) {
-                $addTagsInput.addClass("is-invalid");
-                setTimeout(() => {
-                    $addTagsInput.removeClass("is-invalid");
-                }, 2000);
-                return; // No agregar si está vacío o ya existe
+                const cleaned = val
+                    .replace(/[\s;:.]+/g, ",")
+                    .replace(/,+/g, ",")
+                    .replace(/^,|,$/g, "");
+
+                return cleaned
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag !== "");
             }
 
-            // Agrega al textarea
-            const tags = getTags();
-            tags.push(tag);
-            $textareaTags.val(tags.join(","));
+            function updateTagContainer() {
+                $tagContainer.empty();
 
-            // Agrega visualmente
-            const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_"); // id seguro
-            const $tagSpan = $(`
-                <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
-                    ${tag}
-                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
-                </span>
-            `);
-            $tagContainer.append($tagSpan);
-            $addTagsInput.val("");
-        }
-
-        function getTags() {
-            const val = $textareaTags.val().trim();
-
-            if (!val) return [];
-
-            // Reemplaza espacios múltiples y otros delimitadores por comas
-            const cleaned = val
-                .replace(/[\s;:.]+/g, ",") // reemplaza espacios, punto y coma, dos puntos, punto
-                .replace(/,+/g, ",") // evita comas repetidas
-                .replace(/^,|,$/g, ""); // elimina comas al inicio o al final
-
-            return cleaned
-                .split(",")
-                .map((tag) => tag.trim())
-                .filter((tag) => tag !== "");
-        }
-
-        // Función para eliminar etiquetas
-        function removeTag(tag) {
-            let tags = getTags().filter((t) => t !== tag);
-            $textareaTags.val(tags.join(","));
-
-            const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_");
-            $(`#tag-${tagId}`).remove();
-        }
-
-        // Actualiza el contenedor de etiquetas cuando cambia el contenido del textarea
-        function updateTagContainer() {
-            $tagContainer.empty(); // Limpiar las etiquetas visuales actuales
-
-            const tags = getTags();
-            tags.forEach((tag) => {
-                const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_"); // id seguro
-                const $tagSpan = $(`
-                    <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
-                        ${tag}
-                        <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Close" data-tag="${tag}"></button>
-                    </span>
+                const tags = getTags();
+                tags.forEach((tag) => {
+                    const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_");
+                    const $tagSpan = $(`
+                        <span id="tag-${tagId}" class="badge badge-primary d-flex justify-content-between align-items-center col">
+                            ${tag}
+                            <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Close" data-tag="${tag}"></button>
+                        </span>
                     `);
-                $tagContainer.append($tagSpan);
+                    $tagContainer.append($tagSpan);
+                });
+            }
+
+            function addTag(tag) {
+                tag = tag.trim();
+
+                if (!tag || getTags().includes(tag)) {
+                    $addTagsInput.addClass("is-invalid");
+                    setTimeout(() => {
+                        $addTagsInput.removeClass("is-invalid");
+                    }, 2000);
+                    return;
+                }
+
+                const tags = getTags();
+                tags.push(tag);
+                $textareaTags.val(tags.join(","));
+                updateTagContainer();
+                $addTagsInput.val("");
+            }
+
+            function removeTag(tag) {
+                let tags = getTags().filter((t) => t !== tag);
+                $textareaTags.val(tags.join(","));
+                updateTagContainer();
+            }
+
+            $addTagsInput.on("keydown", function (e) {
+                if (["Enter", " ", ",", ".", ";", ":"].includes(e.key)) {
+                    e.preventDefault();
+                    const input = $addTagsInput.val().trim();
+
+                    // Soporta múltiples etiquetas en el mismo input
+                    input.split(/[\s,;:.]+/).forEach((subTag) => {
+                        if (subTag) addTag(subTag);
+                    });
+                }
             });
+
+            $tagContainer.on("click", ".btn-close", function () {
+                const tag = $(this).data("tag");
+                removeTag(tag);
+            });
+
+            $textareaTags.on("click", () => updateTagContainer());
+            $textareaTags.on("input", function () {
+                // let value = $textareaTags.val();
+
+                // // Reemplazar espacios y otros separadores por comas, pero evitando al principio y final
+                // value = value
+                //     .trim() // elimina espacios al principio/final antes de procesar
+                //     .replace(/[\s;:.]+/g, ",") // reemplaza separadores por comas
+                //     .replace(/,+/g, ",") // evita múltiples comas seguidas
+                //     .replace(/^,|,$/g, ""); // quita coma al principio o final
+                
+                // $textareaTags.val(value);
+                updateTagContainer();
+            });
+
+            updateTagContainer();
         }
 
-        // Actualiza el contenedor de etiquetas cuando cambie el textarea
-        $textareaTags.on("input", function () {
-            updateTagContainer();
-        });
-
-        // Evento para agregar etiquetas al presionar Enter o teclas de separación
-        $addTagsInput.on("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " " || e.key === "," || e.key === "." || e.key === ";" || e.key === ":" || e.key === " ") {
-                e.preventDefault();
-                const tag = $addTagsInput.val();
-                addTag(tag);
-            }
-        });
-
-        // Evento para eliminar etiquetas
-        $tagContainer.on("click", ".btn-close", function () {
-            const tag = $(this).data("tag");
-            removeTag(tag);
+        // Inicializa todos los grupos en la página
+        $(document).ready(function () {
+            $(".tag-group").each(function () {
+                initTagGroup($(this));
+            });
         });
 
         //
