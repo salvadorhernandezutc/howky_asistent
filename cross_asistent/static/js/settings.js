@@ -510,6 +510,13 @@ $(document).ready(function () {
             activarTabDesdeParametro();
         }
 
+        // Cambiar min del siguiente inpput Date ###############################
+        $("[data-blur-min]").on("blur", function () {
+            const minValue = $(this).val();
+            const targetSelector = $(this).attr("data-blur-min");
+            $(targetSelector).attr("min", minValue);
+        });
+
         // Sistema para Crear Tags / Etiquetas (Modulos) ###############################
         function initTagGroup($group) {
             const $addTagsInput = $group.find(".addTags");
@@ -533,7 +540,6 @@ $(document).ready(function () {
 
             function updateTagContainer() {
                 $tagContainer.empty();
-
                 const tags = getTags();
                 tags.forEach((tag) => {
                     const tagId = tag.replace(/[^a-zA-Z0-9_-]/g, "_");
@@ -598,7 +604,7 @@ $(document).ready(function () {
                 //     .replace(/[\s;:.]+/g, ",") // reemplaza separadores por comas
                 //     .replace(/,+/g, ",") // evita múltiples comas seguidas
                 //     .replace(/^,|,$/g, ""); // quita coma al principio o final
-                
+
                 // $textareaTags.val(value);
                 updateTagContainer();
             });
@@ -607,10 +613,31 @@ $(document).ready(function () {
         }
 
         // Inicializa todos los grupos en la página
-        $(document).ready(function () {
-            $(".tag-group").each(function () {
-                initTagGroup($(this));
-            });
+        $(".tag-group").each(function () {
+            initTagGroup($(this));
+        });
+
+        $("[data-blur-tags]").on("blur", function () {
+            let value = $(this).val();
+            value = value.replace(/T\d.*$/, ""); // Campo de Fecha: Elimina la hora
+            value = value
+                .trim()
+                .replace(/[\s;:.\u00A0]+/g, ",")
+                .replace(/,+/g, ",")
+                .replace(/^,|,$/g, "");
+
+            const $groupElement = $(this).attr("data-blur-tags");
+            const $textareaTags = $(`${$groupElement} .tags`);
+            let existingValue = $textareaTags.val().trim();
+            // $(`${$groupElement} .tags`).val(value).trigger("input");
+
+            if (existingValue) {
+                existingValue = existingValue.replace(/,+$/g, "");
+                value = existingValue + "," + value;
+            }
+
+            value = value.replace(/,+/g, ",").replace(/^,|,$/g, ""); // Elimina comas al principio y final
+            $textareaTags.val(value).trigger("input");
         });
 
         //

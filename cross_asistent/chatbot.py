@@ -97,9 +97,9 @@ def chatbot(request):
             if mejores_resultados:
                 bloques_info = "\n\n".join([f"Tema relacionado:\n{r.informacion}" for r in mejores_resultados])
                 system_prompt = (
-                    f"Eres Hawky, asistente virtual de la Universidad Tecnológica de Coahuila (UTC). "
-                    f"Usa emojis, no saludes, no repreguntes. "
-                    f"Responde únicamente en base a la siguiente información:\n\n{bloques_info}\n\n"
+                    f"Eres Hawky, asistente virtual de la Universidad Tecnológica de Coahuila (UTC)."
+                    f"Usa emojis, no saludes, no repreguntes."
+                    f"Responde únicamente en base a la siguiente información:{bloques_info}"
                     f"Hoy es {ahora}."
                 )
                 info_respuesta = None

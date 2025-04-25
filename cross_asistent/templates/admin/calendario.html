@@ -19,7 +19,7 @@
                         <input type="text" id="categoria" name="categoria" class="d-none" value="Calendario" required />
                         <div class="form-outline mb-4" data-mdb-input-init>
                             <i class="fa-solid fa-heading trailing"></i>
-                            <input type="text" id="titulo" name="titulo" class="form-control form-icon-trailing" required />
+                            <input type="text" id="titulo" name="titulo" class="form-control form-icon-trailing" data-blur-tags="#createTagsGroup" required />
                             <label class="form-label" for="titulo">Título:</label>
                         </div>
                         <div class="form-outline mb-4" data-mdb-input-init>
@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="form-outline mb-4" data-mdb-input-init>
-                                    <input type="datetime-local" id="eStart" name="eStart" class="form-control active" min="2024-01-01T00:00" required />
+                                    <input type="datetime-local" id="eStart" name="eStart" class="form-control active" min="2024-01-01T00:00" data-blur-tags="#createTagsGroup" data-blur-min="#eEnd" required />
                                     <label class="form-label" for="eStart">Inicio:</label>
                                 </div>
                             </div>
@@ -54,8 +54,8 @@
                             <div class="col-xl-6">
                                 <div class="form-outline mb-4">
                                     <select class="form-select" id="eColor" name="eColor" data-select_addClass required>
-                                        <option selected disabled hidden>Color:</option>
-                                        <option value="event_detail">Por Defecto</option>
+                                        <option value="event_detail" selected>Color Default</option>
+                                        <!-- <option selected disabled hidden>Color:</option> -->
                                         <!-- <option value="customColor">Personalizado</option> -->
                                         <option value="bg_calendar_green">Verde Lima</option>
                                         <option value="bg_calendar_naranja">Naranja</option>
@@ -77,7 +77,7 @@
                             <label for="imagen" class="form-label">Imágen: <small>(opcional)</small></label>
                             <input type="file" class="form-control" id="imagen" name="imagen" accept="image/jpeg, image/png, image/webp*">
                         </div>
-                        <div class="tag-group">
+                        <div class="tag-group" id="createTagsGroup">
                             <div class="form-outline mb-4" data-mdb-input-init>
                                 <i class="fa-solid fa-tag trailing"></i>
                                 <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
@@ -223,5 +223,5 @@
 
 {% endblock %}
 {% block scripts_end %}
-<script src="{% static 'js/settings_fullcalendar.js' %}"></script>
+<script src="{% static 'js/settings_fullcalendar.min.js' %}"></script>
 {% endblock %}
