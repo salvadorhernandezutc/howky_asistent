@@ -616,8 +616,11 @@ $(document).ready(function () {
         $(".tag-group").each(function () {
             initTagGroup($(this));
         });
-
         $("[data-blur-tags]").on("blur", function () {
+            addMoreTags.call(this);
+        });
+
+        function addMoreTags() {
             let value = $(this).val();
             value = value.replace(/T\d.*$/, ""); // Campo de Fecha: Elimina la hora
             value = value
@@ -629,7 +632,6 @@ $(document).ready(function () {
             const $groupElement = $(this).attr("data-blur-tags");
             const $textareaTags = $(`${$groupElement} .tags`);
             let existingValue = $textareaTags.val().trim();
-            // $(`${$groupElement} .tags`).val(value).trigger("input");
 
             if (existingValue) {
                 existingValue = existingValue.replace(/,+$/g, "");
@@ -638,7 +640,7 @@ $(document).ready(function () {
 
             value = value.replace(/,+/g, ",").replace(/^,|,$/g, ""); // Elimina comas al principio y final
             $textareaTags.val(value).trigger("input");
-        });
+        }
 
         //
         //
