@@ -268,12 +268,12 @@ def database_create(request):
         try:
             categoriaIdPOST = request.POST.get('categoria')
             categoria = get_object_or_404(models.Categorias, categoria=categoriaIdPOST)
-            tituloPOST = request.POST.get('titulo')
+            tituloPOST = request.POST.get('titulo').lower()
             informacionPOST = request.POST.get('informacion')
-            redirigirPOST = request.POST.get('redirigir')
+            redirigirPOST = request.POST.get('redirigir').lower()
             documentoPOST = request.FILES.get('documento')
             imagenPOST = request.FILES.get('imagen')
-            tagsPOST = request.POST.get('tags')
+            tagsPOST = request.POST.get('tags').lower()
             evento_fecha_inicioPOST = request.POST.get('eStart')
             evento_fecha_finPOST = request.POST.get('eEnd')
             evento_allDayPOST = request.POST.get('eAllDay')
@@ -355,9 +355,9 @@ def database_update(request):
             
             dbUpdate = get_object_or_404(models.Database, id=idPOST)
             dbUpdate.categoria = categoriaGET
-            dbUpdate.titulo = request.POST.get('titulo')
+            dbUpdate.titulo = request.POST.get('titulo').lower()
             dbUpdate.informacion = request.POST.get('informacion')
-            dbUpdate.redirigir = request.POST.get('redirigir')
+            dbUpdate.redirigir = request.POST.get('redirigir').lower()
             dbUpdate.frecuencia = frecuenciaPOST or '0'
             
             # Validación de archivo
@@ -424,7 +424,7 @@ def calendario_eventos(request):
     eventos = models.Database.objects.filter(categoria=categoriaGet).select_related('categoria')
     eventos_json = [{
         'id': evento.id,
-        'title': evento.titulo,
+        'title': evento.titulo.capitalize(),
         'description': evento.informacion,
         'classNames': evento.evento_className,
         'location': evento.evento_lugar,
@@ -459,7 +459,7 @@ def mapa_data(request):
             "uuid": mapa.uuid,
             "color": mapa.color,
             "imagen_url": imagen,
-            "nombre": mapa.nombre,
+            "nombre": mapa.nombre.capitalize(),
             "ismarker": mapa.is_marker,
             "sizemarker": mapa.size_marker,
             "informacion": mapa.informacion,

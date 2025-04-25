@@ -789,7 +789,7 @@ window.addEventListener("load", () => {
                     properties: {
                         uuid: item.uuid,
                         color: item.color,
-                        label: item.hidename ? item.nombre : "",
+                        label: item.hidename ? "" : item.nombre,
                         nombre: item.nombre,
                         door: item.door_coords,
                         ismarker: item.ismarker,
@@ -1274,4 +1274,55 @@ window.addEventListener("load", () => {
             console.error(error);
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
+
+    const draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+            polygon: true,
+            trash: true,
+        },
+        // defaultMode: "draw_polygon",
+    });
+
+    mapMapbox.addControl(draw);
+
+    mapMapbox.on("draw.create", updateArea);
+    mapMapbox.on("draw.delete", updateArea);
+    mapMapbox.on("draw.update", updateArea);
+
+    function updateArea(e) {
+        const data = draw.getAll();
+        console.log(data);
+        $("#controlsIndic").addClass("show");
+        if (data.features.length > 0) {
+            const polygon = data.features[0];
+
+            // Calcular área
+            const area = turf.area(polygon);
+            const rounded_area = Math.round(area * 100) / 100;
+
+            // Obtener coordenadas del polígono
+            const coordinates = polygon.geometry.coordinates[0]; // primer anillo del polígono
+
+            // Calcular perímetro (longitud del borde)
+            const perimeter = turf.length(polygon, { units: "kilometers" });
+            const rounded_perimeter = Math.round(perimeter * 1000 * 100) / 100; // en metros
+
+            // Calcular centroide (centro geométrico)
+            const centroid = turf.centroid(polygon);
+
+            // Mostrar resultados
+            $("#controlsIndic .card-body p").html(`
+            <p><strong>Área:</strong> ${rounded_area} m²</p>
+            <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
+            <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c.toFixed(5)).join(", ")}]</p>
+            <p><strong>Puntos del polígono:</strong></p>
+            <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
+        `);
+        } else {
+            $("#controlsIndic").removeClass("show");
+            $("#controlsIndic .card-body p").html("");
+            if (e.type !== "draw.delete") alert("Haz clic en el mapa para dibujar un polígono.");
+        }
+    }
 });

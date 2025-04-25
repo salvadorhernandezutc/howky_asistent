@@ -63,7 +63,7 @@
 </main>
 
 <!-- OffCanvas: Editar/Crear informacion -->
-<form class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="infoLateral" aria-labelledby="infoLateralLabel"
+<form class="offcanvas offcanvas-start show" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="infoLateral" aria-labelledby="infoLateralLabel"
     method="post" action="{% url 'upload_map' %}" data-validate-map autocomplete="off">
     <div class="offcanvas-header position-relative p-0">
         <button type="button" class="btn-close p-3 m-1 m-2 position-absolute" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -82,20 +82,14 @@
         </div>
         <div class="p-3 pt-0">
             {% csrf_token %}
-            <!-- Foto del Lugar -->
-            <div>
-                <input type="file" id="fotoEdificio" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual"
-                    style="opacity: 0; transform: scale(0);" />
-                <label class="btn bg_blue-green btn-block text-white" for="fotoEdificio" data-mdb-ripple-init data-mdb-ripple-color="white">
-                    Cambiar foto <i class="fa-regular fa-image ms-1"></i></label>
-            </div>
+            <input type="file" id="fotoEdificio" class="d-none" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
             <input type="text" name="isNew" id="isNewEdif" class="d-none">
             <input type="text" name="uuid" id="uuid" class="form-control d-none" data-uuid data-new-uid="{{UID}}" readonly required>
 
             <!-- Marcador de imagen -->
             <div class="mt-4" data-notmarker>
                 <input class="form-check-input" type="checkbox" id="checkHidename" data-transfer-bool="#hidename" />
-                <label class="form-check-label" for="checkHidename">: Mostrar Nombre</label>
+                <label class="form-check-label" for="checkHidename">: Ocultar Nombre</label>
                 <input type="hidden" id="hidename" name="hidename">
             </div>
             <div class="my-4">
@@ -108,68 +102,27 @@
                     required />
                 <label class="form-label" for="sizemarker">Tamaño:</label>
             </div>
+            
+            <div class="row mt-4">
+                <div class="col-6">
+                    <label class="btn btn-block bg_blue-green text-white" for="fotoEdificio" data-mdb-ripple-init data-mdb-ripple-color="white">Cambiar foto <i class="fa-regular fa-image ms-1"></i></label>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-block text-white m-0" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
+                </div>
 
-            <!-- Color del poligono -->
-            <section class="row" data-notmarker>
-                <div class="col-10">
-                    <div class="form-outline" data-mdb-input-init>
-                        <input type="text" class="form-control" id="namecolor" name="namecolor" autocapitalize="off" data-colorName list="colorsList" />
-                        <label class="form-label" for="namecolor">Color:</label>
-                    </div>
-                    <datalist id="colorsList"></datalist>
+                <div class="col-4 mt-4">
+                    <button type="button" id="btnPoligon" class="btn btn-block btn_detail text-white" data-mdb-ripple-init data-mdb-ripple-color="white" data-notmarker><i class="fa-solid fa-draw-polygon ms-1"></i></button>
                 </div>
-                <div class="col-2 ps-1">
-                    <input type="text" class="d-none" id="colorHex" name="colorEdificio" value="#808080" required />
-                    <input type="color" class="form-control form-control-color p-1 rounded border border-secondary" id="colorPicker" value="#808080"
-                        data-colorPicker>
+                <div class="col-4 mt-4">
+                    <button type="button" id="btnPoligonCancel" class="btn btn-block btn-danger" data-mdb-ripple-init data-mdb-ripple-color="white"><i class="fa-solid fa-power-off ms-1"></i></button>
                 </div>
-            </section>
-            <!-- Poligonos, boton e inputs -->
-            <button type="button" id="btnPoligon" class="btn btn_detail btn-block text-white mt-4" data-mdb-ripple-init data-mdb-ripple-color="white"
-                data-notmarker>
-                Dibujar Polígono<i class="fa-solid fa-draw-polygon ms-1"></i>
-            </button>
-            <button type="button" id="btnPoligonCancel" class="btn btn-danger btn-block mt-4 none" data-mdb-ripple-init data-mdb-ripple-color="white">
-                Cancelar <i class="fa-solid fa-power-off ms-1"></i>
-            </button>
-            <section class="none" id="esquinasPoligono">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="input-group form-outline mt-4" data-mdb-input-init>
-                            <input type="text" id="esquina1" name="esquina1" class="form-control pe-2" readonly aria-describedby="inputBtnE1" required />
-                            <label class="form-label" for="esquina1">Esquina 01:</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group form-outline mt-4" data-mdb-input-init>
-                            <input type="text" id="esquina2" name="esquina2" class="form-control pe-2" readonly aria-describedby="inputBtnE2" required />
-                            <label class="form-label" for="esquina2">Esquina 02:</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group form-outline mt-4" data-mdb-input-init>
-                            <input type="text" id="esquina3" name="esquina3" class="form-control pe-2" readonly aria-describedby="inputBtnE3" required />
-                            <label class="form-label" for="esquina3">Esquina 03:</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group form-outline mt-4" data-mdb-input-init>
-                            <input type="text" id="esquina4" name="esquina4" class="form-control pe-2" readonly aria-describedby="inputBtnE4" required />
-                            <label class="form-label" for="esquina4">Esquina 04:</label>
-                        </div>
-                    </div>
+                <div class="col-4 mt-4">
+                    <button class="btn btn-block btn_detail px-3 text-white" type="button" id="inputBtnDoor" data-mdb-ripple-init data-mdb-ripple-color="white" title="Colocar Marcador de la Entrada"><i class="fa-solid fa-location-dot fs-10"></i></button>
                 </div>
-            </section>
-            <!-- Coordenadas de la puerta -->
-            <div class="input-group form-outline mt-4" data-mdb-input-init>
-                <input type="text" id="puertaCordsEdificio" name="puertaCordsEdificio" class="form-control pe-4" aria-describedby="inputBtnDoor" readonly
-                    required />
-                <label class="form-label" for="puertaCordsEdificio">Punto de Entrada:</label>
-                <button class="btn btn_detail px-3 rounded-end text-white" type="button" id="inputBtnDoor" data-mdb-ripple-init data-mdb-ripple-color="white"
-                    title="Colocar Marcador de la Entrada">
-                    <i class="fa-solid fa-location-dot fs-10"></i>
-                </button>
             </div>
+            
+            <input type="text" id="puertaCordsEdificio" name="puertaCordsEdificio" class="d-none" aria-describedby="inputBtnDoor" readonly required />
             
             <!-- TinyMCE: Contenido de texto -->
             <div class="mt-4" data-notmarker>
@@ -187,27 +140,6 @@
                     <button type="submit" class="btn btn_detail btn-block" data-mdb-ripple-init data-mdb-ripple-color="white">
                         Guardar Cambios <i class="fa-regular fa-floppy-disk ms-1"></i>
                     </button>
-                </div>
-            </div>
-            <div class="mt-4 accordion accordion-borderless" id="noteAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingTwoX">
-                        <button data-mdb-collapse-init class="accordion-button btn collapsed bg_purple-blue text-white" type="button" data-mdb-toggle="collapse"
-                            data-mdb-target="#flush-collapseTwoX" aria-expanded="false" aria-controls="flush-collapseTwoX">
-                            Nota: ...
-                        </button>
-                    </h2>
-                    <div id="flush-collapseTwoX" class="accordion-collapse collapse" aria-labelledby="flush-headingTwoX" data-mdb-parent="#noteAccordion">
-                        <div class="accordion-body p-2">
-                            <small>
-                                Además de crear/editar la información del mapa, se recomienda editar los lugares y caminos en (OSM) OpenStreetMaps
-                                <i class="fa-solid fa-book-atlas"></i><br>
-                                También se recomienda registrar los caminos y lugares sin su nombre, ya que estos intervienen
-                                en la visualización del mapa en este sitio web. <br>
-                                Utiliza la capa de <u>Mapbox Satelite</u> <i class="fa-solid fa-layer-group ms-1"></i> al editar la información en OSM
-                            </small>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -366,6 +298,9 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css" type="text/css">
 <script src="{% static 'js/settings_mapbox.js' %}"></script>
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
 <script src="{% static 'js/settings_tinymce.js' %}"></script>

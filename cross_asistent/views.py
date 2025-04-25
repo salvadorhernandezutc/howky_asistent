@@ -269,14 +269,13 @@ def map_page(request):
 @never_cache
 def update_create_pleace_map(request):
     if request.method != 'POST':
-        # return JsonResponse({'error': 'Metodo no valido'}, status=400)
         return redirect('update_mapa')
 
     isNewPost = request.POST.get('isNew')
     is_markerPost = request.POST.get('ismarker')
     hide_namePost = request.POST.get('hidename')
     uuidPost = request.POST.get('uuid')
-    nombrePost = request.POST.get('nombreEdificio')
+    nombrePost = request.POST.get('nombreEdificio').lower()
     colorPost = request.POST.get('colorEdificio')
     p1Post = request.POST.get('esquina1')
     p2Post = request.POST.get('esquina2')

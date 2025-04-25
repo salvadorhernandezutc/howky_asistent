@@ -77,7 +77,11 @@ class Categorias(models.Model):
     creacion = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.categoria    
+        return self.categoria
+    
+    class Meta:
+        verbose_name = "Categoria"
+        verbose_name_plural = "Categorias"
 
 class Database(models.Model):
     categoria = models.ForeignKey(Categorias, on_delete=models.CASCADE, null=True)
@@ -101,7 +105,6 @@ class Database(models.Model):
             return [tag.strip() for tag in self.tags.split(',')]
         return []
     
-    
     def __str__(self):
         return self.titulo
     
@@ -119,8 +122,12 @@ class Database(models.Model):
                 old_info.imagen.delete(save=False)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "Base de Datos"
+        verbose_name_plural = "Bases de Datos"
+
 class Mapa(models.Model):
-    uuid = models.CharField(max_length=25)
+    uuid = models.CharField(max_length=25, unique=True)
     nombre = models.CharField(max_length=200)
     informacion = models.TextField()
     color = models.CharField(max_length=50)
@@ -129,16 +136,22 @@ class Mapa(models.Model):
     p2_polygons = models.CharField(max_length=150, blank=True, null=True)
     p3_polygons = models.CharField(max_length=150, blank=True, null=True)
     p4_polygons = models.CharField(max_length=150, blank=True, null=True)
+    points = models.TextField()
+    tags = models.TextField(blank=True, null=True, help_text='Palabras Clave. Separar por comas')
     is_marker = models.BooleanField(default=False)
-    hide_name = models.BooleanField(default=True)
+    hide_name = models.BooleanField(default=False)
     size_marker = models.CharField(max_length=4, default='0.05')
     
     def __str__(self):
         return self.nombre
+    
+    class Meta:
+        verbose_name = "Mapa"
+        verbose_name_plural = "Mapas"
 
 class galeria(models.Model):
     imagen = models.ImageField(upload_to=set_imgs_path, max_length=120, blank=True, null=True)
-    uuid = models.CharField(max_length=25)
+    uuid = models.ForeignKey(Mapa, to_field='uuid', on_delete=models.CASCADE, null=True, blank=True)
     usos = models.TextField(blank=True,null=True)
     
     def __str__(self):
@@ -148,11 +161,19 @@ class galeria(models.Model):
         if self.imagen:
             self.imagen.delete()
         super(galeria, self).delete(*args, **kwargs)
+    
+    class Meta:
+        verbose_name = "Galeria"
+        verbose_name_plural = "Galeria"
 
 class Preguntas(models.Model):
     pregunta = models.CharField(max_length=150)
     descripcion = models.TextField(blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Pregunta"
+        verbose_name_plural = "Preguntas"
     
 class Configuraciones(models.Model):
     qr_image = models.FileField(upload_to='settings/', max_length=200)
@@ -180,6 +201,10 @@ class Configuraciones(models.Model):
                 old_images.about_img_second.delete(save=False)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "Configuracion"
+        verbose_name_plural = "Configuraciones"
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to=set_imgProfile_path, max_length=120, blank=True, null=True)
@@ -195,6 +220,9 @@ class UserProfile(models.Model):
                 old_profile.profile_picture.delete(save=False)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "Perfil de Usuario"
+        verbose_name_plural = "Perfiles de Usuario"
 
 # Función genérica para eliminar archivos
 def delete_files(instance, fields):
