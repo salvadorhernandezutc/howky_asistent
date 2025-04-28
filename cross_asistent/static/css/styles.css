@@ -44,7 +44,7 @@
     --transitionCubic: 0.3s all cubic-bezier(0.68, -0.55, 0.27, 1.55);
     --transitionCubicVal: cubic-bezier(0.68, -0.55, 0.27, 1.55);
     --border-input_items: 2px solid var(--var-white);
-    --border-radius: 8px;
+    --border-radius: 10px;
     --nav_height: 70px;
     --full_page: calc(100vh - var(--nav_height));
 }
@@ -762,11 +762,12 @@ main.main_anchor {
 }
 
 .box_asistent_controls .controls_buttons {
+    --size: 60px;
     display: flex;
     gap: 10px;
-    min-width: 60px;
-    min-height: 60px;
-    border-radius: 60px;
+    min-width: var(--size);
+    min-height: var(--size);
+    border-radius: var(--size);
     background: transparent;
     transition: var(--transitionEase);
 }
@@ -1721,7 +1722,7 @@ input:checked+.slider:before {
     box-sizing: border-box;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 10px;
+    border-radius: calc(var(--border-radius) + 2px);
     box-shadow: -2px 2px 10px 0px rgba(68, 68, 68, 0.4);
     transition: all 0.3s ease-in-out;
     counter-increment: grid-item-counter;
@@ -2704,7 +2705,7 @@ img.img-rounded {
     min-height: 6px;
     opacity: 0.9;
     border: none;
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
     background: var(--var-detail) !important;
 }
 
