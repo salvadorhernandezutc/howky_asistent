@@ -424,7 +424,7 @@ def calendario_eventos(request):
     eventos = models.Database.objects.filter(categoria=categoriaGet).select_related('categoria')
     eventos_json = [{
         'id': evento.id,
-        'title': evento.titulo.capitalize(),
+        'title': evento.titulo,
         'description': evento.informacion,
         'classNames': evento.evento_className,
         'location': evento.evento_lugar,
@@ -459,7 +459,7 @@ def mapa_data(request):
             "uuid": mapa.uuid,
             "color": mapa.color,
             "imagen_url": imagen,
-            "nombre": mapa.nombre.capitalize(),
+            "nombre": mapa.nombre,
             "ismarker": mapa.is_marker,
             "sizemarker": mapa.size_marker,
             "informacion": mapa.informacion,

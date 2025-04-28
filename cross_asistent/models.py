@@ -164,7 +164,7 @@ class galeria(models.Model):
     
     class Meta:
         verbose_name = "Galeria"
-        verbose_name_plural = "Galeria"
+        verbose_name_plural = "Galerias"
 
 class Preguntas(models.Model):
     pregunta = models.CharField(max_length=150)
@@ -222,7 +222,7 @@ class UserProfile(models.Model):
 
     class Meta:
         verbose_name = "Perfil de Usuario"
-        verbose_name_plural = "Perfiles de Usuario"
+        verbose_name_plural = "Perfiles de Usuarios"
 
 # Función genérica para eliminar archivos
 def delete_files(instance, fields):
