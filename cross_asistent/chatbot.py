@@ -116,7 +116,7 @@ def chatbot(request):
                     except:
                         info_random = mejores_resultados[0].informacion
 
-                    info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n 👇👇👇"
+                    info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
 
                     map_url = reverse('map')
                     params = urlencode({'origin': origen or 'Caseta 1', 'destiny': destino})

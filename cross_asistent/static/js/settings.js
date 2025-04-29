@@ -44,22 +44,6 @@ $(document).ready(function () {
         }
         input.on("input", filtertable);
 
-        // Vista de Programador y Banners
-        // Agrega la clase active al banner con la id mas baja #######################################
-        var minIdNumber = Infinity;
-        let minIdElement = null;
-        $('[id^="bannerid_"]').each(function () {
-            var id = $(this).attr("id");
-            var number = parseInt(id.split("_")[1]);
-            if (number < minIdNumber) {
-                minIdNumber = number;
-                minIdElement = $(this);
-            }
-        });
-        if (minIdElement !== null) {
-            minIdElement.addClass("active");
-        }
-
         // iniciar sesion ####################################################
         // Crea usuario nuevo desde programador ##############################
         // Registrar un nuevo articulo con TinyMCE ###########################
@@ -97,8 +81,7 @@ $(document).ready(function () {
 
         // Editar/Crear usuario
         // generar nueva contraseña aleatoria #################################
-        $("button[data-editinput]").click(genpass);
-        function genpass() {
+        $("button[data-editinput]").click(function () {
             $(this).addClass("active");
             var newRandomPass = cadenaRandom(10, caracteres);
             var editInputId = $(this).data("editinput");
@@ -108,11 +91,11 @@ $(document).ready(function () {
             $("#" + editInputId)
                 .val(`UTC#${newRandomPass}`)
                 .addClass("active");
-        }
+        });
 
-        // Quitar clase show #####################################
+        // Toggle de la clase show #####################################
         $("[data-btn_closed]").on("click", function () {
-            var targetId = $(this).data("btn_closed");
+            const targetId = $(this).data("btn_closed");
             $(targetId).toggleClass("show");
 
             if (targetId.includes("slide")) {
@@ -248,21 +231,7 @@ $(document).ready(function () {
             applyTheme(colorTheme);
         }
 
-        // Firma del blog ##################################################
-        // obtener texto sin espacios en inicio y final (trim)
-        const oldSignature = $.trim($("#firmaPerfilTexto").text());
-        $("#new_firma").on("input", function () {
-            const inputText = $(this).val();
-
-            // Verificar si el texto está vacío
-            if (inputText.trim() === "") {
-                $("#firmaPerfilTexto").text(oldSignature);
-            } else {
-                $("#firmaPerfilTexto").text(inputText);
-            }
-        });
-
-        // Colocar imagen del input file #############################################
+        // Colocar imagen del input file en DOM #############################################
         function readURL(input, elementId) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -371,44 +340,6 @@ $(document).ready(function () {
             }
         });
 
-        // Editar Blog ################################################################
-        $("#formularioArticulo #blogNewUpdate").change(function () {
-            blogIdGet = $("#formularioArticulo #blogNewUpdate").val();
-            dataGetBlog = $("#formularioArticulo #blogNewUpdate").data("get-blog");
-            if (blogIdGet != "newBlog") {
-                $.ajax({
-                    url: dataGetBlog,
-                    type: "GET",
-                    data: { id: blogIdGet },
-                    success: function (data) {
-                        $("#formularioArticulo #imgArticle").attr("src", "/static/img/default_image.webp");
-                        if (data.encabezado) {
-                            $("#formularioArticulo #imgArticle").attr("src", data.encabezado);
-                        }
-                        $("#formularioArticulo #titulo").addClass("active").val(data.titulo);
-                        const blogContent = data.contenido;
-                        tinymce.get("mainTiny").setContent(blogContent);
-                        $("#formularioArticulo .blogSubmit").html('Modificar <i class="fa-regular fa-paper-plane ms-1"></i>');
-                        $("#formularioArticulo .btnModal").slideDown("fast");
-                        $("#blogDelete #blogDeleteTitle").text(data.titulo);
-                        $("#blogDelete #blogIdDelete").val(blogIdGet);
-                    },
-                    error: function (error) {
-                        console.error("Error al obtener datos: " + error);
-                        alertSToast("center", 8000, "error", "UPS! 😯🤔🧐<br> hubo un error al obtener los datos, consulte la consola.");
-                    },
-                });
-            } else {
-                $("#formularioArticulo #imgArticle").attr("src", "/static/img/default_image.webp");
-                $("#formularioArticulo #titulo").removeClass("active").val("");
-                tinymce.get("mainTiny").setContent("");
-                $("#formularioArticulo .blogSubmit").html('Publicar <i class="fa-regular fa-paper-plane ms-1"></i>');
-                $("#formularioArticulo .btnModal").slideUp("fast");
-                $("#blogDelete #blogDeleteTitle").text("");
-                $("#blogDelete #blogIdDelete").val("");
-            }
-        });
-
         // Editar Evento -Calendario ######################################
         // Cambiar clase del select option
         $("[data-select_addClass]").change(function () {
@@ -421,21 +352,12 @@ $(document).ready(function () {
             const setDefault = $(this).attr("data-blur-default");
             const thisValue = $(this).val();
             const newVal = $(this).attr(setDefault);
+
             if (thisValue == "") {
                 $(this).val(newVal);
             }
             if (setDefault == "min" && thisValue < newVal) {
                 $(this).val(newVal);
-            }
-        });
-
-        // Transferir valor booleano del checkbox ####################
-        $('input[type="checkbox"][data-transfer-bool]').on("change", function () {
-            var inputId = $(this).attr("data-transfer-bool");
-            if ($(this).is(":checked")) {
-                $(inputId).attr("value", "true");
-            } else {
-                $(inputId).attr("value", "false");
             }
         });
 
@@ -454,24 +376,6 @@ $(document).ready(function () {
             });
         }
         setRangeVal();
-
-        // Crear Efecto de Honda en un boton ####################
-        $("[init-wave-click]").on("click", function (event) {
-            var wave = $('<div class="wave"></div>');
-            var offset = $(this).offset();
-            var x = event.pageX - offset.left;
-            var y = event.pageY - offset.top;
-
-            wave.css({
-                width: "50px",
-                height: "50px",
-                top: y - 25 + "px",
-                left: x - 25 + "px",
-            });
-
-            $(this).append(wave);
-            setTimeout(() => wave.remove(), 1000);
-        });
 
         // Función para obtener los parámetros de la URL
         function getUrlParams() {
@@ -917,6 +821,19 @@ function alertSToast(posittionS, timerS, iconS, titleS, didDestroyS) {
 }
 
 // context menu disabled ######################################################################
-document.oncontextmenu = function () {
-    return false;
-};
+document.oncontextmenu = () => false;
+document.addEventListener("keydown", (event) => {
+    const forbiddenKeys = [
+        { ctrl: true, shift: true, key: "C" },
+        { ctrl: true, shift: true, key: "E" },
+        { ctrl: true, shift: true, key: "I" },
+        { ctrl: true, shift: true, key: "J" },
+        { ctrl: true, shift: true, key: "K" },
+        { ctrl: true, shift: true, key: "M" },
+        { ctrl: false, shift: false, key: "F12" },
+    ];
+
+    if (forbiddenKeys.some((k) => event.ctrlKey === k.ctrl && event.shiftKey === k.shift && event.key === k.key)) {
+        event.preventDefault();
+    }
+});

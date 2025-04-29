@@ -922,14 +922,47 @@ window.addEventListener("load", () => {
                             };
                             currentRoute = routeGeoJSON;
 
-                            const distance = e.route[0].distance / 1000;
-                            const duration = e.route[0].duration / 60;
+                            const rawDistance = e.route[0].distance; // en metros
+                            const rawDuration = e.route[0].duration; // en segundos
+
+                            // Formato de distancia
+                            let distanceStr;
+                            if (rawDistance < 1000) {
+                                distanceStr = `${Math.round(rawDistance)} m`;
+                            } else {
+                                distanceStr = `${(rawDistance / 1000).toFixed(2)} km`;
+                            }
+
+                            // Formato de duración
+                            const minutes = Math.floor(rawDuration / 60);
+                            const seconds = Math.round(rawDuration % 60);
+
+                            let durationStr;
+                            if (seconds === 0) {
+                                durationStr = `${minutes} min`;
+                            } else if (minutes === 0) {
+                                durationStr = `${seconds} s`;
+                            } else {
+                                durationStr = `${minutes}:${seconds.toString().padStart(2, "0")} min`;
+                            }
+
+                            // Mostrar en HTML
                             $("#route-info").html(
-                                `<div class="row mb-2"><div class="col-1"><i class="fa-solid fa-shoe-prints me-1"></i></div><div class="col">Distancia: <strong>${distance.toFixed(
-                                    2
-                                )} km</strong></div></div><div class="row"><div class="col-1"><i class="fa-solid fa-hourglass-half me-1"></i></div><div class="col">Duración: <strong>${duration.toFixed(
-                                    2
-                                )} minutos aprox.</strong></div></div>`
+                                `<div class="row">
+                                    <div class="col-1 mb-2">
+                                        <i class="fa-solid fa-shoe-prints me-1"></i>
+                                    </div>
+                                    <div class="col-10 mb-2">
+                                        Distancia: <strong>${distanceStr}</strong>
+                                    </div>
+                                
+                                    <div class="col-1">
+                                        <i class="fa-solid fa-hourglass-half me-1"></i>
+                                    </div>
+                                    <div class="col-10">
+                                        Duración: <strong>${durationStr} aprox.</strong>
+                                    </div>
+                                </div>`
                             );
                             $("#route-info").slideDown();
                         });
@@ -1026,7 +1059,6 @@ window.addEventListener("load", () => {
 
                     // Agregar etiqueta de punto de origen
                     if (!mapMapbox.getLayer("directions-origin-label")) {
-                        console.log(originFeature.properties["marker-symbol"]);
                         mapMapbox.addLayer({
                             id: "directions-origin-label",
                             type: "symbol",
