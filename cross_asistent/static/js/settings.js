@@ -821,19 +821,19 @@ function alertSToast(posittionS, timerS, iconS, titleS, didDestroyS) {
 }
 
 // context menu disabled ######################################################################
-document.oncontextmenu = () => false;
-document.addEventListener("keydown", (event) => {
-    const forbiddenKeys = [
-        { ctrl: true, shift: true, key: "C" },
-        { ctrl: true, shift: true, key: "E" },
-        { ctrl: true, shift: true, key: "I" },
-        { ctrl: true, shift: true, key: "J" },
-        { ctrl: true, shift: true, key: "K" },
-        { ctrl: true, shift: true, key: "M" },
-        { ctrl: false, shift: false, key: "F12" },
-    ];
+// document.oncontextmenu = () => false;
+// document.addEventListener("keydown", (event) => {
+//     const forbiddenKeys = [
+//         { ctrl: true, shift: true, key: "C" },
+//         { ctrl: true, shift: true, key: "E" },
+//         { ctrl: true, shift: true, key: "I" },
+//         { ctrl: true, shift: true, key: "J" },
+//         { ctrl: true, shift: true, key: "K" },
+//         { ctrl: true, shift: true, key: "M" },
+//         { ctrl: false, shift: false, key: "F12" },
+//     ];
 
-    if (forbiddenKeys.some((k) => event.ctrlKey === k.ctrl && event.shiftKey === k.shift && event.key === k.key)) {
-        event.preventDefault();
-    }
-});
+//     if (forbiddenKeys.some((k) => event.ctrlKey === k.ctrl && event.shiftKey === k.shift && event.key === k.key)) {
+//         event.preventDefault();
+//     }
+// });
