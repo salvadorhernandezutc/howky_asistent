@@ -263,7 +263,7 @@ def map_page(request):
     categoria_mapa = models.Categorias.objects.get(categoria="Mapa")
     map_inDB = models.Database.objects.filter(categoria=categoria_mapa)
     UID = f'mapa-pleace_{models.generate_random_string(11)}'
-    return render(request, 'admin/mapa.html', {'map_inDB': map_inDB, 'active_page': 'mapa', 'UID':UID,'pages': functions.pages})
+    return render(request, 'admin/mapa.html', {'map_inDB': map_inDB, 'active_page': 'mapa', 'UID':UID, 'pages': functions.pages})
 
 @login_required
 @never_cache

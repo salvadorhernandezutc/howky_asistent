@@ -53,312 +53,6 @@ window.addEventListener("load", () => {
         }
     });
 
-    if (mapElement.classList.contains("map_editing")) {
-        formChanges = true;
-
-        // Hacer visible los campos de las esquinas
-        $("#btnPoligon").on("click", function () {
-            $("#esquinasPoligono").slideDown("slow");
-        });
-
-        // Dibujar poligono
-        const drawPolygonButton = document.getElementById("btnPoligon");
-        const drawPolygonCancel = document.getElementById("btnPoligonCancel");
-        const coordInputs = ["esquina1", "esquina2", "esquina3", "esquina4"];
-        const colors = ["tomato", "#3b71ca", "lime", "#d29c15"];
-        let rightClicks = 4;
-        let markers = [];
-        let coords = [];
-        let polygonLayer = null;
-        let createNew = false;
-
-        drawPolygonButton.addEventListener("click", () => {
-            createNew = true;
-            formChanges = false;
-            initPolygonDrawing();
-            $("#controlsIndic .card-header h6").html('<i class="fa-solid fa-draw-polygon me-1"></i>Dibujar Poligono:');
-            $("#controlsIndic .card-body p").html(
-                'Da <strong id="poligonClicks">4</strong> cliks derechos en el mapa... <br> Dibuja el poligono en sentido <u>Horario</u> <i class="fa-solid fa-arrow-rotate-right ms-1"></i>'
-            );
-            $("#controlsIndic").addClass("show");
-            mapMapbox.on("contextmenu", countClicks);
-
-            mapMapbox.on("contextmenu", addMarker);
-            $("#btnPoligonCancel").slideDown();
-            if (window.innerWidth <= 800) {
-                setTimeout(() => {
-                    if (offcanvasElement.classList.contains("show")) {
-                        offcanvasInstance.hide();
-                    }
-                }, 1000);
-            }
-        });
-        drawPolygonCancel.addEventListener("click", () => {
-            createNew = "";
-            initPolygonDrawing();
-            mapMapbox.off("contextmenu", addMarker);
-            mapMapbox.off("contextmenu", countClicks);
-            $("#controlsIndic").removeClass("show");
-            $("#btnPoligonCancel").slideUp();
-            $("#esquinasPoligono").slideUp("fast");
-        });
-        function addMarker(e) {
-            if (coords.length < 4) {
-                const color = colors[coords.length];
-                const marker = new mapboxgl.Marker({ color: color, draggable: true }).setLngLat(e.lngLat).addTo(mapMapbox).on("dragend", updatePolygon);
-                markers.push(marker);
-                coords.push(e.lngLat);
-
-                document.getElementById(coordInputs[coords.length - 1]).classList.add("active");
-                document.getElementById(coordInputs[coords.length - 1]).value = `${e.lngLat.lng}, ${e.lngLat.lat}`;
-            }
-
-            if (coords.length === 4) {
-                mapMapbox.off("contextmenu", addMarker);
-                drawPolygon();
-                drawPolygonButton.classList.add("bg_red-blue");
-                drawPolygonButton.classList.remove("bg_purple-blue");
-                drawPolygonButton.innerHTML = 'Dibujar de nuevo <i class="fa-solid fa-trash-can ms-1"></i>';
-                createNew = true;
-                $("#btnPoligonCancel").slideUp();
-            }
-        }
-        function initPolygonDrawing() {
-            markers.forEach((marker) => marker.remove());
-            markers = [];
-            coords = [];
-            if (createNew) {
-                drawPolygonButton.classList.remove("btn_detail", "bg_red-blue");
-                drawPolygonButton.classList.add("bg_purple-blue");
-                drawPolygonButton.innerHTML = 'Borrar marcadores <i class="fa-solid fa-trash-can ms-1"></i>';
-            } else if (createNew === "") {
-                drawPolygonButton.classList.remove("bg_purple-blue", "bg_red-blue");
-                drawPolygonButton.classList.add("btn_detail");
-                drawPolygonButton.innerHTML = 'Dibujar Poligono <i class="fa-solid fa-draw-polygon ms-1"></i>';
-            }
-
-            if (polygonLayer) {
-                if (mapMapbox.getLayer(polygonLayer.id + "_label")) {
-                    mapMapbox.removeLayer(polygonLayer.id + "_label");
-                }
-                if (mapMapbox.getLayer(polygonLayer.id)) {
-                    mapMapbox.removeLayer(polygonLayer.id);
-                }
-                if (mapMapbox.getSource(polygonLayer.id)) {
-                    mapMapbox.removeSource(polygonLayer.id);
-                }
-            }
-
-            createNew = false;
-        }
-        function drawPolygon() {
-            const polygonText = document.getElementById("nombreEdificio").value || "Nuevo Lugar";
-            const polygonColor = document.getElementById("colorHex").value || "#808080";
-
-            const coordinates = [coords[0].toArray(), coords[1].toArray(), coords[2].toArray(), coords[3].toArray(), coords[0].toArray()];
-
-            if (mapMapbox.getLayer("polygon_label")) {
-                mapMapbox.removeLayer("polygon_label");
-            }
-            if (mapMapbox.getLayer("polygon")) {
-                mapMapbox.removeLayer("polygon");
-            }
-            if (mapMapbox.getSource("polygon")) {
-                mapMapbox.removeSource("polygon");
-            }
-
-            const polygonId = "polygon";
-
-            mapMapbox.addSource(polygonId, {
-                type: "geojson",
-                data: {
-                    type: "Feature",
-                    geometry: {
-                        type: "Polygon",
-                        coordinates: [coordinates],
-                    },
-                },
-            });
-
-            mapMapbox.addLayer({
-                id: polygonId,
-                type: "fill",
-                source: polygonId,
-                layout: {},
-                paint: {
-                    "fill-color": polygonColor,
-                    "fill-opacity": 0.5,
-                },
-            });
-
-            mapMapbox.addLayer({
-                id: polygonId + "_label",
-                type: "symbol",
-                source: polygonId,
-                layout: {
-                    "text-field": polygonText,
-                    "text-size": 14,
-                    "text-anchor": "center",
-                },
-                paint: {
-                    "text-color": colorlabels,
-                },
-            });
-
-            polygonLayer = { id: polygonId };
-        }
-        function updatePolygon() {
-            coords = markers.map((marker) => marker.getLngLat());
-            coordInputs.forEach((id, index) => {
-                document.getElementById(id).value = `${coords[index].lng}, ${coords[index].lat}`;
-            });
-
-            drawPolygon();
-        }
-        function countClicks() {
-            rightClicks--;
-            if (rightClicks > 0) {
-                document.getElementById("poligonClicks").textContent = rightClicks;
-            } else {
-                mapMapbox.off("contextmenu", countClicks);
-                setTimeout(() => {
-                    $("#controlsIndic").removeClass("show");
-                    rightClicks = 4;
-                    document.getElementById("poligonClicks").textContent = rightClicks;
-                }, 2000);
-            }
-        }
-
-        // Colocar puerta
-        const btnDoor = document.getElementById("inputBtnDoor");
-        const puertaCordsEdificio = document.getElementById("puertaCordsEdificio");
-        var doorMarker;
-        let addDoorMarker = true;
-        btnDoor.addEventListener("click", () => {
-            formChanges = false;
-            if (addDoorMarker) {
-                if (coords.length > 4) {
-                    drawPolygonCancel.click();
-                }
-                btnDoor.classList.add("bg_purple-blue");
-                btnDoor.classList.remove("btn_detail");
-                mapMapbox.on("contextmenu", addMarkerDoor);
-
-                $("#controlsIndic .card-header h6").html('<i class="fa-solid fa-location-dot me-1"></i>Punto de Entrada:');
-                $("#controlsIndic .card-body p").html(
-                    "Da <strong>1</strong> clik derecho en el mapa... <br> Debe esta ubicada en el <strong>borde</strong>  del poligono y conectada con algun <strong>camino</strong>"
-                );
-                $("#controlsIndic").addClass("show");
-            }
-            addDoorMarker = false;
-            if (window.innerWidth <= 800) {
-                setTimeout(() => {
-                    if (offcanvasElement.classList.contains("show")) {
-                        offcanvasInstance.hide();
-                    }
-                }, 1000);
-            }
-        });
-        function addMarkerDoor(e) {
-            if (doorMarker) {
-                doorMarker.remove();
-            }
-            doorMarker = new mapboxgl.Marker({ color: "purple", draggable: true }).setLngLat(e.lngLat).addTo(mapMapbox).on("dragend", updateDoorCords);
-
-            puertaCordsEdificio.classList.add("active");
-            puertaCordsEdificio.value = `${e.lngLat.lng}, ${e.lngLat.lat}`;
-            btnDoor.classList.remove("bg_purple-blue");
-            btnDoor.classList.add("btn_detail");
-            addDoorMarker = true;
-
-            mapMapbox.off("contextmenu", addMarkerDoor);
-            setTimeout(() => {
-                $("#controlsIndic").removeClass("show");
-            }, 2000);
-        }
-        function updateDoorCords(e) {
-            const lngLat = doorMarker.getLngLat();
-            puertaCordsEdificio.value = `${lngLat.lng}, ${lngLat.lat}`;
-        }
-
-        // Detectar si es marcador
-        $("#checkIsmarker").change(function () {
-            if ($(this).is(":checked")) {
-                $("#sizemarkerdiv").slideDown("fast");
-                $("[data-notmarker]").slideUp();
-                $('[for="puertaCordsEdificio"]').text("Ubicacion:");
-            } else {
-                $("#sizemarkerdiv").slideUp();
-                $("[data-notmarker]").slideDown();
-                $('[for="puertaCordsEdificio"]').text("Punto de entrada:");
-            }
-        });
-        $("#sizemarker").blur(function () {
-            const maxval = parseFloat($("#sizemarker").attr("max"));
-            const minval = parseFloat($("#sizemarker").attr("min"));
-            let defval = parseFloat($("#sizemarker").val());
-
-            if (defval > maxval) {
-                defval = maxval;
-            } else if (defval < minval) {
-                defval = minval;
-            }
-
-            $("#sizemarker").val(defval);
-        });
-
-        const draw = new MapboxDraw({
-            displayControlsDefault: false,
-            controls: {
-                polygon: true,
-                trash: true,
-            },
-            // defaultMode: "draw_polygon",
-        });
-
-        mapMapbox.addControl(draw);
-
-        mapMapbox.on("draw.create", updateArea);
-        mapMapbox.on("draw.delete", updateArea);
-        mapMapbox.on("draw.update", updateArea);
-
-        function updateArea(e) {
-            const data = draw.getAll();
-            console.log(data);
-            $("#controlsIndic").addClass("show");
-            if (data.features.length > 0) {
-                const polygon = data.features[0];
-
-                // Calcular área
-                const area = turf.area(polygon);
-                const rounded_area = Math.round(area * 100) / 100;
-
-                // Obtener coordenadas del polígono
-                const coordinates = polygon.geometry.coordinates[0]; // primer anillo del polígono
-
-                // Calcular perímetro (longitud del borde)
-                const perimeter = turf.length(polygon, { units: "kilometers" });
-                const rounded_perimeter = Math.round(perimeter * 1000 * 100) / 100; // en metros
-
-                // Calcular centroide (centro geométrico)
-                const centroid = turf.centroid(polygon);
-
-                // Mostrar resultados
-                $("#controlsIndic .card-body p").html(`
-                    <p><strong>Área:</strong> ${rounded_area} m²</p>
-                    <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
-                    <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c.toFixed(5)).join(", ")}]</p>
-                    <p><strong>Puntos del polígono:</strong></p>
-                    <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
-                `);
-            } else {
-                $("#controlsIndic").removeClass("show");
-                $("#controlsIndic .card-body p").html("");
-                if (e.type !== "draw.delete") alert("Haz clic en el mapa para dibujar un polígono.");
-            }
-        }
-    }
-
     // Detectar cuando un offcanvas se cierra
     offcanvasElement.addEventListener("hidden.bs.offcanvas", function () {
         offcanvasOpen = false;
@@ -429,7 +123,6 @@ window.addEventListener("load", () => {
 
                         const newUID = $("#uuid").data("new-uid");
                         $("#uuid").removeClass("active").val(newUID);
-                        $("#namecolor").addClass("active").val("gray");
                         $("#colorPicker").addClass("active").val("#808080");
                         initPolygonDrawing();
 
@@ -664,7 +357,7 @@ window.addEventListener("load", () => {
                         $("#sizemarker").addClass("active").val(icon_size);
                         $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
 
-                        $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
+                        // $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
                         $("#fotoEdificio").attr("required", false);
 
                         $("#esquina1").addClass("active").val(edges[0]);
@@ -1013,7 +706,7 @@ window.addEventListener("load", () => {
                     if ($("#checkIsmarker").is(":checked")) {
                         $("#sizemarkerdiv").slideUp();
                         $("[data-notmarker]").slideDown();
-                        $('[for="puertaCordsEdificio"]').text("Punto de entrada:");
+                        // $('[for="puertaCordsEdificio"]').text("Punto de entrada:");
                     }
                     $("#btnDeletedPleace").show();
                     $("#btnOpenGalery").slideDown();
@@ -1021,6 +714,8 @@ window.addEventListener("load", () => {
                     $("#galeryCount").text(galery_count);
                     $("#isNewEdif").val("notnew");
                     $("#sizemarker").val("0.5");
+                    $("#colorPicker").val(color);
+                    pickr.setColor(color);
 
                     if (ismarker) {
                         $("#ismarker").val("True");
@@ -1049,7 +744,7 @@ window.addEventListener("load", () => {
                     $("#esquina3").addClass("active").val(coordinates[0][2]);
                     $("#esquina4").addClass("active").val(coordinates[0][3]);
 
-                    $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
+                    // $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
                     $("#fotoEdificio").attr("required", false);
                     tinymce.get("textTiny").setContent(informacion);
 
@@ -1169,7 +864,7 @@ window.addEventListener("load", () => {
                         }
 
                         calcularRuta();
-                    }, 1000);
+                    }, 3000);
                 }
             }
 
@@ -1219,4 +914,70 @@ window.addEventListener("load", () => {
             console.error(error);
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
+
+    // Dibujar poligonos con mapbox Draw ###########################################
+    if (mapElement.classList.contains("map_editing")) {
+        const draw = new MapboxDraw({
+            displayControlsDefault: false,
+        });
+
+        mapMapbox.addControl(draw);
+
+        mapMapbox.on("draw.create", updateArea);
+        mapMapbox.on("draw.delete", updateArea);
+        mapMapbox.on("draw.update", updateArea);
+
+        $("#btnPoligon").click(function () {
+            $("#controlsIndic").addClass("show");
+            draw.changeMode("draw_polygon");
+        });
+
+        $("#delPoligon").click(function () {
+            $("#controlsIndic").removeClass("show");
+            const all = draw.getAll();
+            if (all.features.length > 0) {
+                all.features.forEach((feature) => {
+                    draw.delete(feature.id);
+                });
+            }
+        });
+
+        function updateArea(e) {
+            const data = draw.getAll();
+            console.log(data);
+            $("#controlsIndic").addClass("show");
+            if (data.features.length > 0) {
+                const polygon = data.features[0];
+
+                // Calcular área
+                const area = turf.area(polygon);
+                const rounded_area = Math.round(area * 100) / 100;
+
+                // Obtener coordenadas del polígono
+                const coordinates = polygon.geometry.coordinates[0]; // primer anillo del polígono
+                $("#coords").val(JSON.stringify(coordinates));
+
+                // Calcular perímetro (longitud del borde)
+                const perimeter = turf.length(polygon, { units: "kilometers" });
+                const rounded_perimeter = Math.round(perimeter * 1000 * 100) / 100; // en metros
+
+                // Calcular centroide (centro geométrico)
+                const centroid = turf.centroid(polygon);
+
+                // Mostrar resultados
+                $("#controlsIndic .card-body p").html(`
+                    <p><strong>Área:</strong> ${rounded_area} m²</p>
+                    <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
+                    <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c).join(", ")}]</p>
+                    <p><strong>Puntos del polígono:</strong></p>
+                    <ol>${coordinates.map((coord) => `<li>[${coord[0]}, ${coord[1]}]</li>`).join("")}</ol>
+                `);
+                    // <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
+            } else {
+                $("#controlsIndic").removeClass("show");
+                $("#controlsIndic .card-body p").html("");
+                if (e.type !== "draw.delete") alert("Haz clic en el mapa para dibujar un polígono.");
+            }
+        }
+    }
 });

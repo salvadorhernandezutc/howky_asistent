@@ -73,22 +73,22 @@
             <img src="{% static 'img/default_image.webp' %}" id="imagen_actual" class="img-fluid" />
             <div class="mask mask_white">
                 <div class="d-flex flex-column justify-content-end h-100 px-3">
-                    <div class="form-outline" data-mdb-input-init>
-                        <input type="text" id="nombreEdificio" name="nombreEdificio" class="form-control name_pleace" required />
-                        <label class="form-label" for="nombreEdificio">Nombre del Lugar:</label>
+                    <div class="d-flex gap_10">
+                        <div class="form-outline" data-mdb-input-init>
+                            <input type="text" id="nombreEdificio" name="nombreEdificio" class="form-control name_pleace" required />
+                            <label class="form-label" for="nombreEdificio">Nombre del Lugar:</label>
+                        </div>
+                        <label class="btn btn-floating bg_blue-green text-white" for="fotoEdificio" title="Agregar Imagen">
+                            <i class="ic-solar gallery_add-linear px-4"></i>
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
         <div class="p-3 pt-0">
             {% csrf_token %}
-            <input type="file" id="fotoEdificio" class="d-none" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
-            <input type="text" name="isNew" id="isNewEdif" class="d-none">
-            <input type="text" name="uuid" id="uuid" class="form-control d-none" data-uuid data-new-uid="{{UID}}" readonly required>
-            <input type="hidden" name="colorEdificio" id="colorEdificio" value="#808080" required>
-
             <!-- Marcador de imagen -->
-            <div class="mt-4" data-notmarker>
+            <div class="mt-4">
                 <input class="form-check-input" type="checkbox" id="checkHidename" />
                 <label class="form-check-label" for="checkHidename">: Ocultar Nombre</label>
             </div>
@@ -103,41 +103,40 @@
             </div>
             
             <div class="row mt-4">
-                <div class="col-6">
-                    <label class="btn btn-block bg_blue-green text-white" for="fotoEdificio" data-mdb-ripple-init data-mdb-ripple-color="white">Cambiar foto <i class="fa-regular fa-image ms-1"></i></label>
-                </div>
-                <div class="col-6">
+                <div class="col">
                     <button type="button" id="color-picker" class="btn btn-block text-white m-0" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
                 </div>
-
-                <div class="col-4 mt-4">
-                    <button type="button" id="btnPoligon" class="btn btn-block btn_detail text-white" data-mdb-ripple-init data-mdb-ripple-color="white" data-notmarker><i class="fa-solid fa-draw-polygon ms-1"></i></button>
+                <div class="col">
+                    <button type="button" id="btnPoligon" class="btn btn-block btn_detail text-white px-0">Edificio <i class="fa-solid fa-draw-polygon ms-1"></i></button>
                 </div>
-                <div class="col-4 mt-4">
-                    <button type="button" id="btnPoligonCancel" class="btn btn-block btn-danger" data-mdb-ripple-init data-mdb-ripple-color="white"><i class="fa-solid fa-power-off ms-1"></i></button>
+                <div class="col">
+                    <button type="button" id="delPoligon" class="btn btn-block btn-danger text-white px-0">Borrar <i class="fas fa-trash-can ms-1"></i></button>
                 </div>
-                <div class="col-4 mt-4">
-                    <button class="btn btn-block btn_detail px-3 text-white" type="button" id="inputBtnDoor" data-mdb-ripple-init data-mdb-ripple-color="white" title="Colocar Marcador de la Entrada"><i class="fa-solid fa-location-dot fs-10"></i></button>
-                </div>
+                <!-- <div class="col-4">
+                    <button type="button" id="btnDoor" class="btn btn-block btn-info text-white px-0">Entrada <i class="fas fa-location-dot ms-1"></i></button>
+                </div> -->
             </div>
             
-            <input type="text" id="puertaCordsEdificio" name="puertaCordsEdificio" class="d-none" aria-describedby="inputBtnDoor" readonly required />
-            
+            <input type="file" id="fotoEdificio" class="d-none" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
+            <input type="text" name="isNew" id="isNewEdif" class="d-none" placeholder="isNew">
+            <input type="text" name="uuid" id="uuid" class="d-none" data-uuid data-new-uid="{{UID}}" readonly required placeholder="uuid {{UID}}" />
+            <input type="text" name="colorEdificio" id="colorPicker" class="d-none" value="#808080" required placeholder="color">
+            <textarea type="text" id="coords" name="coords" class="d-non" placeholder="coordenates" readonly required ></textarea>
+
             <!-- TinyMCE: Contenido de texto -->
-            <div class="mt-4" data-notmarker>
+            <div class="mt-4">
                 <textarea id="textTiny" class="form-control" name="contenidoWord"
                     placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
             </div>
             <div id="submitEdificio" class="mt-4 row">
                 <div class="col-2 none" id="btnDeletedPleace">
-                    <button title="Borrar lugar" type="button" class="btn btn-danger btn-block px-1" data-mdb-ripple-init data-mdb-ripple-color="white"
-                        data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
+                    <button title="Borrar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
                         <i class="fa-regular fa-trash-can tscale-1-4"></i>
                     </button>
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn_detail btn-block" data-mdb-ripple-init data-mdb-ripple-color="white">
-                        Guardar Cambios <i class="fa-regular fa-floppy-disk ms-1"></i>
+                    <button type="submit" class="btn btn_detail btn-block">
+                        Registrar Lugar <i class="fa-regular fa-floppy-disk ms-1"></i>
                     </button>
                 </div>
             </div>
@@ -303,9 +302,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script>
 <script src="{% static 'js/settings_mapbox.js' %}"></script>
-<script src="{% static 'js/settings_mapbox_admin.js' %}"></script>
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
 <script src="{% static 'js/settings_tinymce.js' %}"></script>
-<script src="{% static 'js/jquery.validate.min.js' %}"></script>
+<!-- <script src="{% static 'js/jquery.validate.min.js' %}"></script> -->
 <script src="{% static 'js/colorpickr.js' %}"></script>
 {% endblock %}

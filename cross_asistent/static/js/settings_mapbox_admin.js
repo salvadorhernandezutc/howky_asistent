@@ -1,12 +1,8 @@
 window.addEventListener("load", () => {
-    var mapToken = "pk.eyJ1IjoiY2hhdmEtdXRjIiwiYSI6ImNtOTdqdm13cjA4ZGsyaW9rc2g0OGRmdWoifQ.oxLDSCy8_q3xLJNVtDHmDw";
     var mapElement = document.getElementById("map");
     const savedLastLayerMap = localStorage.getItem("mapbox-last_layer");
     const inputsLayer = document.querySelectorAll("#offcanvasbody input[type='radio']");
     const labelsLayer = document.querySelectorAll("#offcanvasbody label");
-    const formRoute = document.querySelector("#form_route");
-    const selectOrigin = formRoute.querySelector("#origen");
-    const selectDestiny = formRoute.querySelector("#destino");
     let colorlabels = "#000";
     let offcanvasOpen = false;
     let formChanges = false;
