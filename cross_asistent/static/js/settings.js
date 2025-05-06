@@ -596,10 +596,6 @@ inputs.forEach((input) => {
     // input.addEventListener("focus", copyText);
 });
 
-// MaterialBox https://materializecss.com/ ################################################
-var imagesZoom = document.querySelectorAll(".materialBoxed");
-var instances = M.Materialbox.init(imagesZoom);
-
 // Enviar formulario JSON ######################################################################
 function jsonSubmit(e) {
     e.preventDefault = e.preventDefault || function () {};

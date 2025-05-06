@@ -142,6 +142,11 @@ class Mapa(models.Model):
     hide_name = models.BooleanField(default=False)
     size_marker = models.CharField(max_length=4, default='0.05')
     
+    def get_tag_list(self):
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',')]
+        return []
+    
     def __str__(self):
         return self.nombre
     
