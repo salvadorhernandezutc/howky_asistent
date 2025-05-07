@@ -277,14 +277,14 @@ def update_create_pleace_map(request):
     uuidPost = request.POST.get('uuid')
     nombrePost = request.POST.get('nombreEdificio').lower()
     colorPost = request.POST.get('colorEdificio')
-    p1Post = request.POST.get('esquina1')
-    p2Post = request.POST.get('esquina2')
-    p3Post = request.POST.get('esquina3')
-    p4Post = request.POST.get('esquina4')
+    # p1Post = request.POST.get('esquina1')
+    # p2Post = request.POST.get('esquina2')
+    # p3Post = request.POST.get('esquina3')
+    # p4Post = request.POST.get('esquina4')
     informacionText = request.POST.get('textTiny')
     sizemarkerPost = request.POST.get('sizemarker')
     informacionPost = request.POST.get('contenidoWord')
-    door_cordsPost = request.POST.get('puertaCordsEdificio')
+    coordsPost = request.POST.get('coords')
     imagenPost = request.FILES.get('fotoEdificio')
     
     if not nombrePost:
@@ -296,11 +296,11 @@ def update_create_pleace_map(request):
                 edificio = get_object_or_404(models.Mapa, uuid=uuidPost)
                 edificio.nombre = nombrePost
                 edificio.color = colorPost
-                edificio.p1_polygons = p1Post
-                edificio.p2_polygons = p2Post
-                edificio.p3_polygons = p3Post
-                edificio.p4_polygons = p4Post
-                edificio.door_cords = door_cordsPost
+                # edificio.p1_polygons = p1Post
+                # edificio.p2_polygons = p2Post
+                # edificio.p3_polygons = p3Post
+                # edificio.p4_polygons = p4Post
+                edificio.coords = coordsPost
                 edificio.size_marker = sizemarkerPost
                 edificio.informacion = informacionPost
                 edificio.is_marker = bool(is_markerPost)
@@ -320,11 +320,11 @@ def update_create_pleace_map(request):
                 uuid = uuidPost,
                 color = colorPost,
                 nombre = nombrePost,
-                p1_polygons = p1Post,
-                p2_polygons = p2Post,
-                p3_polygons = p3Post,
-                p4_polygons = p4Post,
-                door_cords = door_cordsPost,
+                # p1_polygons = p1Post,
+                # p2_polygons = p2Post,
+                # p3_polygons = p3Post,
+                # p4_polygons = p4Post,
+                coords = coordsPost,
                 informacion = informacionPost,
                 size_marker  =  sizemarkerPost,
                 is_marker = bool(is_markerPost),

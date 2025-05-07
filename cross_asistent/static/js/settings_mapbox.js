@@ -285,7 +285,7 @@ window.addEventListener("load", () => {
                                         },
                                         geometry: {
                                             type: "Point",
-                                            coordinates: item.door_coords,
+                                            coordinates: item.coords,
                                         },
                                     },
                                 ],
@@ -397,7 +397,7 @@ window.addEventListener("load", () => {
                         color: item.color,
                         label: item.hidename ? "" : item.nombre,
                         nombre: item.nombre,
-                        door: item.door_coords,
+                        door: item.coords,
                         ismarker: item.ismarker,
                         imagen_url: item.imagen_url,
                         informacion: item.informacion,

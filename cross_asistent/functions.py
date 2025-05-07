@@ -466,7 +466,7 @@ def mapa_data(request):
             "galery_items": galery_items,
             "galery_count": galeryQuery.count(),
             "hidename": bool(mapa.hide_name),
-            "door_coords": [float(coord) for coord in mapa.door_cords.split(",")],
+            "coords": [float(coord) for coord in mapa.coords.split(",")],
             "polygons": [
                 [float(coord) for coord in mapa.p1_polygons.split(",")],
                 [float(coord) for coord in mapa.p2_polygons.split(",")],
@@ -490,7 +490,7 @@ def mapa_markers(request):
             "sizemarker": mapa.size_marker,
             "imagen": imagen_mark.imagen.url,
             "icon_size": float(mapa.size_marker),
-            "door_coords": [float(coord) for coord in mapa.door_cords.split(",")],
+            "coords": [float(coord) for coord in mapa.coords.split(",")],
             "edges": [
                 [mapa.p1_polygons],
                 [mapa.p2_polygons],
