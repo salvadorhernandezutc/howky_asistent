@@ -6,7 +6,7 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
 
 
 ## Librerias
-- Javascript:
+### Javascript:
   - ModelViewer
   - Mapbox
   - FullCalendar
@@ -14,7 +14,7 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
   - JQuery.Validate
   - JQuery Datatables
 
-- Python:
+ ### Python:
   - Django
   - django-environ
   - pillow
@@ -22,20 +22,6 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
   - whitenoise
   - nltk
   - openai
- 
-Para tener las librerias de python, primero se debe tener python 3.12.0 o superior y pip.
-Para instalar todas las dependencias de python ANTES se debe tener RUST instalado, esto se puede verificar con:
-```sh
-rustc --version
-```
-```sh
-cargo --version
-```
-De no tenerlo entonces se requiere su instalacion.
-Posteriormente se instalan todas las dependencias:
-```sh
-pip install -r requirements.txt
-```
 
 ## Paleta de colores
 
@@ -61,3 +47,20 @@ Con el objetivo de ser la figura representativa del asistente, al estar directam
 | Blanco       | ![#ffffff](https://via.placeholder.com/10/ffffff?text=+) #ffffff |
 | Lima         | ![#77BD1F](https://via.placeholder.com/10/77BD1F?text=+) #77BD1F |
 | Negro        | ![#000000](https://via.placeholder.com/10/000000?text=+) #000000 |
+
+
+## Instalacion
+ 
+Se requiere python 3.12.0 o superior y pip.
+Para instalar todas las dependencias de python ANTES se debe tener RUST instalado, esto se puede verificar con:
+```sh
+rustc --version
+```
+```sh
+cargo --version
+```
+De no tenerlo entonces se requiere su instalacion.
+Posteriormente se instalan todas las dependencias de los requerimientos:
+```sh
+pip install -r requirements.txt
+```
