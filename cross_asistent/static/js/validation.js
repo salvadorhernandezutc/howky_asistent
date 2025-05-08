@@ -58,10 +58,7 @@ $(document).ready(function () {
                 invalidHandler: function (event, validator) {
                     var errors = validator.numberOfInvalids();
                     if (errors) {
-                        var message =
-                            errors == 1
-                                ? "Llena correctamente el campo resaltado 😬"
-                                : "Corrige los " + errors + " errores resaltados 😥😯🧐🤔😬";
+                        var message = errors == 1 ? "Llena correctamente el campo resaltado 😬" : "Corrige los " + errors + " errores resaltados 😥😯🧐🤔😬";
                         alertSToast("center", 10000, "error", message);
                     }
                 },
@@ -100,8 +97,7 @@ $(document).ready(function () {
         },
         username: {
             required: "Ingresa un nombre de usuario.",
-            validusername:
-                "El nombre de usuario debe contener solo letras, numeros y guiones. El nombre de usuario no puede comenzar por numeros o guiones.",
+            validusername: "El nombre de usuario debe contener solo letras, numeros y guiones. El nombre de usuario no puede comenzar por numeros o guiones.",
             minlength: "Escribe al menos 5 letras.",
         },
         email: {
@@ -185,8 +181,7 @@ $(document).ready(function () {
                 email: "Ingresa un correo electrónico válido",
             },
             firmaBlog: {
-                minlength:
-                    "Este campo es Opcional. <br>Debe tener al menos 8 Caracteres. Se pueden incluir caracteres especiales.",
+                minlength: "Este campo es Opcional. <br>Debe tener al menos 8 Caracteres. Se pueden incluir caracteres especiales.",
             },
             passwordSend: {
                 required: "Confirma tu contraseña actual.",
@@ -212,11 +207,6 @@ $(document).ready(function () {
             nombreEdificio: { required: true, minlength: 3, validtitle: true },
             fotoEdificio: { required: true },
             uuid: { required: true, minlength: 5 },
-            puertaCordsEdificio: { required: true, minlength: 20 },
-            esquina1: { required: true, minlength: 20 },
-            esquina2: { required: true, minlength: 20 },
-            esquina3: { required: true, minlength: 20 },
-            esquina4: { required: true, minlength: 20 },
         },
         {
             nombreEdificio: {
@@ -230,32 +220,6 @@ $(document).ready(function () {
             uuid: {
                 required: "Ocurrio un error backend, Se requiere la UUID.",
                 minlength: "Debe contener al menos 5 caracteres.",
-            },
-            puertaCordsEdificio: {
-                required:
-                    'Se requieren coordenadas, coloca un marcador en el mapa <i class="fa-solid fa-location-dot"></i>.',
-                minlength:
-                    "Las coordenadas tienen una cadena extensa de numeros, no escribas coordenadas, coloca un marcador para indicar el punto en el mapa.",
-            },
-            esquina1: {
-                required: 'Se requieren coordenadas, Dibuja un poligono <i class="fa-solid fa-draw-polygon ms-1"></i>.',
-                minlength:
-                    "Las coordenadas tienen una cadena extensa de numeros, no escribas coordenadas, coloca un marcador para indicar el punto en el mapa.",
-            },
-            esquina2: {
-                required: 'Se requieren coordenadas, Dibuja un poligono <i class="fa-solid fa-draw-polygon ms-1"></i>.',
-                minlength:
-                    "Las coordenadas tienen una cadena extensa de numeros, no escribas coordenadas, coloca un marcador para indicar el punto en el mapa.",
-            },
-            esquina3: {
-                required: 'Se requieren coordenadas, Dibuja un poligono <i class="fa-solid fa-draw-polygon ms-1"></i>.',
-                minlength:
-                    "Las coordenadas tienen una cadena extensa de numeros, no escribas coordenadas, coloca un marcador para indicar el punto en el mapa.",
-            },
-            esquina4: {
-                required: 'Se requieren coordenadas, Dibuja un poligono <i class="fa-solid fa-draw-polygon ms-1"></i>.',
-                minlength:
-                    "Las coordenadas tienen una cadena extensa de numeros, no escribas coordenadas, coloca un marcador para indicar el punto en el mapa.",
             },
         },
         (gapMsg = true),

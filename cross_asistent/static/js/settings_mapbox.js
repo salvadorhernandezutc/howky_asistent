@@ -7,12 +7,12 @@ window.addEventListener("load", () => {
     const formRoute = document.querySelector("#form_route");
     const selectOrigin = formRoute.querySelector("#origen");
     const selectDestiny = formRoute.querySelector("#destino");
-    let colorlabels = "#000";
+    let mapInteractions = true;
     let offcanvasOpen = false;
+    let colorlabels = "#000";
     let formChanges = false;
     let currentRoute;
     var currentMarker;
-    var doorMarker;
 
     const offcanvasElement = document.querySelector("#infoLateral");
     const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
@@ -115,7 +115,7 @@ window.addEventListener("load", () => {
                     $("#btnDeletedPleace").hide();
                     $("[data-namePleace]").text("");
 
-                    if (formChanges) {
+                    // if (formChanges) {
                         $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
                         $(".error.bg-danger").slideUp("fast");
                         document.getElementById("imagen_actual").src = "/static/img/default_image.webp";
@@ -124,9 +124,7 @@ window.addEventListener("load", () => {
                         const newUID = $("#uuid").data("new-uid");
                         $("#uuid").removeClass("active").val(newUID);
                         $("#colorPicker").addClass("active").val("#808080");
-                        initPolygonDrawing();
 
-                        $('[for="fotoEdificio"]').html('Subir foto <i class="fa-regular fa-image ms-1"></i>');
                         $("#fotoEdificio").attr("required", true);
                         tinymce.get("textTiny").setContent("");
 
@@ -134,10 +132,9 @@ window.addEventListener("load", () => {
                         $("#checkIsmarker").removeAttr("checked");
                         $("#sizemarkerdiv").slideUp();
                         $("[data-notmarker]").slideDown();
-                        $('[for="puertaCordsEdificio"]').text("Punto de entrada:");
                         $("#hidename").slideDown();
                         $("#btnOpenGalery").slideUp();
-                    }
+                    // }
 
                     if (!offcanvasOpen) {
                         if (offcanvasElement.classList.contains("show")) {
@@ -192,7 +189,7 @@ window.addEventListener("load", () => {
         setMapStyle(savedLastLayerMap);
     }
 
-    // Controles de Ruta
+    // Controles de Ruta ########################################
     const directions = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
         unit: "metric",
@@ -211,7 +208,7 @@ window.addEventListener("load", () => {
         }
     }
 
-    // Agregar nuevo menu
+    // Agregar nuevo menu ########################################
     mapMapbox.addControl(new CustomControl(), "top-right");
 
     // Cursor segun el evento ###########################################
@@ -226,7 +223,7 @@ window.addEventListener("load", () => {
     mapMapbox.on("mouseup", () => setCursor("default"));
     mapMapbox.on("mouseover", () => setCursor("default"));
 
-    // Agregar marcador al hacer click cuando se es usuario y no es editor #################################################
+    // Agregar marcador al hacer click #################################################
     function addMarkerToMap(lngLat) {
         if (currentMarker) {
             currentMarker.remove();
@@ -257,7 +254,7 @@ window.addEventListener("load", () => {
         });
     });
 
-    // Cargar datos de Marcadores ####################
+    // Cargar datos de Marcadores ########################################
     const dataMarkers = document.querySelector("#map").getAttribute("data-mapa_markers");
     fetch(dataMarkers)
         .then((response) => response.json())
@@ -322,57 +319,57 @@ window.addEventListener("load", () => {
                 createMarkers();
             });
             mapMapbox.on("click", (e) => {
-                if (mapElement.classList.contains("map_editing")) {
-                    const features = mapMapbox.queryRenderedFeatures(e.point, {
-                        layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
-                    });
+                if (mapInteractions) {
+                    if (mapElement.classList.contains("map_editing")) {
+                        const features = mapMapbox.queryRenderedFeatures(e.point, {
+                            layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
+                        });
 
-                    if (features.length) {
-                        const feature = features[0];
-                        const { nombre, imagen, uuid, ismarker, icon_size, edges } = feature.properties;
-                        const coordinates = feature.geometry.coordinates.slice();
+                        if (features.length) {
+                            const feature = features[0];
+                            const { nombre, imagen, uuid, ismarker, icon_size, edges } = feature.properties;
+                            const coordinates = feature.geometry.coordinates.slice();
 
-                        const offcanvasContent = document.getElementById("offcanvasContent");
-                        document.getElementById("imagen_actual").src = imagen;
+                            const offcanvasContent = document.getElementById("offcanvasContent");
+                            document.getElementById("imagen_actual").src = imagen;
 
-                        $("#btnDeletedPleace").show();
-                        $("[data-namePleace]").text(nombre);
+                            $("#btnDeletedPleace").show();
+                            $("[data-namePleace]").text(nombre);
 
-                        offcanvasContent.querySelector("#isNewEdif").value = "notnew";
+                            offcanvasContent.querySelector("#isNewEdif").value = "notnew";
 
-                        if (ismarker) {
-                            $("#ismarker").val("True");
-                            $("#checkIsmarker").attr("checked", "checked");
-                            $("#sizemarkerdiv").slideDown("fast");
-                            $("[data-notmarker]").slideUp();
-                            $('[for="puertaCordsEdificio"]').text("Ubicacion:");
-                        } else {
-                            $("#ismarker").val("False");
-                            $("#checkIsmarker").removeAttr("checked");
+                            if (ismarker) {
+                                $("#ismarker").val("True");
+                                $("#checkIsmarker").attr("checked", "checked");
+                                $("#sizemarkerdiv").slideDown("fast");
+                                $("[data-notmarker]").slideUp();
+                                $('[for="puertaCordsEdificio"]').text("Ubicacion:");
+                            } else {
+                                $("#ismarker").val("False");
+                                $("#checkIsmarker").removeAttr("checked");
+                            }
+
+                            $("#hidename").slideUp();
+                            $("[data-uuid]").addClass("active").val(uuid);
+                            $("#nombreEdificio").addClass("active").val(nombre);
+                            $("#sizemarker").addClass("active").val(icon_size);
+                            $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
+                            $("#fotoEdificio").attr("required", false);
+
+                            $("#esquina1").addClass("active").val(edges[0]);
+                            $("#esquina2").addClass("active").val(edges[1]);
+                            $("#esquina3").addClass("active").val(edges[2]);
+                            $("#esquina4").addClass("active").val(edges[3]);
+
+                            var canvasGalery = document.getElementById("pleaceGalery");
+                            var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
+                            if (bsOffcanvasGalery) {
+                                bsOffcanvasGalery.hide();
+                            }
+
+                            offcanvasInstance.show();
+                            offcanvasOpen = true;
                         }
-
-                        $("#hidename").slideUp();
-                        $("[data-uuid]").addClass("active").val(uuid);
-                        $("#nombreEdificio").addClass("active").val(nombre);
-                        $("#sizemarker").addClass("active").val(icon_size);
-                        $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
-
-                        // $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
-                        $("#fotoEdificio").attr("required", false);
-
-                        $("#esquina1").addClass("active").val(edges[0]);
-                        $("#esquina2").addClass("active").val(edges[1]);
-                        $("#esquina3").addClass("active").val(edges[2]);
-                        $("#esquina4").addClass("active").val(edges[3]);
-
-                        var canvasGalery = document.getElementById("pleaceGalery");
-                        var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                        if (bsOffcanvasGalery) {
-                            bsOffcanvasGalery.hide();
-                        }
-
-                        offcanvasInstance.show();
-                        offcanvasOpen = true;
                     }
                 }
             });
@@ -410,7 +407,8 @@ window.addEventListener("load", () => {
                     },
                 })),
             };
-
+            console.log(geojsonEdificios);
+            
             function createEdificios() {
                 if (!mapMapbox.getSource("places")) {
                     mapMapbox.addSource("places", {
@@ -675,134 +673,65 @@ window.addEventListener("load", () => {
                 // let galeryObj = JSON.parse(galery_items);
 
                 const offcanvasContent = document.getElementById("offcanvasContent");
-                if (imagen_url) {
-                    document.getElementById("imagen_actual").src = `/media/${imagen_url}`;
+                if (mapInteractions) {
+                    if (imagen_url) {
+                        document.getElementById("imagen_actual").src = `/media/${imagen_url}`;
+                    }
+
+                    if (mapElement.classList.contains("map_user")) {
+                        document.getElementById("lateralTitle").innerText = nombre;
+                        offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
+                    } else if (mapElement.classList.contains("map_editing")) {
+                        $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
+                        $(".error.bg-danger").slideUp("fast");
+                        const { color, door, uuid, ismarker, label } = feature.properties;
+
+                        if ($("#checkIsmarker").is(":checked")) {
+                            $("#sizemarkerdiv").slideUp();
+                            $("[data-notmarker]").slideDown();
+                        }
+                        $("#btnDeletedPleace").show();
+                        $("#btnOpenGalery").slideDown();
+                        $("[data-namePleace]").text(nombre);
+                        $("#galeryCount").text(galery_count);
+                        $("#isNewEdif").val("notnew");
+                        $("#sizemarker").val("0.5");
+                        $("#colorPicker").val(color);
+                        pickr.setColor(color);
+
+                        if (ismarker) {
+                            $("#ismarker").val("True");
+                            $("#checkIsmarker").attr("checked", "checked");
+                        } else {
+                            $("#ismarker").val("False");
+                            $("#checkIsmarker").removeAttr("checked");
+                        }
+
+                        $("#hidename").slideDown();
+                        if (label != "") {
+                            $("#hidename").attr("checked", "checked");
+                        } else {
+                            $("#hidename").removeAttr("checked");
+                        }
+
+                        $("[data-uuid]").addClass("active").val(uuid);
+                        $("#nombreEdificio").addClass("active").val(nombre);
+                        $(".name_pleace").text(nombre);
+
+                        const numeros = door.slice(1, -1).split(",");
+                        $("#puertaCordsEdificio").addClass("active").val(`${numeros[0]},${numeros[1]}`);
+
+                        $("#esquina1").addClass("active").val(coordinates[0][0]);
+                        $("#esquina2").addClass("active").val(coordinates[0][1]);
+                        $("#esquina3").addClass("active").val(coordinates[0][2]);
+                        $("#esquina4").addClass("active").val(coordinates[0][3]);
+                        $("#fotoEdificio").attr("required", false);
+                        tinymce.get("textTiny").setContent(informacion);
+                    }
+
+                    offcanvasInstance.show();
+                    offcanvasOpen = true;
                 }
-
-                if (mapElement.classList.contains("map_user")) {
-                    document.getElementById("lateralTitle").innerText = nombre;
-                    offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
-
-                    // const imageGaleryCont = document.getElementById("offcanvasGalery");
-                    // imageGaleryCont.innerHTML = "";
-
-                    // galeryObj.forEach((item) => {
-                    //     const imageGalery = `<img loading="lazy" src="${item.imagen}" id="img_${item.id}" class="img-fluid img-rounded unfocus-4 none">`;
-                    //     imageGaleryCont.insertAdjacentHTML("beforeend", imageGalery);
-                    //     const thisItem = $(`#img_${item.id}`);
-
-                    //     setTimeout(() => {
-                    //         thisItem.slideDown();
-                    //         setTimeout(() => {
-                    //             thisItem.removeClass("unfocus-4");
-                    //         }, item.id * 40);
-                    //     }, item.id * 20);
-                    // });
-                } else if (mapElement.classList.contains("map_editing")) {
-                    $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
-                    $(".error.bg-danger").slideUp("fast");
-                    const { color, door, uuid, ismarker, label } = feature.properties;
-
-                    if ($("#checkIsmarker").is(":checked")) {
-                        $("#sizemarkerdiv").slideUp();
-                        $("[data-notmarker]").slideDown();
-                        // $('[for="puertaCordsEdificio"]').text("Punto de entrada:");
-                    }
-                    $("#btnDeletedPleace").show();
-                    $("#btnOpenGalery").slideDown();
-                    $("[data-namePleace]").text(nombre);
-                    $("#galeryCount").text(galery_count);
-                    $("#isNewEdif").val("notnew");
-                    $("#sizemarker").val("0.5");
-                    $("#colorPicker").val(color);
-                    pickr.setColor(color);
-
-                    if (ismarker) {
-                        $("#ismarker").val("True");
-                        $("#checkIsmarker").attr("checked", "checked");
-                    } else {
-                        $("#ismarker").val("False");
-                        $("#checkIsmarker").removeAttr("checked");
-                    }
-
-                    $("#hidename").slideDown();
-                    if (label != "") {
-                        $("#hidename").attr("checked", "checked");
-                    } else {
-                        $("#hidename").removeAttr("checked");
-                    }
-
-                    $("[data-uuid]").addClass("active").val(uuid);
-                    $("#nombreEdificio").addClass("active").val(nombre);
-                    $(".name_pleace").text(nombre);
-
-                    const numeros = door.slice(1, -1).split(",");
-                    $("#puertaCordsEdificio").addClass("active").val(`${numeros[0]},${numeros[1]}`);
-
-                    $("#esquina1").addClass("active").val(coordinates[0][0]);
-                    $("#esquina2").addClass("active").val(coordinates[0][1]);
-                    $("#esquina3").addClass("active").val(coordinates[0][2]);
-                    $("#esquina4").addClass("active").val(coordinates[0][3]);
-
-                    // $('[for="fotoEdificio"]').html('Cambiar foto <i class="fa-regular fa-image ms-1"></i>');
-                    $("#fotoEdificio").attr("required", false);
-                    tinymce.get("textTiny").setContent(informacion);
-
-                    //     // Galeria #############################################
-                    //     if (window.innerWidth <= 800) {
-                    //         setTimeout(() => {
-                    //             var canvasGalery = document.getElementById("pleaceGalery");
-                    //             var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
-                    //             if (bsOffcanvasGalery) {
-                    //                 bsOffcanvasGalery.hide();
-                    //             }
-                    //         }, 100);
-                    //     }
-
-                    //     const imageListGalery = document.getElementById("image-list-galery");
-                    //     const deleteImgUrl = imageListGalery.getAttribute("data-galery-del");
-                    //     document.getElementById("image-list").innerHTML = "";
-                    //     imageListGalery.innerHTML = "";
-
-                    //     galeryObj.forEach((item) => {
-                    //         const imgFile = item.imagen;
-                    //         let imgName = imgFile.replace("/media/imagenes/", "");
-                    //         imgName = imgName.split(".");
-
-                    //         const imageItemGalery = `<div id="img_galery_${
-                    //             item.id
-                    //         }" class="image-item"><img loading="lazy" src="${imgFile}" class="img-rounded unfocus-5"><div class="fs-8"><p class="name-file m-0">${imgName[0]}</p><p class="size-file m-0">(${
-                    //             imgName[1]
-                    //         }) ${formatBytes(item.img_size)}</p></div><form action="${deleteImgUrl}" method="post" autocomplete="off" data-submit-galery><input type="hidden" name="id" value="${
-                    //             item.id
-                    //         }"><input type="hidden" name="uuid" value="${uuid}"><button type="submit" id="btnDelImg_${
-                    //             item.id
-                    //         }" class="btn btn-danger btn-floating"><i class="fa-regular fa-trash-can tscale-1-4"></i></button></form></div>`;
-                    //         imageListGalery.insertAdjacentHTML("beforeend", imageItemGalery);
-
-                    //         const thisItem = document.querySelector(`#img_galery_${item.id}`);
-                    //         const thisItemImg = document.querySelector(`#img_galery_${item.id} img`);
-                    //         const delGaleryButton = document.querySelector(`#btnDelImg_${item.id}`);
-
-                    //         setTimeout(() => {
-                    //             thisItem.classList.add("visible");
-                    //             setTimeout(() => {
-                    //                 thisItemImg.classList.remove("unfocus-5");
-                    //             }, item.id * 40);
-                    //         }, item.id * 20);
-
-                    //         delGaleryButton.addEventListener("click", () => {
-                    //             thisItem.classList.remove("visible");
-                    //             setTimeout(() => {
-                    //                 thisItem.remove();
-                    //             }, 1000);
-                    //         });
-                    //     });
-                    //     $("[data-submit-galery]").submit(jsonSubmit);
-                }
-
-                offcanvasInstance.show();
-                offcanvasOpen = true;
             });
 
             const nombresEdificios = geojsonEdificios.features.map((feature) => feature.properties.nombre).sort();
@@ -868,8 +797,8 @@ window.addEventListener("load", () => {
                 }
             }
 
-            document.querySelector("[data-reset_form]").addEventListener("click", function () {
-                formRoute.querySelectorAll("option").forEach((option) => {
+            $("[data-reset_form]").on("click", function () {
+                $("option").each((option) => {
                     option.disabled = false;
                 });
 
@@ -928,51 +857,62 @@ window.addEventListener("load", () => {
         mapMapbox.on("draw.update", updateArea);
 
         $("#btnPoligon").click(function () {
+            mapInteractions = false;
+            const all = draw.getAll();
+            deleteArea(all);
+
             $("#controlsIndic").addClass("show");
+            $("#delPoligonGroup").addClass("none");
+            $(this).html('Dibujando... <i class="fa-solid fa-draw-polygon ms-1"></i>');
+
             draw.changeMode("draw_polygon");
         });
 
         $("#delPoligon").click(function () {
+            mapInteractions = true;
             $("#controlsIndic").removeClass("show");
+            $("#delPoligonGroup").addClass("none");
             const all = draw.getAll();
-            if (all.features.length > 0) {
-                all.features.forEach((feature) => {
+            deleteArea(all);
+        });
+
+        function deleteArea(areas) {
+            if (areas.features.length > 0) {
+                areas.features.forEach((feature) => {
                     draw.delete(feature.id);
                 });
             }
-        });
+        }
 
         function updateArea(e) {
             const data = draw.getAll();
-            console.log(data);
-            $("#controlsIndic").addClass("show");
+            $("#controlsIndic").removeClass("show");
+            $("#delPoligonGroup").removeClass("none");
+            $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>')
+
             if (data.features.length > 0) {
                 const polygon = data.features[0];
+                const coordinates = polygon.geometry.coordinates[0];
+                $("#coords").val(JSON.stringify(coordinates));
 
                 // Calcular área
                 const area = turf.area(polygon);
                 const rounded_area = Math.round(area * 100) / 100;
-
-                // Obtener coordenadas del polígono
-                const coordinates = polygon.geometry.coordinates[0]; // primer anillo del polígono
-                $("#coords").val(JSON.stringify(coordinates));
-
                 // Calcular perímetro (longitud del borde)
                 const perimeter = turf.length(polygon, { units: "kilometers" });
                 const rounded_perimeter = Math.round(perimeter * 1000 * 100) / 100; // en metros
-
                 // Calcular centroide (centro geométrico)
                 const centroid = turf.centroid(polygon);
 
                 // Mostrar resultados
-                $("#controlsIndic .card-body p").html(`
-                    <p><strong>Área:</strong> ${rounded_area} m²</p>
-                    <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
-                    <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c).join(", ")}]</p>
-                    <p><strong>Puntos del polígono:</strong></p>
-                    <ol>${coordinates.map((coord) => `<li>[${coord[0]}, ${coord[1]}]</li>`).join("")}</ol>
-                `);
-                    // <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
+                // $("#controlsIndic .card-body p").html(`
+                //     <p><strong>Área:</strong> ${rounded_area} m²</p>
+                //     <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
+                //     <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c).join(", ")}]</p>
+                //     <p><strong>Puntos del polígono:</strong></p>
+                //     <ol>${coordinates.map((coord) => `<li>[${coord[0]}, ${coord[1]}]</li>`).join("")}</ol>
+                // `);
+                // <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
             } else {
                 $("#controlsIndic").removeClass("show");
                 $("#controlsIndic .card-body p").html("");

@@ -605,8 +605,8 @@ function jsonSubmit(e) {
 
     if (formData.has("contenidoWord")) {
         const contenidoTiny = tinymce.activeEditor.getContent();
-        formData.set("contenidoWord", contenidoTiny);
-
+        formData.set("htmlTiny", contenidoTiny);
+        
         const contenidoTextTiny = tinymce.activeEditor.getContent({ format: "text" });
         formData.set("textTiny", contenidoTextTiny);
     }
