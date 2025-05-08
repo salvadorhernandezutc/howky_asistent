@@ -116,24 +116,25 @@ window.addEventListener("load", () => {
                     $("[data-namePleace]").text("");
 
                     // if (formChanges) {
-                        $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
-                        $(".error.bg-danger").slideUp("fast");
-                        document.getElementById("imagen_actual").src = "/static/img/default_image.webp";
-                        $("#offcanvasContent #isNewEdif").val("new");
+                    // $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
+                    $("#offcanvasContent input").removeClass("active is-invalid is-valid");
+                    $(".error.bg-danger").slideUp("fast");
+                    document.getElementById("imagen_actual").src = "/static/img/default_image.webp";
+                    $("#offcanvasContent #isNewEdif").val("new");
 
-                        const newUID = $("#uuid").data("new-uid");
-                        $("#uuid").removeClass("active").val(newUID);
-                        $("#colorPicker").addClass("active").val("#808080");
+                    const newUID = $("#uuid").data("new-uid");
+                    $("#uuid").removeClass("active").val(newUID);
+                    $("#colorPicker").addClass("active").val("#808080");
 
-                        $("#fotoEdificio").attr("required", true);
-                        tinymce.get("textTiny").setContent("");
+                    $("#fotoEdificio").attr("required", true);
+                    tinymce.get("textTiny").setContent("");
 
-                        $("#ismarker").val("False");
-                        $("#checkIsmarker").removeAttr("checked");
-                        $("#sizemarkerdiv").slideUp();
-                        $("[data-notmarker]").slideDown();
-                        $("#hidename").slideDown();
-                        $("#btnOpenGalery").slideUp();
+                    $("#ismarker").val("False");
+                    $("#checkIsmarker").removeAttr("checked");
+                    // $("#sizemarkerdiv").slideUp();
+                    $("[data-notmarker]").slideDown();
+                    $("#hidename").slideDown();
+                    $("#btnOpenGalery").slideUp();
                     // }
 
                     if (!offcanvasOpen) {
@@ -278,7 +279,6 @@ window.addEventListener("load", () => {
                                             ismarker: item.ismarker,
                                             icon_size: item.icon_size,
                                             sizemarker: item.sizemarker,
-                                            edges: [[item.edges[0], item.edges[1], item.edges[2], item.edges[3]]],
                                         },
                                         geometry: {
                                             type: "Point",
@@ -327,7 +327,7 @@ window.addEventListener("load", () => {
 
                         if (features.length) {
                             const feature = features[0];
-                            const { nombre, imagen, uuid, ismarker, icon_size, edges } = feature.properties;
+                            const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
                             const coordinates = feature.geometry.coordinates.slice();
 
                             const offcanvasContent = document.getElementById("offcanvasContent");
@@ -343,7 +343,7 @@ window.addEventListener("load", () => {
                                 $("#checkIsmarker").attr("checked", "checked");
                                 $("#sizemarkerdiv").slideDown("fast");
                                 $("[data-notmarker]").slideUp();
-                                $('[for="puertaCordsEdificio"]').text("Ubicacion:");
+                                // $('[for="puertaCordsEdificio"]').text("Ubicacion:");
                             } else {
                                 $("#ismarker").val("False");
                                 $("#checkIsmarker").removeAttr("checked");
@@ -353,13 +353,8 @@ window.addEventListener("load", () => {
                             $("[data-uuid]").addClass("active").val(uuid);
                             $("#nombreEdificio").addClass("active").val(nombre);
                             $("#sizemarker").addClass("active").val(icon_size);
-                            $("#puertaCordsEdificio").addClass("active").val(`${coordinates}`);
+                            $("#coords").addClass("active").val(`${coordinates}`);
                             $("#fotoEdificio").attr("required", false);
-
-                            $("#esquina1").addClass("active").val(edges[0]);
-                            $("#esquina2").addClass("active").val(edges[1]);
-                            $("#esquina3").addClass("active").val(edges[2]);
-                            $("#esquina4").addClass("active").val(edges[3]);
 
                             var canvasGalery = document.getElementById("pleaceGalery");
                             var bsOffcanvasGalery = bootstrap.Offcanvas.getInstance(canvasGalery);
@@ -394,7 +389,6 @@ window.addEventListener("load", () => {
                         color: item.color,
                         label: item.hidename ? "" : item.nombre,
                         nombre: item.nombre,
-                        door: item.coords,
                         ismarker: item.ismarker,
                         imagen_url: item.imagen_url,
                         informacion: item.informacion,
@@ -403,7 +397,7 @@ window.addEventListener("load", () => {
                     },
                     geometry: {
                         type: "Polygon",
-                        coordinates: [[item.polygons[0], item.polygons[1], item.polygons[2], item.polygons[3], item.polygons[0]]],
+                        coordinates: item.coords,
                     },
                 })),
             };
@@ -448,6 +442,10 @@ window.addEventListener("load", () => {
                     mapMapbox.moveLayer("places-label");
                 }
             }
+            function getCentroidCoords(feature) {
+                const centroid = turf.centroid(feature);
+                return centroid.geometry.coordinates;
+            }
             function calcularRuta() {
                 const origen = selectOrigin.value;
                 const destino = selectDestiny.value;
@@ -457,8 +455,8 @@ window.addEventListener("load", () => {
                     const destiFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === destino);
 
                     if (origenFeature && destiFeature) {
-                        const origenCoords = origenFeature.properties.door;
-                        const destinoCoords = destiFeature.properties.door;
+                        const origenCoords = getCentroidCoords(origenFeature);
+                        const destinoCoords = getCentroidCoords(destiFeature);
 
                         directions.setOrigin(origenCoords);
                         directions.setDestination(destinoCoords);
@@ -684,7 +682,7 @@ window.addEventListener("load", () => {
                     } else if (mapElement.classList.contains("map_editing")) {
                         $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
                         $(".error.bg-danger").slideUp("fast");
-                        const { color, door, uuid, ismarker, label } = feature.properties;
+                        const { color, coords, uuid, ismarker, label } = feature.properties;
 
                         if ($("#checkIsmarker").is(":checked")) {
                             $("#sizemarkerdiv").slideUp();
@@ -718,13 +716,7 @@ window.addEventListener("load", () => {
                         $("#nombreEdificio").addClass("active").val(nombre);
                         $(".name_pleace").text(nombre);
 
-                        const numeros = door.slice(1, -1).split(",");
-                        $("#puertaCordsEdificio").addClass("active").val(`${numeros[0]},${numeros[1]}`);
-
-                        $("#esquina1").addClass("active").val(coordinates[0][0]);
-                        $("#esquina2").addClass("active").val(coordinates[0][1]);
-                        $("#esquina3").addClass("active").val(coordinates[0][2]);
-                        $("#esquina4").addClass("active").val(coordinates[0][3]);
+                        $("#coords").addClass("active").val(coords);
                         $("#fotoEdificio").attr("required", false);
                         tinymce.get("textTiny").setContent(informacion);
                     }
@@ -888,7 +880,7 @@ window.addEventListener("load", () => {
             const data = draw.getAll();
             $("#controlsIndic").removeClass("show");
             $("#delPoligonGroup").removeClass("none");
-            $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>')
+            $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>');
 
             if (data.features.length > 0) {
                 const polygon = data.features[0];

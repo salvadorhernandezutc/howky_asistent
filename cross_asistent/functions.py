@@ -466,16 +466,9 @@ def mapa_data(request):
             "galery_items": galery_items,
             "galery_count": galeryQuery.count(),
             "hidename": bool(mapa.hide_name),
-            "coords": [float(coord) for coord in mapa.coords.split(",")],
-            "polygons": [
-                [float(coord) for coord in mapa.p1_polygons.split(",")],
-                [float(coord) for coord in mapa.p2_polygons.split(",")],
-                [float(coord) for coord in mapa.p3_polygons.split(",")],
-                [float(coord) for coord in mapa.p4_polygons.split(",")],
-            ]
+            "coords": [json.loads(mapa.coords)] if mapa.coords else []
         }
         data.append(item)
-
     return JsonResponse(data, safe=False)
 
 def mapa_markers(request):
@@ -490,13 +483,7 @@ def mapa_markers(request):
             "sizemarker": mapa.size_marker,
             "imagen": imagen_mark.imagen.url,
             "icon_size": float(mapa.size_marker),
-            "coords": [float(coord) for coord in mapa.coords.split(",")],
-            "edges": [
-                [mapa.p1_polygons],
-                [mapa.p2_polygons],
-                [mapa.p3_polygons],
-                [mapa.p4_polygons],
-            ]
+            "coords": [json.loads(mapa.coords)] if mapa.coords else [],
         }
         data.append(item)
 

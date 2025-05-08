@@ -23,7 +23,7 @@ def create_csv_response(filename, header, rows):
 @login_required
 @never_cache
 def export_categorias(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+    now = timezone.localtime(timezone.now()).strftime('%d%m%y_%H%M%S')
     if request.user.is_staff:
         rows = [
             [item.categoria or '', item.descripcion or '']
@@ -35,7 +35,7 @@ def export_categorias(request):
 @login_required
 @never_cache
 def export_database(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+    now = timezone.localtime(timezone.now()).strftime('%d%m%y_%H%M%S')
     if request.user.is_staff:
         rows = [
             [
@@ -65,7 +65,7 @@ def export_database(request):
 @login_required
 @never_cache
 def export_preguntas(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+    now = timezone.localtime(timezone.now()).strftime('%d%m%y_%H%M%S')
 
     if request.user.is_staff:
         preguntas = models.Preguntas.objects.all()
@@ -83,7 +83,7 @@ def export_preguntas(request):
 @login_required
 @never_cache
 def export_configuraciones(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+    now = timezone.localtime(timezone.now()).strftime('%d%m%y_%H%M%S')
 
     if request.user.is_staff:
         configuraciones = models.Configuraciones.objects.all()
@@ -107,7 +107,7 @@ def export_configuraciones(request):
 @login_required
 @never_cache
 def export_mapa(request):
-    now = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
+    now = timezone.localtime(timezone.now()).strftime('%d%m%y_%H%M%S')
     if request.user.is_staff:
         rows = [
             [
@@ -115,16 +115,12 @@ def export_mapa(request):
                 info.nombre or '',
                 info.informacion or '',
                 info.color or '',
-                info.door_cords or '',
-                info.p1_polygons or '',
-                info.p2_polygons or '',
-                info.p3_polygons or '',
-                info.p4_polygons or '',
+                f'[{info.p1_polygons}], [{info.p2_polygons}], [{info.p3_polygons}], [{info.p4_polygons}]' or '',
             ]
             for info in mapaall
         ]
         return create_csv_response(f"UTC_mapa_{now}.csv", 
-            ['uuid', 'Nombre', 'Informacion', 'Color', 'Coordenadas: Puerta', 'Coordenadas: Esquina 1', 'Coordenadas: Esquina 2', 'Coordenadas: Esquina 3', 'Coordenadas: Esquina 4'], 
+            ['uuid', 'Nombre', 'Informacion', 'Color', 'Coordenadas'], 
             rows
         )
     return JsonResponse({'success': False, 'message': 'Acción no permitida. 🧐😠🤥'}, status=400)
@@ -165,11 +161,9 @@ def import_mapa(request):
         'nombre': 1,
         'informacion': 2,
         'color': 3,
-        'door_cords': 4,
-        'p1_polygons': 5,
-        'p2_polygons': 6,
-        'p3_polygons': 7,
-        'p4_polygons': 8,
+        'coords': 4,
+        'door': 5,
+        'tags': 6,
     }, 'Datos Del Mapa importados correctamente. 🎉😁🫡')
 
 @login_required
