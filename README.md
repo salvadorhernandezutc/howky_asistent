@@ -1,4 +1,4 @@
-![Logo](https://github.com/chava-utc/howky_asistent/blob/main/cross_asistent/static/img/UTC_logo-plano.webp)
+![Logo](./static/img/UTC_logo-plano.webp)
 
 # Proyecto Asistente Howky
 
@@ -25,13 +25,13 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
 
 ## Paleta de colores
 
-| Color      | Hex                                                              |
-| ---------- | ---------------------------------------------------------------- |
-| Base       | ![#ffffff](https://via.placeholder.com/10/ffffff?text=+) #ffffff |
-| Secundario | ![#c2c2c2](https://via.placeholder.com/10/c2c2c2?text=+) #c2c2c2 |
-| Detalles   | ![#3b71ca](https://via.placeholder.com/10/3b71ca?text=+) #3b71ca |
-| Extra      | ![#02913c](https://via.placeholder.com/10/02913c?text=+) #02913c |
-| Oscuro     | ![#292f38](https://via.placeholder.com/10/292f38?text=+) #292f38 |
+| Color      | Hex               |
+| ---------- | ----------------- |
+| Base       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
+| Secundario | <span style="display:inline-block;width:12px;height:12px;background-color:#c2c2c2;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #c2c2c2 |
+| Detalles   | <span style="display:inline-block;width:12px;height:12px;background-color:#3b71ca;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #3b71ca |
+| Extra      | <span style="display:inline-block;width:12px;height:12px;background-color:#02913c;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #02913c |
+| Oscuro     | <span style="display:inline-block;width:12px;height:12px;background-color:#292f38;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #292f38 |
 
 ## Modelo 3D
 En el proyecto se realizo un modelo 3D del halcon que representa a la UTC, desarrollado en blender, en conjunto por el TSU. Fransisco Malacara y el Ing. Salvador Hernandez.
@@ -39,14 +39,14 @@ Con el objetivo de ser la figura representativa del asistente, al estar directam
 
 ### Colores del Modelo
 
-| Colores      | Hex                                                              |
-| ------------ | ---------------------------------------------------------------- |
-| Azul Intenso | ![#133362](https://via.placeholder.com/10/133362?text=+) #133362 |
-| Azul Marino  | ![#0D223F](https://via.placeholder.com/10/0D223F?text=+) #0D223F |
-| Gris Claro   | ![#95989D](https://via.placeholder.com/10/95989D?text=+) #95989D |
-| Blanco       | ![#ffffff](https://via.placeholder.com/10/ffffff?text=+) #ffffff |
-| Lima         | ![#77BD1F](https://via.placeholder.com/10/77BD1F?text=+) #77BD1F |
-| Negro        | ![#000000](https://via.placeholder.com/10/000000?text=+) #000000 |
+| Colores      | Hex               |
+| ------------ | ----------------- |
+| Azul Intenso | <span style="display:inline-block;width:12px;height:12px;background-color:#133362;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #133362 |
+| Azul Marino  | <span style="display:inline-block;width:12px;height:12px;background-color:#0D223F;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #0D223F |
+| Gris Claro   | <span style="display:inline-block;width:12px;height:12px;background-color:#95989D;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #95989D |
+| Blanco       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
+| Lima         | <span style="display:inline-block;width:12px;height:12px;background-color:#77BD1F;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #77BD1F |
+| Negro        | <span style="display:inline-block;width:12px;height:12px;background-color:#000000;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #000000 |
 
 
 ## Instalacion
