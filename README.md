@@ -4,6 +4,16 @@
 
 Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativos, alumnos y visitantes, ademas de dar una nueva imagen a la UTC al recibir a los vistantes con esta aplicacion en las entradas de la universidad
 
+### Paleta de colores
+
+| Color      | Hex               |
+| ---------- | ----------------- |
+| Base       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
+| Secundario | <span style="display:inline-block;width:12px;height:12px;background-color:#c2c2c2;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #c2c2c2 |
+| Detalles   | <span style="display:inline-block;width:12px;height:12px;background-color:#3b71ca;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #3b71ca |
+| Extra      | <span style="display:inline-block;width:12px;height:12px;background-color:#02913c;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #02913c |
+| Oscuro     | <span style="display:inline-block;width:12px;height:12px;background-color:#292f38;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #292f38 |
+
 
 ## Librerias
 ### Javascript:
@@ -22,16 +32,6 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
   - whitenoise
   - nltk
   - openai
-
-## Paleta de colores
-
-| Color      | Hex               |
-| ---------- | ----------------- |
-| Base       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
-| Secundario | <span style="display:inline-block;width:12px;height:12px;background-color:#c2c2c2;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #c2c2c2 |
-| Detalles   | <span style="display:inline-block;width:12px;height:12px;background-color:#3b71ca;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #3b71ca |
-| Extra      | <span style="display:inline-block;width:12px;height:12px;background-color:#02913c;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #02913c |
-| Oscuro     | <span style="display:inline-block;width:12px;height:12px;background-color:#292f38;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #292f38 |
 
 ## Modelo 3D
 En el proyecto se realizo un modelo 3D del halcon que representa a la UTC, desarrollado en blender, en conjunto por el TSU. Fransisco Malacara y el Ing. Salvador Hernandez.
