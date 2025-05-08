@@ -1,4 +1,4 @@
-![Logo](./static/img/UTC_logo-plano.webp)
+![Logo](./cross_asistent/static/img/UTC_logo-plano.webp)
 
 # Proyecto Asistente Howky
 
@@ -8,11 +8,11 @@ Con el fin de resolver y atender las dudas sobre la UTC, tanto de administrativo
 
 | Color      | Hex               |
 | ---------- | ----------------- |
-| Base       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
-| Secundario | <span style="display:inline-block;width:12px;height:12px;background-color:#c2c2c2;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #c2c2c2 |
-| Detalles   | <span style="display:inline-block;width:12px;height:12px;background-color:#3b71ca;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #3b71ca |
-| Extra      | <span style="display:inline-block;width:12px;height:12px;background-color:#02913c;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #02913c |
-| Oscuro     | <span style="display:inline-block;width:12px;height:12px;background-color:#292f38;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #292f38 |
+| Base       | #ffffff |
+| Secundario | #c2c2c2 |
+| Detalles   | #3b71ca |
+| Extra      | #02913c |
+| Oscuro     | #292f38 |
 
 
 ## Librerias
