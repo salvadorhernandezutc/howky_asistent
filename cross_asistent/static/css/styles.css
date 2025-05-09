@@ -451,7 +451,10 @@ main.main_anchor {
     box-shadow: 0 0 10px var(--darkA6);
     border: 5px solid white !important;
 }
-
+.bg_purple {
+    background-color: #ae37cc !important;
+    background: #ae37cc !important;
+}
 .bg_purple-blue {
     background-color: var(--var-detail) !important;
     background: linear-gradient(45deg, #ae37cc 10%, #3b71ca 90%);
@@ -470,6 +473,20 @@ main.main_anchor {
 .bg_blue-red {
     background-color: var(--var-detail) !important;
     background: linear-gradient(45deg, #3b71ca 10%, #b4330f 90%);
+}
+.bg_purple-anim {
+    background: linear-gradient(270deg, #ae37cc, #0000ff, #ae37cc);
+    background-size: 600% 100%;
+    animation: moveBlue 3s linear infinite;
+}
+
+@keyframes moveBlue {
+    0%, 100% {
+        background-position: 100% 0;
+    }
+    40%,50%,60% {
+        background-position: 0 0;
+    }
 }
 
 @media (min-width: 992px) {
