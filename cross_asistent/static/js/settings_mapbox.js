@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
             [-100.9117, 25.5735],
         ],
     });
+    window.mapMapbox = mapMapbox;
 
     // Controles de localizacion ########################################
     const locateUser = new mapboxgl.GeolocateControl({
@@ -263,7 +264,6 @@ window.addEventListener("load", () => {
             function createMarkers() {
                 data.forEach((item) => {
                     const nameImage = item.nombre.replace(" ", "");
-
                     if (!mapMapbox.getSource(item.uuid)) {
                         mapMapbox.addSource(item.uuid, {
                             type: "geojson",
@@ -292,25 +292,32 @@ window.addEventListener("load", () => {
 
                     if (!mapMapbox.hasImage(nameImage)) {
                         mapMapbox.loadImage(item.imagen, (error, image) => {
-                            if (error) throw error;
-                            mapMapbox.addImage(nameImage, image);
+                            if (error) {
+                                console.error("Error al cargar imagen:", item.imagen, error);
+                                return;
+                            }
+                            if (!mapMapbox.hasImage(nameImage)) {
+                                mapMapbox.addImage(nameImage, image);
+                            }
+                            if (!mapMapbox.getLayer(`points${nameImage}`)) {
+                                mapMapbox.addLayer({
+                                    id: `points${nameImage}`,
+                                    type: "symbol",
+                                    source: item.uuid,
+                                    layout: {
+                                        "icon-image": nameImage,
+                                        "icon-size": item.icon_size,
+                                        "icon-allow-overlap": true,
+                                    },
+                                });
+                                // mapMapbox.moveLayer("places-label", `points${nameImage}`);
+                            }
                         });
-                    }
-
-                    if (!mapMapbox.getLayer(`points${nameImage}`)) {
-                        mapMapbox.addLayer({
-                            id: `points${nameImage}`,
-                            type: "symbol",
-                            source: item.uuid,
-                            layout: {
-                                "icon-image": nameImage,
-                                "icon-size": item.icon_size,
-                                "icon-allow-overlap": true,
-                            },
-                        });
-                        // mapMapbox.moveLayer("places-label", `points${nameImage}`);
                     }
                 });
+            }
+            if (mapMapbox.loaded()) {
+                createMarkers();
             }
             mapMapbox.on("load", () => {
                 createMarkers();
@@ -394,6 +401,7 @@ window.addEventListener("load", () => {
                         informacion: item.informacion,
                         galery_count: item.galery_count,
                         galery_items: item.galery_items,
+                        door: item.door,
                     },
                     geometry: {
                         type: "Polygon",
@@ -401,8 +409,7 @@ window.addEventListener("load", () => {
                     },
                 })),
             };
-            console.log(geojsonEdificios);
-            
+
             function createEdificios() {
                 if (!mapMapbox.getSource("places")) {
                     mapMapbox.addSource("places", {
@@ -446,6 +453,14 @@ window.addEventListener("load", () => {
                 const centroid = turf.centroid(feature);
                 return centroid.geometry.coordinates;
             }
+            function getFeatureCoords(feature) {
+                const door = feature.properties.door;
+                if (door && Array.isArray(door) && door.length === 2) {
+                    return door;
+                }
+                return getCentroidCoords(feature);
+            }
+
             function calcularRuta() {
                 const origen = selectOrigin.value;
                 const destino = selectDestiny.value;
@@ -455,8 +470,8 @@ window.addEventListener("load", () => {
                     const destiFeature = geojsonEdificios.features.find((feature) => feature.properties.nombre === destino);
 
                     if (origenFeature && destiFeature) {
-                        const origenCoords = getCentroidCoords(origenFeature);
-                        const destinoCoords = getCentroidCoords(destiFeature);
+                        const origenCoords = getFeatureCoords(origenFeature);
+                        const destinoCoords = getFeatureCoords(destiFeature);
 
                         directions.setOrigin(origenCoords);
                         directions.setDestination(destinoCoords);
@@ -836,8 +851,8 @@ window.addEventListener("load", () => {
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
 
-    // Dibujar poligonos con mapbox Draw ###########################################
     if (mapElement.classList.contains("map_editing")) {
+        // Dibujar poligonos con mapbox Draw ###########################################
         const draw = new MapboxDraw({
             displayControlsDefault: false,
         });
@@ -911,5 +926,44 @@ window.addEventListener("load", () => {
                 if (e.type !== "draw.delete") alert("Haz clic en el mapa para dibujar un polígono.");
             }
         }
+
+        // Agregar marcador de entrada ################################################
+        let doorMarker = null;
+        let placingDoor = false;
+        $("#setDoor").on("click", function () {
+            if (!placingDoor) {
+                // Modo activar punto de entrada
+                placingDoor = true;
+                mapInteractions = false;
+                $(this).removeClass("bg_purple").addClass("bg_purple-anim").text("Coloca el punto...");
+                
+                if (doorMarker) {
+                    doorMarker.remove();
+                    doorMarker = null;
+                }
+                
+                mapMapbox.once("click", function (e) {
+                    const coords = e.lngLat;
+
+                    doorMarker = new mapboxgl.Marker({ color: "#ae37cc" }).setLngLat([coords.lng, coords.lat]).addTo(mapMapbox);
+                    $("#doorcoords").val(JSON.stringify([coords.lng, coords.lat]));
+                    $("#setDoor").removeClass("bg_purple-anim").addClass("bg_purple").html('Quitar punto de entrada <i class="fas fa-door-open ms-1"></i><i class="fas fa-trash-can"></i>');
+
+                    placingDoor = false;
+                    mapInteractions = true;
+                });
+            } else {
+                placingDoor = false;
+                mapInteractions = true;
+
+                if (doorMarker) {
+                    doorMarker.remove();
+                    doorMarker = null;
+                }
+
+                $("#doorcoords").val("");
+                $(this).removeClass("bg_purple-anim").addClass("bg_purple").html('Establecer punto de entrada <i class="fas fa-door-open ms-1"></i>');
+            }
+        });
     }
 });
