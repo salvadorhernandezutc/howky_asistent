@@ -466,7 +466,8 @@ def mapa_data(request):
             "galery_items": galery_items,
             "galery_count": galeryQuery.count(),
             "hidename": bool(mapa.hide_name),
-            "coords": [json.loads(mapa.coords)] if mapa.coords else []
+            "coords": [json.loads(mapa.coords)] if mapa.coords else [],
+            "door": mapa.door,
         }
         data.append(item)
     return JsonResponse(data, safe=False)
@@ -483,7 +484,7 @@ def mapa_markers(request):
             "sizemarker": mapa.size_marker,
             "imagen": imagen_mark.imagen.url,
             "icon_size": float(mapa.size_marker),
-            "coords": [json.loads(mapa.coords)] if mapa.coords else [],
+            "coords": json.loads(mapa.coords) if mapa.coords else [],
         }
         data.append(item)
 

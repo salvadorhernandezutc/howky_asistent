@@ -115,12 +115,17 @@ def export_mapa(request):
                 info.nombre or '',
                 info.informacion or '',
                 info.color or '',
-                f'[{info.p1_polygons}], [{info.p2_polygons}], [{info.p3_polygons}], [{info.p4_polygons}]' or '',
+                info.coords or '',
+                info.door or '',
+                info.tags or '',
+                bool(info.hide_name) or '',
+                bool(info.is_marker) or '',
+                info.size_marker or '0.05',
             ]
             for info in mapaall
         ]
         return create_csv_response(f"UTC_mapa_{now}.csv", 
-            ['uuid', 'Nombre', 'Informacion', 'Color', 'Coordenadas'], 
+            ['uuid', 'Nombre', 'Informacion', 'Color', 'Coordenadas', 'Puerta', 'Etiquetas', 'Ocultar Nombre', 'Es Marcador', 'Tamaño Marcador'],
             rows
         )
     return JsonResponse({'success': False, 'message': 'Acción no permitida. 🧐😠🤥'}, status=400)
@@ -164,6 +169,9 @@ def import_mapa(request):
         'coords': 4,
         'door': 5,
         'tags': 6,
+        'hide_name': 7,
+        'is_marker': 8,
+        'size_marker': 9,
     }, 'Datos Del Mapa importados correctamente. 🎉😁🫡')
 
 @login_required
