@@ -109,7 +109,7 @@
             <input type="text" name="isNew" id="isNewEdif" class="d-none" placeholder="isNew">
             <input type="text" name="uuid" id="uuid" class="d-none" data-uuid data-new-uid="{{UID}}" readonly required placeholder="uuid {{UID}}" />
             <input type="text" name="colorEdificio" id="colorPicker" class="d-none" value="#808080" required placeholder="color">
-            <input type="text" name="doorcoords" id="doorcoords" class="d-non" placeholder="door">
+            <input type="text" name="doorcoords" id="doorcoords" class="d-none" placeholder="door">
             <textarea type="text" id="coords" name="coords" class="d-none" placeholder="coordenates" readonly required></textarea>
 
             <div class="accordion accordion-borderless my-4" id="moreoptions">
@@ -150,6 +150,9 @@
             <div class="mb-4" data-mdb-input-init id="otherActionGroup">
                 <select id="otherAction" class="form-control mb-3">
                     <option disabled selected hidden>Lugar Relacionado:</option>
+                    <option value="Biblioteca">Biblioteca</option>
+                    <option value="Caseta 1">Caseta 1</option>
+                    <option value="Caseta 2">Caseta 2</option>
                 </select>
             </div>
 

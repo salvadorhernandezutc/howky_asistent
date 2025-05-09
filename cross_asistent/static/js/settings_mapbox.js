@@ -454,6 +454,7 @@ window.addEventListener("load", () => {
             }
             function getFeatureCoords(feature) {
                 const door = feature.properties.door;
+                // if (door) {
                 if (door && Array.isArray(door) && door.length === 2) {
                     return door;
                 }
