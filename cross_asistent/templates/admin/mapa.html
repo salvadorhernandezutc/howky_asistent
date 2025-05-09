@@ -117,6 +117,7 @@
                     <div class="accordion-header" id="flush-moreoptions">
                         <button data-mdb-collapse-init class="accordion-button bg-secondary text-white py-2 px-3 collapsed" type="button" data-mdb-target="#flush-oneOption" aria-expanded="false" aria-controls="flush-oneOption">
                             Más Opciones
+                      
                         </button>
                     </div>
                     <div id="flush-oneOption" class="accordion-collapse collapse" aria-labelledby="flush-moreoptions" data-mdb-parent="#moreoptions">
@@ -129,17 +130,27 @@
                                 <input class="form-check-input" type="checkbox" id="checkIsmarker" />
                                 <label class="form-check-label" for="checkIsmarker">: Marcador de Imagen</label>
                             </div>
-                            <div class="mt-4">
-                                <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-0">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-0">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
+                                </div>
+                                <div class="col none" id="delDoorGroup">
+                                    <button type="button" id="delDoor" class="btn btn-block btn-danger px-0">Eliminar Punto de Entrada <i class="fas fa-trash-can ms-1"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="form-outline none mb-4" data-mdb-input-init id="sizemarkerdiv">
+            <div class="form-outline mb-4" data-mdb-input-init id="sizemarkerdiv">
                 <input type="number" id="sizemarker" name="sizemarker" class="form-control active text-end" min="0.01" max="1" step="0.01" value="0.05" required />
                 <label class="form-label" for="sizemarker">Tamaño:</label>
+            </div>
+            <div class="mb-4" data-mdb-input-init id="otherActionGroup">
+                <select id="otherAction" class="form-control mb-3">
+                    <option disabled selected hidden>Lugar Relacionado:</option>
+                </select>
             </div>
 
             <!-- TinyMCE: Contenido de texto -->

@@ -169,8 +169,8 @@ def import_mapa(request):
         'coords': 4,
         'door': 5,
         'tags': 6,
-        'hide_name': 7,
-        'is_marker': 8,
+        'hide_name': lambda row: parse_boolean(row[7]),
+        'is_marker': lambda row: parse_boolean(row[8]),
         'size_marker': 9,
     }, 'Datos Del Mapa importados correctamente. 🎉😁🫡')
 

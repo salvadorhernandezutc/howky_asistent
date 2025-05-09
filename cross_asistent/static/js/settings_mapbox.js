@@ -350,7 +350,6 @@ window.addEventListener("load", () => {
                                 $("#checkIsmarker").attr("checked", "checked");
                                 $("#sizemarkerdiv").slideDown("fast");
                                 $("[data-notmarker]").slideUp();
-                                // $('[for="puertaCordsEdificio"]').text("Ubicacion:");
                             } else {
                                 $("#ismarker").val("False");
                                 $("#checkIsmarker").removeAttr("checked");
@@ -930,25 +929,35 @@ window.addEventListener("load", () => {
         // Agregar marcador de entrada ################################################
         let doorMarker = null;
         let placingDoor = false;
+        $("#delDoor").on("click", function () {
+            $("#doorcoords").val("");
+            $("#delDoorGroup").addClass("none");
+            $("#setDoor").removeClass("bg_purple-anim").addClass("bg_purple").html('Establecer punto de entrada <i class="fas fa-door-open ms-1"></i>');
+
+            if (doorMarker) {
+                doorMarker.remove();
+                doorMarker = null;
+            }
+        });
         $("#setDoor").on("click", function () {
             if (!placingDoor) {
                 // Modo activar punto de entrada
                 placingDoor = true;
                 mapInteractions = false;
                 $(this).removeClass("bg_purple").addClass("bg_purple-anim").text("Coloca el punto...");
-                
+                $("#delDoorGroup").addClass("none");
                 if (doorMarker) {
                     doorMarker.remove();
                     doorMarker = null;
                 }
-                
+
                 mapMapbox.once("click", function (e) {
                     const coords = e.lngLat;
 
                     doorMarker = new mapboxgl.Marker({ color: "#ae37cc" }).setLngLat([coords.lng, coords.lat]).addTo(mapMapbox);
                     $("#doorcoords").val(JSON.stringify([coords.lng, coords.lat]));
-                    $("#setDoor").removeClass("bg_purple-anim").addClass("bg_purple").html('Quitar punto de entrada <i class="fas fa-door-open ms-1"></i><i class="fas fa-trash-can"></i>');
-
+                    $("#setDoor").removeClass("bg_purple-anim").addClass("bg_purple").html('Cambiar punto de entrada <i class="fas fa-door-open ms-1"></i><i class="fas fa-trash-can"></i>');
+                    $("#delDoorGroup").removeClass("none");
                     placingDoor = false;
                     mapInteractions = true;
                 });
@@ -962,6 +971,7 @@ window.addEventListener("load", () => {
                 }
 
                 $("#doorcoords").val("");
+                $("#delDoorGroup").addClass("none");
                 $(this).removeClass("bg_purple-anim").addClass("bg_purple").html('Establecer punto de entrada <i class="fas fa-door-open ms-1"></i>');
             }
         });

@@ -9,7 +9,7 @@ class DatabaseAdmin(admin.ModelAdmin):
     search_fields = ('titulo', 'informacion', 'uuid')
 
 class MapaAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'color')
+    list_display = ('nombre', 'color', 'tags', 'is_marker')
 
 class NotifAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'tipo', 'leida')
