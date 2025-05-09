@@ -70,7 +70,7 @@
 </main>
 
 <!-- OffCanvas: Editar/Crear informacion -->
-<form class="offcanvas offcanvas-start show" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="infoLateral" aria-labelledby="infoLateralLabel" method="post" action="{% url 'upload_map' %}" data-validate-map autocomplete="off">
+<form class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="infoLateral" aria-labelledby="infoLateralLabel" method="post" action="{% url 'upload_map' %}" data-validate-map autocomplete="off">
     <div class="offcanvas-header position-relative p-0">
         <button type="button" class="btn-close p-3 m-1 m-2 position-absolute" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
@@ -92,22 +92,7 @@
             </div>
         </div>
         <div class="p-3 pt-0">
-            {% csrf_token %}
-
-            <!-- Marcador de imagen -->
-            <div class="mt-4">
-                <input class="form-check-input" type="checkbox" id="checkHidename" />
-                <label class="form-check-label" for="checkHidename">: Ocultar Nombre</label>
-            </div>
-            <div class="my-4">
-                <input class="form-check-input" type="checkbox" id="checkIsmarker" />
-                <label class="form-check-label" for="checkIsmarker">: Marcador de Imagen</label>
-            </div>
-            <div class="form-outline non mb-4" data-mdb-input-init id="sizemarkerdiv">
-                <input type="number" id="sizemarker" name="sizemarker" class="form-control active text-end" min="0.01" max="1" step="0.01" value="0.05" required />
-                <label class="form-label" for="sizemarker">Tamaño:</label>
-            </div>
-            
+            {% csrf_token %}            
             <div class="row mt-4">
                 <div class="col">
                     <button type="button" id="color-picker" class="btn btn-block text-white m-0" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
@@ -120,16 +105,46 @@
                 </div>
             </div>
             
-            <input type="file" id="fotoEdificio" class="d-non" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
-            <input type="text" name="isNew" id="isNewEdif" class="d-non" placeholder="isNew">
-            <input type="text" name="uuid" id="uuid" class="d-non" data-uuid data-new-uid="{{UID}}" readonly required placeholder="uuid {{UID}}" />
-            <input type="text" name="colorEdificio" id="colorPicker" class="d-non" value="#808080" required placeholder="color">
-            <textarea type="text" id="coords" name="coords" class="d-non" placeholder="coordenates" readonly required ></textarea>
+            <input type="file" id="fotoEdificio" class="d-none" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
+            <input type="text" name="isNew" id="isNewEdif" class="d-none" placeholder="isNew">
+            <input type="text" name="uuid" id="uuid" class="d-none" data-uuid data-new-uid="{{UID}}" readonly required placeholder="uuid {{UID}}" />
+            <input type="text" name="colorEdificio" id="colorPicker" class="d-none" value="#808080" required placeholder="color">
+            <input type="text" name="doorcoords" id="doorcoords" class="d-non" placeholder="door">
+            <textarea type="text" id="coords" name="coords" class="d-none" placeholder="coordenates" readonly required></textarea>
+
+            <div class="accordion accordion-borderless my-4" id="moreoptions">
+                <div class="accordion-item">
+                    <div class="accordion-header" id="flush-moreoptions">
+                        <button data-mdb-collapse-init class="accordion-button bg-secondary text-white py-2 px-3 collapsed" type="button" data-mdb-target="#flush-oneOption" aria-expanded="false" aria-controls="flush-oneOption">
+                            Más Opciones
+                        </button>
+                    </div>
+                    <div id="flush-oneOption" class="accordion-collapse collapse" aria-labelledby="flush-moreoptions" data-mdb-parent="#moreoptions">
+                        <div class="accordion-body pt-4 px-2">
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="checkHidename" />
+                                <label class="form-check-label" for="checkHidename">: Ocultar Nombre</label>
+                            </div>
+                            <div class="mt-4">
+                                <input class="form-check-input" type="checkbox" id="checkIsmarker" />
+                                <label class="form-check-label" for="checkIsmarker">: Marcador de Imagen</label>
+                            </div>
+                            <div class="mt-4">
+                                <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-0">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-outline none mb-4" data-mdb-input-init id="sizemarkerdiv">
+                <input type="number" id="sizemarker" name="sizemarker" class="form-control active text-end" min="0.01" max="1" step="0.01" value="0.05" required />
+                <label class="form-label" for="sizemarker">Tamaño:</label>
+            </div>
 
             <!-- TinyMCE: Contenido de texto -->
-            <div class="mt-4">
-                <textarea id="textTiny" class="form-control" name="contenidoWord"
-                    placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
+            <div class="mt-2">
+                <textarea id="textTiny" class="form-control" name="contenidoWord" placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
             </div>
             <div id="submitEdificio" class="mt-4 row">
                 <div class="col-2 none" id="btnDeletedPleace">
