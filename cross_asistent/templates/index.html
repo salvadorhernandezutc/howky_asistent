@@ -19,7 +19,21 @@
                 {% if active_areas %}
                 <div init-wave-click id="model_areas" class="model_areas slide_areas show"></div>
                 {% endif %}
+                <div class="model_response">
+                    <div class="output_block">
+                        <div class="bg_detail chat_msg user_submit visible" data-tokeid="101">Estamos trabajando en algo nuevo para ustedes...</div>
+                    </div>
+                </div>
             </model-viewer>
+            <!-- Controles iniciales -->
+            <div class="box_asistent_controls">
+                <div class="controls_buttons">
+                    <a href="{% url 'map' %}" class="btn btn_controls text-white">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Controles del chat -->
         </div>
     </section>
 </main>
