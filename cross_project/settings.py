@@ -2,22 +2,23 @@ import os
 import environ
 from pathlib import Path
 
-env = environ.Env()
+env = environ.Env(DEBUG=(bool, True),ALLOWED_HOSTS=(list, []))
 environ.Env.read_env()
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Utiliza las variables del entorno que estan en otra ubicacion
-#env = environ.Env()
+#env = environ.Env(
+#    DEBUG=(bool, True),
+#    ALLOWED_HOSTS=(list, []),
+#)
 #environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Cambiar la clave secreta en produccion ---------------------------------------------------------
-SECRET_KEY = os.environ.get('SECRET_KEY', default='django-secure-dwkz!xn+ahpk*ah)69dvo3x6@xw%^$u3du-ia$zjf^_(w+9r2b')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
-env_hosts = os.getenv('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [host.strip() for host in env_hosts.split(',') if host.strip()]
+SECRET_KEY = env('SECRET_KEY', default='django-secure-dwkz!xn+ahpk*ah)69dvo3x6@xw%^$u3du-ia$zjf^_(w+9r2b')
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'cross_asistent',
