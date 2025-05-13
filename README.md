@@ -102,3 +102,11 @@ py manage.py runserver
 ```
 
 Despues puedes acceder a [http://127.0.0.1:8000/](http://127.0.0.1:8000/) o puedes hacer click en el mismo link en la terminal si es que lo permite.
+
+## Desarrollo
+
+Ejecuta:
+```bash
+py manage.py collectstatic
+```
+Esto creara una carpeta de static en la raiz, ademas de contener los documentos estaticos personalizados tambien se hace la coleccion de los documentos estaticos de admin, esto pertenece a django

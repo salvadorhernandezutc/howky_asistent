@@ -1,0 +1,69 @@
+.fc-multimonth-title,
+.fc-toolbar-chunk {
+    text-transform: capitalize;
+}
+
+.fc-daygrid-day.fc-day-today {
+    background: none !important;
+}
+
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    background: var(--mdb-surface-color);
+    color: var(--mdb-surface-bg);
+}
+
+.fc-daygrid-day-number {
+    height: 30px !important;
+    width: 30px !important;
+    padding: 0 !important;
+    padding-top: 2px !important;
+    margin: 5px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    border: none;
+    border-radius: 30px;
+    transition: 0.1s ease;
+}
+
+.fc-daygrid-day-number:hover {
+    background: var(--darkA4);
+    color: white;
+}
+
+.fc-timegrid-event-harness.fc-timegrid-event-harness-inset,
+.fc-multimonth-month,
+.fc-daygrid-event {
+    cursor: pointer !important;
+}
+
+.fc-daygrid-week-number {
+    font-size: 0.6rem !important;
+    background: none !important;
+}
+
+.fc .fc-popover {
+    border-radius: var(--border-radius) !important;
+    overflow: hidden !important;
+    z-index: 2 !important;
+}
+
+.fc-day-sat,
+.fc-day-sun {
+    background-color: var(--whiteA1);
+}
+
+[data-mdb-theme="light"] .fc-day-sat,
+[data-mdb-theme="light"] .fc-day-sun {
+    background-color: var(--darkA1);
+}
+
+.event_detail {
+    background-color: var(--var-detail_flat) !important;
+    background: var(--var-detail_flat) !important;
+    border-color: var(--var-detail_flat) !important;
+    margin-block: 2px !important;
+    color: white;
+    overflow: hidden;
+}

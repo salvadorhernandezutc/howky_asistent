@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Administracion {% if user.is_staff %}- Programacion{% endif %} | Inicio{% endblock %}
 {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}"/>
 <script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
 {% endblock %}
 {% block link_home %}{% url 'vista_programador' %}{% endblock %}

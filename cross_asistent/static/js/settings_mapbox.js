@@ -694,16 +694,19 @@ window.addEventListener("load", () => {
                 const offcanvasContent = document.getElementById("offcanvasContent");
                 if (mapInteractions) {
                     if (imagen_url) {
+                        document.querySelector("#imagen_actual").classList.remove("invisible");
                         document.getElementById("imagen_actual").src = `/media/${imagen_url}`;
+                    } else {
+                        document.querySelector("#imagen_actual").classList.add("invisible");
                     }
 
                     if (mapElement.classList.contains("map_user")) {
                         document.getElementById("lateralTitle").innerText = nombre;
                         offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
                     } else if (mapElement.classList.contains("map_editing")) {
-                        // if (!imagen_url) {
-                        //     document.getElementById("imagen_actual").src = `/static/img/default_image.webp`;
-                        // }
+                        if (!imagen_url) {
+                            document.getElementById("imagen_actual").src = `/static/img/default_image.webp`;
+                        }
 
                         $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                         $(".error.bg-danger").slideUp("fast");

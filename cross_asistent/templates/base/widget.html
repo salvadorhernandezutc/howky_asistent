@@ -11,11 +11,10 @@
         (function () { const theme = localStorage.getItem('data-mdb-theme') || 'light'; document.documentElement.setAttribute('data-mdb-theme', theme); })();
         (function () { const themeColor = localStorage.getItem('data-color_prefer') || 'blue'; document.documentElement.setAttribute('data-color_prefer', themeColor); })();
     </script>
-    <link rel="preload" href="{% static 'css/mdb_fontawesome.min.css' %}" as="style" />
 
     {% block extra_head %}{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/mdb_fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/mdb_fontawesome.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
 </head>
 

@@ -1,6 +1,9 @@
 {% extends 'base/widget.html' %}
 {% load static %}
 {% block title %}Calendario de la Universidad 📰{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}"/>
+{% endblock %}
 {% block content %}
 <main class="container container-fluid py-5">
     <section id="calendar" data-events="{% url 'calendario_eventos' %}" data-show_btnyear="{{calendar_btnsYear}}"></section>
