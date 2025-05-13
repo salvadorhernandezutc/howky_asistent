@@ -85,7 +85,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 ![note](https://img.shields.io/badge/NOTA-Importante-blue)
-Las aplicaciones creadas deben estar definidas en el proyecto, se definen en **INSTALLED_APPS** de settings.py [`\cross_project\settings.py`](.\cross_project\settings.py)
+Las aplicaciones creadas deben estar definidas en el proyecto, se definen en **INSTALLED_APPS** de settings.py [`\cross_project\settings.py`](/cross_project/settings.py)
 
 ### Crear Usuario Administrador
 Este es un usuario importante para manjar tanto la base de datos como el uso de las tablas y modelos locales de DJango.
