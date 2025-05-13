@@ -1,35 +1,23 @@
 import os
 import environ
 from pathlib import Path
-from cryptography.fernet import Fernet
 
 env = environ.Env()
 environ.Env.read_env()
-
-# encryption_key = env("ENCRYPTION_KEY").encode()
-# fernet = Fernet(encryption_key)
-# encrypted_api_key = env("OPENAI_API_KEY").encode()
-# decrypted_api_key = fernet.decrypt(encrypted_api_key).decode()
-# OPENAI_API_KEY = decrypted_api_key
-
-
-OPENAI_API_KEY = env("OPENAI_API_KEY")
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENV_FILE_PATH = os.path.join(BASE_DIR, '.env')
-if os.path.exists(ENV_FILE_PATH):
-    environ.Env.read_env(ENV_FILE_PATH)
+# Utiliza las variables del entorno que estan en otra ubicacion
+#env = environ.Env()
+#environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Cambiar la clave secreta en produccion ---------------------------------------------------------
-SECRET_KEY = 'django-insecure-32wpj55%1@sy+hqt(v6b87!04o3m2(+1##sf@^%45$0@@fdynj'
-DEBUG = True
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-secure-dwkz!xn+ahpk*ah)69dvo3x6@xw%^$u3du-ia$zjf^_(w+9r2b')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ['10.1.1.113']
-#if DEBUG:
-    #ALLOWED_HOSTS = ['10.1.1.113']
-    #ALLOWED_HOSTS = ['tu-dominio.com', 'www.tu-dominio.com']
+env_hosts = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in env_hosts.split(',') if host.strip()]
 
 INSTALLED_APPS = [
     'cross_asistent',
@@ -80,19 +68,6 @@ DATABASES = {
     }
 }
 
-#conect to MySQL ################
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'nombre_base_datos',
-#        'USER': 'usuario',
-#        'PASSWORD': 'contraseña',
-#        'HOST': 'localhost',  # O la dirección IP del servidor
-#        'PORT': '3306',  # Puerto por defecto de MySQL
-#    }
-#}
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -102,7 +77,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
 LANGUAGE_CODE = 'es-mx'
 TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
