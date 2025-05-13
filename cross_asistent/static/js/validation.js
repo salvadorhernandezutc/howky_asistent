@@ -211,7 +211,7 @@ $(document).ready(function () {
         {
             nombreEdificio: {
                 required: "Escribe el Nombre del Lugar.",
-                minlength: "Tu nombre debe tener al menos 3 letras.",
+                minlength: "El nombre debe tener al menos 3 letras.",
                 validtitle: "Regla: Debe comenzar por letras, puede contener numeros, guiones y #",
             },
             fotoEdificio: {

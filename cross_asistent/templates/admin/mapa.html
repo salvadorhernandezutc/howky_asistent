@@ -130,6 +130,11 @@
                                 <input class="form-check-input" type="checkbox" id="checkIsmarker" />
                                 <label class="form-check-label" for="checkIsmarker">: Marcador de Imagen</label>
                             </div>
+                            <div class="mt-4" data-mdb-input-init id="otherActionGroup">
+                                <select id="otherAction" class="form-control mb-3">
+                                    <option disabled selected hidden>Lugar Relacionado:</option>
+                                </select>
+                            </div>
                             <div class="row mt-4">
                                 <div class="col">
                                     <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-0">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
@@ -138,24 +143,17 @@
                                     <button type="button" id="delDoor" class="btn btn-block btn-danger px-0">Eliminar Punto de Entrada <i class="fas fa-trash-can ms-1"></i></button>
                                 </div>
                             </div>
+                            <div id="sizemarkerdiv">
+                                <div class="form-outline mt-4" data-mdb-input-init>
+                                    <input type="number" id="sizemarker" name="sizemarker" class="form-control text-end" min="0.01" max="1" step="0.01" value="0.05" required />
+                                    <label class="form-label" for="sizemarker">Tamaño:</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="form-outline mb-4" data-mdb-input-init id="sizemarkerdiv">
-                <input type="number" id="sizemarker" name="sizemarker" class="form-control active text-end" min="0.01" max="1" step="0.01" value="0.05" required />
-                <label class="form-label" for="sizemarker">Tamaño:</label>
-            </div>
-            <div class="mb-4" data-mdb-input-init id="otherActionGroup">
-                <select id="otherAction" class="form-control mb-3">
-                    <option disabled selected hidden>Lugar Relacionado:</option>
-                    <option value="Biblioteca">Biblioteca</option>
-                    <option value="Caseta 1">Caseta 1</option>
-                    <option value="Caseta 2">Caseta 2</option>
-                </select>
-            </div>
-
             <!-- TinyMCE: Contenido de texto -->
             <div class="mt-2">
                 <textarea id="textTiny" class="form-control" name="contenidoWord" placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
@@ -336,6 +334,6 @@
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
 <script src="{% static 'js/settings_tinymce.js' %}"></script>
 <script src="{% static 'libs/jquery.validate.min.js' %}"></script>
-<script src="{% static 'js/validate.min.js' %}"></script>
+<script src="{% static 'js/validation.min.js' %}"></script>
 <script src="{% static 'js/colorpickr.js' %}"></script>
 {% endblock %}
