@@ -3,7 +3,7 @@
 {% block title %}Inicio | Bienvenidos 🦅{% endblock %}
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}" />
-<script type="module" src="{% static 'js/model-viewer.min.js' %}"></script>
+<script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
 {% endblock %}
 
 {% block navbar %}
@@ -61,7 +61,6 @@
 {% endblock %}
 
 {% block scripts_end %}
-<script src="{% static 'js/swiper.min.js' %}"></script>
 <script src="{% static 'js/settings_chatbot.js' %}"></script>
 <script src="{% static 'js/settings_model.js' %}"></script>
 {% endblock %}

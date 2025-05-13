@@ -125,7 +125,7 @@ window.addEventListener("load", () => {
 
                     const newUID = $("#uuid").data("new-uid");
                     $("#uuid").removeClass("active").val(newUID);
-                    $("#colorPicker").addClass("active").val("#808080");
+                    $("#colorPicker").val("#808080");
 
                     $("#fotoEdificio").attr("required", true);
                     tinymce.get("textTiny").setContent("");
