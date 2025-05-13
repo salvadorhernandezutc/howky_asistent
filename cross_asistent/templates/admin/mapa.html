@@ -96,7 +96,7 @@
             {% csrf_token %}            
             <div class="row mt-4">
                 <div class="col">
-                    <button type="button" id="color-picker" class="btn btn-block text-white m-0" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
+                    <button type="button" id="colorpicker" class="btn btn-block text-white m-0" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
                 </div>
                 <div class="col" id="btnPoligonGroup">
                     <button type="button" id="btnPoligon" class="btn btn-block btn_detail text-white px-0">Edificio <i class="fa-solid fa-draw-polygon ms-1"></i></button>
@@ -109,7 +109,7 @@
             <input type="file" id="fotoEdificio" class="d-none" name="fotoEdificio" accept="image/*" data-img_dom="imagen_actual" required />
             <input type="text" name="isNew" id="isNewEdif" class="d-none" placeholder="isNew">
             <input type="text" name="uuid" id="uuid" class="d-none" data-uuid data-new-uid="{{UID}}" readonly required placeholder="uuid {{UID}}" />
-            <input type="text" name="colorEdificio" id="colorPicker" class="d-none" value="#808080" required placeholder="color">
+            <input type="text" name="colorEdificio" id="colorEdificio" class="d-non mt-4" value="#808080" required placeholder="color:">
             <input type="text" name="doorcoords" id="doorcoords" class="d-none" placeholder="door">
             <textarea type="text" id="coords" name="coords" class="d-none" placeholder="coordenates" readonly required></textarea>
 

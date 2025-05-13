@@ -1,5 +1,5 @@
 const pickr = Pickr.create({
-    el: "#color-picker",
+    el: "#colorpicker",
     theme: "monolith",
     default: "#808080",
     useAsButton: true,
@@ -36,9 +36,8 @@ const pickr = Pickr.create({
 });
 function setColor(thisColor) {
     const getColor = thisColor.toHEXA().toString();
-    $("#color-picker").css("background-color", getColor);
-    alertSToast('center', 8000, 'info', getColor);
-    $("#colorpicker").val(getColor);
+    $("#colorpicker").css("background-color", getColor);
+    $("#colorEdificio").val(getColor);
 }
 pickr.on("change", (color) => {
     setColor(color);
