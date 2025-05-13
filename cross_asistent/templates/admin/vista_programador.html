@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Administracion {% if user.is_staff %}- Programacion{% endif %} | Inicio{% endblock %}
 {% block extra_head %}
-<script type="module" src="{% static 'js/model-viewer.min.js' %}"></script>
+<script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
 {% endblock %}
 {% block link_home %}{% url 'vista_programador' %}{% endblock %}
 {% block link_default %}
@@ -811,8 +811,7 @@
 {% endblock %}
 
 {% block scripts_end %}
-<script src="{% static 'js/jquery.validate.min.js' %}"></script>
-<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
-<script src="{% static 'js/settings_tinymce.js' %}"></script>
+<script src="{% static 'libs/jquery.validate.min.js' %}"></script>
+<script src="{% static 'js/validation.min.js' %}"></script>
 <script src="{% static 'js/settings_model.js' %}"></script>
 {% endblock %}

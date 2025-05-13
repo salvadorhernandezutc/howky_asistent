@@ -125,17 +125,19 @@ window.addEventListener("load", () => {
 
                     const newUID = $("#uuid").data("new-uid");
                     $("#uuid").removeClass("active").val(newUID);
-                    $("#colorPicker").addClass("active").val("#808080");
+                    $("#colorPicker").val("#808080");
 
                     $("#fotoEdificio").attr("required", true);
                     tinymce.get("textTiny").setContent("");
 
                     $("#ismarker").val("False");
                     $("#checkIsmarker").removeAttr("checked");
-                    // $("#sizemarkerdiv").slideUp();
                     $("[data-notmarker]").slideDown();
                     $("#hidename").slideDown();
-                    $("#btnOpenGalery").slideUp();
+
+                    $("#otherAction option").each(function () {
+                        $(this).prop("disabled", false);
+                    });
                     // }
 
                     if (!offcanvasOpen) {
@@ -367,6 +369,10 @@ window.addEventListener("load", () => {
                             if (bsOffcanvasGalery) {
                                 bsOffcanvasGalery.hide();
                             }
+
+                            $("#otherAction option").each(function () {
+                                $(this).prop("disabled", false);
+                            });
 
                             offcanvasInstance.show();
                             offcanvasOpen = true;
@@ -695,18 +701,20 @@ window.addEventListener("load", () => {
                         document.getElementById("lateralTitle").innerText = nombre;
                         offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
                     } else if (mapElement.classList.contains("map_editing")) {
-                        $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
+                        // if (!imagen_url) {
+                        //     document.getElementById("imagen_actual").src = `/static/img/default_image.webp`;
+                        // }
+
+                        $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                         $(".error.bg-danger").slideUp("fast");
-                        const { color, coords, uuid, ismarker, label } = feature.properties;
+                        const { color, uuid, ismarker, label } = feature.properties;
 
                         if ($("#checkIsmarker").is(":checked")) {
                             $("#sizemarkerdiv").slideUp();
                             $("[data-notmarker]").slideDown();
                         }
                         $("#btnDeletedPleace").show();
-                        $("#btnOpenGalery").slideDown();
                         $("[data-namePleace]").text(nombre);
-                        $("#galeryCount").text(galery_count);
                         $("#isNewEdif").val("notnew");
                         $("#sizemarker").val("0.5");
                         $("#colorPicker").val(color);
@@ -731,9 +739,19 @@ window.addEventListener("load", () => {
                         $("#nombreEdificio").addClass("active").val(nombre);
                         $(".name_pleace").text(nombre);
 
-                        $("#coords").addClass("active").val(coords);
+                        const coords = coordinates[0];
+                        $("#coords").addClass("active").val(JSON.stringify(coords));
                         $("#fotoEdificio").attr("required", false);
                         tinymce.get("textTiny").setContent(informacion);
+
+                        $("#otherAction option").each(function () {
+                            $(this).prop("disabled", false);
+                            if ($(this).val() === nombre) {
+                                $(this).prop("disabled", true);
+                            } else {
+                                $(this).prop("disabled", false);
+                            }
+                        });
                     }
 
                     offcanvasInstance.show();
@@ -746,6 +764,9 @@ window.addEventListener("load", () => {
                 const option = new Option(nombre, nombre);
                 document.getElementById("origen").add(option);
                 document.getElementById("destino").add(option.cloneNode(true));
+                if (mapElement.classList.contains("map_editing")) {
+                    document.getElementById("otherAction").add(option.cloneNode(true));
+                }
             });
             selectOrigin.addEventListener("change", function () {
                 const seleccionOrigen = this.value;
@@ -879,6 +900,8 @@ window.addEventListener("load", () => {
             mapInteractions = true;
             $("#controlsIndic").removeClass("show");
             $("#delPoligonGroup").addClass("none");
+            $("#coords").val("");
+            $("#btnPoligon").html('Edificio <i class="fa-solid fa-draw-polygon ms-1"></i>');
             const all = draw.getAll();
             deleteArea(all);
         });
@@ -901,29 +924,9 @@ window.addEventListener("load", () => {
                 const polygon = data.features[0];
                 const coordinates = polygon.geometry.coordinates[0];
                 $("#coords").val(JSON.stringify(coordinates));
-
-                // Calcular área
-                const area = turf.area(polygon);
-                const rounded_area = Math.round(area * 100) / 100;
-                // Calcular perímetro (longitud del borde)
-                const perimeter = turf.length(polygon, { units: "kilometers" });
-                const rounded_perimeter = Math.round(perimeter * 1000 * 100) / 100; // en metros
-                // Calcular centroide (centro geométrico)
-                const centroid = turf.centroid(polygon);
-
-                // Mostrar resultados
-                // $("#controlsIndic .card-body p").html(`
-                //     <p><strong>Área:</strong> ${rounded_area} m²</p>
-                //     <p><strong>Perímetro:</strong> ${rounded_perimeter} m</p>
-                //     <p><strong>Centroide:</strong> [${centroid.geometry.coordinates.map((c) => c).join(", ")}]</p>
-                //     <p><strong>Puntos del polígono:</strong></p>
-                //     <ol>${coordinates.map((coord) => `<li>[${coord[0]}, ${coord[1]}]</li>`).join("")}</ol>
-                // `);
-                // <ol>${coordinates.map((coord) => `<li>[${coord[0].toFixed(5)}, ${coord[1].toFixed(5)}]</li>`).join("")}</ol>
             } else {
                 $("#controlsIndic").removeClass("show");
-                $("#controlsIndic .card-body p").html("");
-                if (e.type !== "draw.delete") alert("Haz clic en el mapa para dibujar un polígono.");
+                if (e.type !== "draw.delete") alertSToast("center", 8000, "error", "Haz clic en el mapa para dibujar un polígono.");
             }
         }
 

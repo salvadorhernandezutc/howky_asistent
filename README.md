@@ -41,26 +41,64 @@ Con el objetivo de ser la figura representativa del asistente, al estar directam
 
 | Colores      | Hex               |
 | ------------ | ----------------- |
-| Azul Intenso | <span style="display:inline-block;width:12px;height:12px;background-color:#133362;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #133362 |
-| Azul Marino  | <span style="display:inline-block;width:12px;height:12px;background-color:#0D223F;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #0D223F |
-| Gris Claro   | <span style="display:inline-block;width:12px;height:12px;background-color:#95989D;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #95989D |
-| Blanco       | <span style="display:inline-block;width:12px;height:12px;background-color:#ffffff;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #ffffff |
-| Lima         | <span style="display:inline-block;width:12px;height:12px;background-color:#77BD1F;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #77BD1F |
-| Negro        | <span style="display:inline-block;width:12px;height:12px;background-color:#000000;border:1px solid #ccc;border-radius:2px;margin-right:4px;"></span> #000000 |
+| Azul Intenso | #133362 |
+| Azul Marino  | #0D223F |
+| Gris Claro   | #95989D |
+| Blanco       | #ffffff |
+| Lima         | #77BD1F |
+| Negro        | #000000 |
 
 
 ## Instalacion
  
 Se requiere python 3.12.0 o superior y pip.
-Para instalar todas las dependencias de python ANTES se debe tener RUST instalado, esto se puede verificar con:
-```sh
+Para instalar todas las dependencias de python ANTES se debe tener **RUST** instalado, esto se puede verificar con:
+```bash
 rustc --version
-```
-```sh
 cargo --version
 ```
-De no tenerlo entonces se requiere su instalacion.
-Posteriormente se instalan todas las dependencias de los requerimientos:
-```sh
+
+### Entorno Virtual
+Configura el entorno virtual para instalar las dependencias de python.
+```bash
+pip install virtualenv
+virtualenv venv
+```
+
+Activar el Entorno virtual para trabajar en él y ejecutar python del entorno virtual en lugar de utilizarlo globalmente.
+```bash
+venv\Scripts\activate
+```
+
+### Requerimientos del Proyecto
+Instala las dependencias definidas en requirements.txt, esto se debe instalar dentro de tu entorno virtual:
+```bash
 pip install -r requirements.txt
 ```
+
+## Iniciar Django
+
+### Base de Datos
+Crear las tablas de los modelos definidos y los modelos iniciales propios de Django.
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+![note](https://img.shields.io/badge/NOTA-Importante-blue)
+Las aplicaciones creadas deben estar definidas en el proyecto, se definen en **INSTALLED_APPS** de settings.py [`\cross_project\settings.py`](/cross_project/settings.py)
+
+### Crear Usuario Administrador
+Este es un usuario importante para manjar tanto la base de datos como el uso de las tablas y modelos locales de DJango.
+Antes de crearlo se requiere un nombre de usuario, email (opcional) y una contraseña que se repetirá para completar el proceso.
+```bash
+python manage.py createsuperuser
+```
+
+### Levantar servidor local
+
+Ejecuta:
+```bash
+py manage.py runserver
+```
+
+Despues puedes acceder a [http://127.0.0.1:8000/](http://127.0.0.1:8000/) o puedes hacer click en el mismo link en la terminal si es que lo permite.

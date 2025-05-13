@@ -275,7 +275,7 @@ def update_create_pleace_map(request):
     is_markerPost = request.POST.get('ismarker')
     hide_namePost = request.POST.get('hidename')
     uuidPost = request.POST.get('uuid')
-    nombrePost = request.POST.get('nombreEdificio').lower()
+    nombrePost = request.POST.get('nombreEdificio')
     colorPost = request.POST.get('colorEdificio')
     informacionText = request.POST.get('textTiny')
     sizemarkerPost = request.POST.get('sizemarker')

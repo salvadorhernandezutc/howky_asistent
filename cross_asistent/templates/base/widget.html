@@ -12,7 +12,6 @@
         (function () { const themeColor = localStorage.getItem('data-color_prefer') || 'blue'; document.documentElement.setAttribute('data-color_prefer', themeColor); })();
     </script>
     <link rel="preload" href="{% static 'css/mdb_fontawesome.min.css' %}" as="style" />
-    <link rel="preload" href="{% static 'js/libraries.min.js' %}" as="script" />
 
     {% block extra_head %}{% endblock %}
 
@@ -116,7 +115,10 @@
         </div>
     </div>
     <div id="overlayMenu" class="menu_overlay"></div>
-    <script src="{% static 'js/libraries.min.js' %}"></script>
+    
+    <script src="{% static 'libs/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'libs/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/mdb.min.js' %}"></script>
     <script src="{% static 'js/settings.js' %}"></script>
     {% block scripts_end %} {% endblock %}
 </body>
