@@ -127,12 +127,16 @@ window.addEventListener("load", () => {
                     // $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
                     $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                     $(".error.bg-danger").slideUp("fast");
-                    document.getElementById("imagen_actual").src = "/static/img/default_image.webp";
+                    $("imagen_actual").attr("src", "/static/img/default_image.webp");
+                    $("#nombreEdificio").val("");
                     $("#offcanvasContent #isNewEdif").val("new");
 
                     const newUID = $("#uuid").data("new-uid");
                     $("#uuid").removeClass("active").val(newUID);
                     $("#colorPicker").val("#808080");
+                    $("#doorcoords").val("");
+                    $("#coords").val("");
+                    pickr.setColor("#808080");
 
                     $("#fotoEdificio").attr("required", true);
                     tinymce.get("textTiny").setContent("");
@@ -141,10 +145,15 @@ window.addEventListener("load", () => {
                     $("#checkIsmarker").removeAttr("checked");
                     $("[data-notmarker]").slideDown();
                     $("#hidename").slideDown();
+                    $("#delPoligonGroup").addClass("none");
+                    $("#btnPoligon").html('Dibujar <i class="fa-solid fa-draw-polygon ms-1"></i>').removeClass("bg_purple-anim");
 
                     $("#otherAction option").each(function () {
                         $(this).prop("disabled", false);
                     });
+
+                    const all = draw.getAll();
+                    deleteArea(all);
                     // }
 
                     if (!offcanvasOpen) {
@@ -485,7 +494,6 @@ window.addEventListener("load", () => {
 
                 return getCentroidCoords(feature);
             }
-
             function calcularRuta() {
                 const origen = selectOrigin.value;
                 const destino = selectDestiny.value;
@@ -699,7 +707,7 @@ window.addEventListener("load", () => {
             // Abrir offcanvas: Informacion del edificio
             mapMapbox.on("click", "places-layer", (e) => {
                 const feature = e.features[0];
-                const { nombre, informacion, imagen_url, galery_count, galery_items } = feature.properties;
+                const { nombre, informacion, imagen_url, door, galery_count, galery_items } = feature.properties;
                 const { coordinates } = feature.geometry;
                 // let galeryObj = JSON.parse(galery_items);
 
@@ -709,10 +717,10 @@ window.addEventListener("load", () => {
 
                 if (mapInteractions) {
                     if (imagen_url) {
-                        imageOffCanvas.attr("src", `/media/${imagen_url}`).removeClass("transparent");
+                        imageOffCanvas.attr("src", `/media/${imagen_url}`).removeClass("invisible");
                         siblingDiv.addClass("mask_white");
                     } else {
-                        imageOffCanvas.addClass("transparent");
+                        imageOffCanvas.addClass("invisible");
                         siblingDiv.removeClass("mask_white");
                     }
 
@@ -721,7 +729,7 @@ window.addEventListener("load", () => {
                         offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
                     } else if (mapElement.classList.contains("map_editing")) {
                         if (!imagen_url) {
-                            imageOffCanvas.attr("src", `/static/img/default_image.webp`).removeClass("transparent");
+                            imageOffCanvas.attr("src", "/static/img/default_image.webp").removeClass("invisible");
                             siblingDiv.addClass("mask_white");
                         }
 
@@ -738,6 +746,7 @@ window.addEventListener("load", () => {
                         $("#isNewEdif").val("notnew");
                         $("#sizemarker").val("0.5");
                         $("#colorPicker").val(color);
+                        $("#doorcoords").val(door);
                         pickr.setColor(color.split("-")[0]);
 
                         if (ismarker) {
@@ -762,6 +771,9 @@ window.addEventListener("load", () => {
                         const coords = coordinates[0];
                         $("#coords").val(JSON.stringify(coords));
                         $("#fotoEdificio").attr("required", false);
+                        $("#delPoligonGroup").removeClass("none");
+                        $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>');
+
                         tinymce.get("textTiny").setContent(informacion);
 
                         $("#otherAction option").each(function () {
@@ -934,7 +946,7 @@ window.addEventListener("load", () => {
 
             $("#controlsIndic").addClass("show");
             $("#delPoligonGroup").addClass("none");
-            $(this).html('Dibujando... <i class="fa-solid fa-draw-polygon ms-1"></i>');
+            $(this).html('Dibujando... <i class="fa-solid fa-draw-polygon ms-1"></i>').addClass("bg_purple-anim").removeClass("btn_detail");
 
             draw.changeMode("draw_polygon");
         });
@@ -944,7 +956,7 @@ window.addEventListener("load", () => {
             $("#controlsIndic").removeClass("show");
             $("#delPoligonGroup").addClass("none");
             $("#coords").val("");
-            $("#btnPoligon").html('Edificio <i class="fa-solid fa-draw-polygon ms-1"></i>');
+            $("#btnPoligon").html('Dibujar <i class="fa-solid fa-draw-polygon ms-1"></i>').removeClass("bg_purple-anim").addClass("btn_detail");
             const all = draw.getAll();
             deleteArea(all);
         });
@@ -961,7 +973,7 @@ window.addEventListener("load", () => {
             const data = draw.getAll();
             $("#controlsIndic").removeClass("show");
             $("#delPoligonGroup").removeClass("none");
-            $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>');
+            $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>').removeClass("bg_purple-anim").addClass("btn_detail");
 
             if (data.features.length > 0) {
                 const polygon = data.features[0];
