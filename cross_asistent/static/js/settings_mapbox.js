@@ -302,7 +302,7 @@ window.addEventListener("load", () => {
                     if (!mapMapbox.hasImage(nameImage)) {
                         mapMapbox.loadImage(item.imagen, (error, image) => {
                             if (error) {
-                                console.error("Error al cargar imagen:", item.imagen, error);
+                                console.error("(MAPBOX) Error al cargar imagen:", item.imagen, error);
                                 return;
                             }
                             if (!mapMapbox.hasImage(nameImage)) {
@@ -387,7 +387,7 @@ window.addEventListener("load", () => {
             });
         })
         .catch((error) => {
-            console.error("Error al obtener Marcadores del mapa:");
+            console.error("(MAPBOX) Error al obtener Marcadores del mapa:");
             console.error(error);
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
@@ -466,11 +466,23 @@ window.addEventListener("load", () => {
                 return centroid.geometry.coordinates;
             }
             function getFeatureCoords(feature) {
-                const door = feature.properties.door;
-                // if (door) {
-                if (door && Array.isArray(door) && door.length === 2) {
-                    return door;
+                let door = feature.properties.door;
+
+                if (door) {
+                    if (typeof door === "string") {
+                        try {
+                            door = JSON.parse(door);
+                        } catch (e) {
+                            console.error("(MAPBOX) Error al hacer JSON.parse en 'door':", e);
+                            door = null;
+                        }
+                    }
+
+                    if (Array.isArray(door) && door.length === 2) {
+                        return door;
+                    }
                 }
+
                 return getCentroidCoords(feature);
             }
 
@@ -675,13 +687,6 @@ window.addEventListener("load", () => {
                     mapMapbox.moveLayer("places-label");
                 }
             }
-            function getParamsFromURL() {
-                const params = new URLSearchParams(window.location.search);
-                return {
-                    origin: params.get("origin"),
-                    destiny: params.get("destiny"),
-                };
-            }
 
             mapMapbox.on("load", function () {
                 createEdificios();
@@ -800,6 +805,7 @@ window.addEventListener("load", () => {
                     document.getElementById("otherAction").add(option.cloneNode(true));
                 }
             });
+
             selectOrigin.addEventListener("change", function () {
                 const seleccionOrigen = this.value;
 
@@ -856,53 +862,63 @@ window.addEventListener("load", () => {
                     }, 3000);
                 }
             }
-
-            $("[data-reset_form]").on("click", function () {
-                $("option").each((option) => {
-                    option.disabled = false;
-                });
-
-                // Verificar si las capas de la ruta existen y removerlas
-                const routeLayers = [
-                    "directions-route-line",
-                    "directions-route-line-alt",
-                    "directions-route-line-casing",
-                    "directions-hover-point-casing",
-                    "directions-hover-point",
-                    "directions-waypoint-point-casing",
-                    "directions-waypoint-point",
-                    "directions-origin-point",
-                    "directions-origin-label",
-                    "directions-destination-point",
-                    "directions-destination-label",
-                ];
-                routeLayers.forEach((layer) => {
-                    if (mapMapbox.getLayer(layer)) {
-                        mapMapbox.removeLayer(layer);
-                    }
-                });
-
-                // Verificar si la fuente de la ruta existe y removerla
-                if (mapMapbox.getSource("directions")) {
-                    mapMapbox.removeSource("directions");
-                }
-
-                $("#buttons_route").slideUp("slow");
-                $("#route-info").slideUp("slow", () => {
-                    $("#route-info").empty();
-                });
-
-                const params = new URLSearchParams(window.location.search);
-                params.delete("origin");
-                params.delete("destiny");
-                history.replaceState({}, "", `${location.pathname}?${params.toString()}`);
-            });
         })
         .catch((error) => {
-            console.error("Error al obtener lugares del mapa:");
+            console.error("(MAPBOX) Error al obtener lugares del mapa:");
             console.error(error);
             alertSToast("top", 5000, "error", "Ocurrio un error inesperado. #403");
         });
+
+    // Resetear formulario de Rutas ###################################################################
+    $("[data-reset_form]").on("click", function () {
+        $("option").each((option) => {
+            option.disabled = false;
+        });
+
+        // Verificar si las capas de la ruta existen y removerlas
+        const routeLayers = [
+            "directions-route-line",
+            "directions-route-line-alt",
+            "directions-route-line-casing",
+            "directions-hover-point-casing",
+            "directions-hover-point",
+            "directions-waypoint-point-casing",
+            "directions-waypoint-point",
+            "directions-origin-point",
+            "directions-origin-label",
+            "directions-destination-point",
+            "directions-destination-label",
+        ];
+        routeLayers.forEach((layer) => {
+            if (mapMapbox.getLayer(layer)) {
+                mapMapbox.removeLayer(layer);
+            }
+        });
+
+        // Verificar si la fuente de la ruta existe y removerla
+        if (mapMapbox.getSource("directions")) {
+            mapMapbox.removeSource("directions");
+        }
+
+        $("#buttons_route").slideUp("slow");
+        $("#route-info").slideUp("slow", () => {
+            $("#route-info").empty();
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        params.delete("origin");
+        params.delete("destiny");
+        history.replaceState({}, "", `${location.pathname}?${params.toString()}`);
+    });
+
+    // Obtener los parámetros de la URL y devolverlos como un objeto ######################################
+    function getParamsFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            origin: params.get("origin"),
+            destiny: params.get("destiny"),
+        };
+    }
 
     if (mapElement.classList.contains("map_editing")) {
         mapMapbox.addControl(draw);

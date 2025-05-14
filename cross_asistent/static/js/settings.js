@@ -790,6 +790,17 @@ if (dropArea) {
 }
 
 // Template Alertas switalert ###################################################
+function typeOf(variable) {
+    if (Array.isArray(variable)) {
+        return "array";
+    } else if (variable === null) {
+        return "null";
+    } else {
+        return typeof variable;
+    }
+}
+
+// Template Alertas switalert ###################################################
 function alertSToast(posittionS, timerS, iconS, titleS, didDestroyS) {
     const Toast = Swal.mixin({
         toast: true,
