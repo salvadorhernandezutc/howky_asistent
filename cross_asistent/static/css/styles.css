@@ -481,10 +481,13 @@ main.main_anchor {
 }
 
 @keyframes moveBlue {
-    0%, 100% {
+    0%,
+    100% {
         background-position: 100% 0;
     }
-    40%,50%,60% {
+    40%,
+    50%,
+    60% {
         background-position: 0 0;
     }
 }
