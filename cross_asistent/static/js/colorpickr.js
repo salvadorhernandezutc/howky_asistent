@@ -1,9 +1,10 @@
 const pickr = Pickr.create({
-    el: "#color-picker",
+    el: "#colorpicker",
     theme: "monolith",
     default: "#808080",
     useAsButton: true,
-    lockOpacity: true,
+    // defaultRepresentation: 'RGBA',
+    // lockOpacity: true,
     // showAlways: true,
 
     swatches: [
@@ -25,7 +26,7 @@ const pickr = Pickr.create({
 
     components: {
         preview: true,
-        opacity: false,
+        opacity: true,
         hue: true,
 
         interaction: {
@@ -36,14 +37,32 @@ const pickr = Pickr.create({
 });
 function setColor(thisColor) {
     const getColor = thisColor.toHEXA().toString();
-    $("#color-picker").css("background-color", getColor);
-    alertSToast('center', 8000, 'info', getColor);
-    $("#colorpicker").val(getColor);
+    const colorRBGA = thisColor.toRGBA().toString(0);
+
+    const colorLenght = getColor.length;
+    let solidColor = getColor;
+    if (colorLenght > 7) {
+        solidColor = getColor.slice(0, -2);
+    }
+
+    const rgbaParts = colorRBGA.replace(/\s+/g, "").replace("(", "").replace(")", "").split(",");
+    const opacity = rgbaParts[rgbaParts.length - 1];
+    let setOpacity = 0.4;
+    if (opacity > 0.85) {
+        setOpacity = 0.4;
+    } else {
+        setOpacity = opacity;
+    }
+
+    $("#colorpicker").css("background-color", getColor);
+    $("#colorEdificio").val(`${solidColor}-${setOpacity}`);
 }
-pickr.on("change", (color) => {
-    setColor(color);
-});
-pickr.on("save", (color) => {
-    setColor(color);
-    pickr.hide();
-});
+
+pickr
+    .on("change", (color) => {
+        setColor(color);
+    })
+    .on("save", (color) => {
+        setColor(color);
+        pickr.hide();
+    });

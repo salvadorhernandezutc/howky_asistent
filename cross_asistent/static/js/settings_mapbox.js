@@ -11,8 +11,9 @@ window.addEventListener("load", () => {
     let offcanvasOpen = false;
     let colorlabels = "#000";
     let formChanges = false;
-    let currentRoute;
     var currentMarker;
+    let currentRoute;
+    let draw;
 
     const offcanvasElement = document.querySelector("#infoLateral");
     const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
@@ -40,8 +41,14 @@ window.addEventListener("load", () => {
     });
 
     mapMapbox.addControl(locateUser);
+    if (mapElement.classList.contains("map_editing")) {
+        // Dibujar poligonos con mapbox Draw ###########################################
+        draw = new MapboxDraw({
+            displayControlsDefault: false,
+        });
+    }
 
-    // Cambiar Estilo con switch de tema ######################################
+    // Cambiar Estilo con switch de tema ####################################################
     $("#switchTheme").click(function () {
         if ($("#switchTheme").is(":checked")) {
             colorlabels = "#000";
@@ -312,7 +319,6 @@ window.addEventListener("load", () => {
                                         "icon-allow-overlap": true,
                                     },
                                 });
-                                // mapMapbox.moveLayer("places-label", `points${nameImage}`);
                             }
                         });
                     }
@@ -329,11 +335,10 @@ window.addEventListener("load", () => {
             });
             mapMapbox.on("click", (e) => {
                 if (mapInteractions) {
+                    const features = mapMapbox.queryRenderedFeatures(e.point, {
+                        layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
+                    });
                     if (mapElement.classList.contains("map_editing")) {
-                        const features = mapMapbox.queryRenderedFeatures(e.point, {
-                            layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
-                        });
-
                         if (features.length) {
                             const feature = features[0];
                             const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
@@ -361,7 +366,7 @@ window.addEventListener("load", () => {
                             $("[data-uuid]").addClass("active").val(uuid);
                             $("#nombreEdificio").addClass("active").val(nombre);
                             $("#sizemarker").addClass("active").val(icon_size);
-                            $("#coords").addClass("active").val(`${coordinates}`);
+                            $("#coords").addClass("active").val(coordinates);
                             $("#fotoEdificio").attr("required", false);
 
                             var canvasGalery = document.getElementById("pleaceGalery");
@@ -398,7 +403,8 @@ window.addEventListener("load", () => {
                     type: "Feature",
                     properties: {
                         uuid: item.uuid,
-                        color: item.color,
+                        color: item.color.split("-")[0],
+                        opacity: parseFloat(item.color.split("-")[1]) || 0.4,
                         label: item.hidename ? "" : item.nombre,
                         nombre: item.nombre,
                         ismarker: item.ismarker,
@@ -428,9 +434,10 @@ window.addEventListener("load", () => {
                         id: "places-layer",
                         type: "fill",
                         source: "places",
+                        clickable: true,
                         paint: {
                             "fill-color": ["get", "color"],
-                            "fill-opacity": 0.4,
+                            "fill-opacity": ["get", "opacity"],
                         },
                     });
                 }
@@ -691,19 +698,27 @@ window.addEventListener("load", () => {
                 const { coordinates } = feature.geometry;
                 // let galeryObj = JSON.parse(galery_items);
 
-                const offcanvasContent = document.getElementById("offcanvasContent");
+                const offcanvasContent = $("#offcanvasContent");
+                const imageOffCanvas = $("#imagen_actual");
+                const siblingDiv = imageOffCanvas.siblings("div"); // Div Hermano
+
                 if (mapInteractions) {
                     if (imagen_url) {
-                        document.getElementById("imagen_actual").src = `/media/${imagen_url}`;
+                        imageOffCanvas.attr("src", `/media/${imagen_url}`).removeClass("transparent");
+                        siblingDiv.addClass("mask_white");
+                    } else {
+                        imageOffCanvas.addClass("transparent");
+                        siblingDiv.removeClass("mask_white");
                     }
 
                     if (mapElement.classList.contains("map_user")) {
-                        document.getElementById("lateralTitle").innerText = nombre;
-                        offcanvasContent.innerHTML = `<div class="feature-info"><p>${informacion}</p></div>`;
+                        $("#lateralTitle").text(nombre);
+                        offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
                     } else if (mapElement.classList.contains("map_editing")) {
-                        // if (!imagen_url) {
-                        //     document.getElementById("imagen_actual").src = `/static/img/default_image.webp`;
-                        // }
+                        if (!imagen_url) {
+                            imageOffCanvas.attr("src", `/static/img/default_image.webp`).removeClass("transparent");
+                            siblingDiv.addClass("mask_white");
+                        }
 
                         $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                         $(".error.bg-danger").slideUp("fast");
@@ -718,7 +733,7 @@ window.addEventListener("load", () => {
                         $("#isNewEdif").val("notnew");
                         $("#sizemarker").val("0.5");
                         $("#colorPicker").val(color);
-                        pickr.setColor(color);
+                        pickr.setColor(color.split("-")[0]);
 
                         if (ismarker) {
                             $("#ismarker").val("True");
@@ -740,7 +755,7 @@ window.addEventListener("load", () => {
                         $(".name_pleace").text(nombre);
 
                         const coords = coordinates[0];
-                        $("#coords").addClass("active").val(JSON.stringify(coords));
+                        $("#coords").val(JSON.stringify(coords));
                         $("#fotoEdificio").attr("required", false);
                         tinymce.get("textTiny").setContent(informacion);
 
@@ -752,6 +767,23 @@ window.addEventListener("load", () => {
                                 $(this).prop("disabled", false);
                             }
                         });
+
+                        const currentDraw = draw.getAll();
+                        deleteArea(currentDraw);
+
+                        // Crear nuevo Feature para Mapbox Draw
+                        const drawFeature = {
+                            id: uuid,
+                            type: "Feature",
+                            properties: {},
+                            geometry: {
+                                type: "Polygon",
+                                coordinates: coordinates,
+                            },
+                        };
+
+                        const [featureId] = draw.add(drawFeature);
+                        draw.changeMode("direct_select", { featureId });
                     }
 
                     offcanvasInstance.show();
@@ -873,11 +905,6 @@ window.addEventListener("load", () => {
         });
 
     if (mapElement.classList.contains("map_editing")) {
-        // Dibujar poligonos con mapbox Draw ###########################################
-        const draw = new MapboxDraw({
-            displayControlsDefault: false,
-        });
-
         mapMapbox.addControl(draw);
 
         mapMapbox.on("draw.create", updateArea);
@@ -924,6 +951,7 @@ window.addEventListener("load", () => {
                 const polygon = data.features[0];
                 const coordinates = polygon.geometry.coordinates[0];
                 $("#coords").val(JSON.stringify(coordinates));
+                mapInteractions = true;
             } else {
                 $("#controlsIndic").removeClass("show");
                 if (e.type !== "draw.delete") alertSToast("center", 8000, "error", "Haz clic en el mapa para dibujar un polígono.");
