@@ -83,13 +83,14 @@ window.addEventListener("load", () => {
             this._container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
 
             const createButton = (className, innerHTML, title, onClick) => {
-                const button = document.createElement("button");
-                button.className = "mapboxgl-ctrl-" + className;
-                button.innerHTML = innerHTML;
-                button.title = title;
-                button.type = "button";
-                button.onclick = onClick;
-                return button;
+                const $button = $("<button>", {
+                    class: "mapboxgl-ctrl-" + className,
+                    html: innerHTML,
+                    title: title,
+                    type: "button",
+                    click: onClick,
+                });
+                return $button[0]; // Devuelve el elemento DOM puro como en el original
             };
             const linkmaps = createButton("gmaps", `<div class="mapboxgl-ctrl-icon"><i class="fa-solid fa-map-location-dot"></i></div>`, "Google Maps", () => {
                 document.querySelectorAll(".offcanvas.show").forEach((openOffcanvasElement) => {
@@ -127,7 +128,7 @@ window.addEventListener("load", () => {
                     // $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
                     $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                     $(".error.bg-danger").slideUp("fast");
-                    $("imagen_actual").attr("src", "/static/img/default_image.webp");
+                    $("#imagen_actual").attr("src", "/static/img/default_image.webp");
                     $("#nombreEdificio").val("");
                     $("#offcanvasContent #isNewEdif").val("new");
 
@@ -353,13 +354,11 @@ window.addEventListener("load", () => {
                             const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
                             const coordinates = feature.geometry.coordinates.slice();
 
-                            const offcanvasContent = document.getElementById("offcanvasContent");
-                            document.getElementById("imagen_actual").src = imagen;
-
+                            $("#imagen_actual").attr("src", imagen);
                             $("#btnDeletedPleace").show();
                             $("[data-namePleace]").text(nombre);
 
-                            offcanvasContent.querySelector("#isNewEdif").value = "notnew";
+                            $("#isNewEdif").value = "notnew";
 
                             if (ismarker) {
                                 $("#ismarker").val("True");
