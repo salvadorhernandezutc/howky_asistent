@@ -669,7 +669,6 @@ function jsonSubmit(e) {
 
                 alertSToast(dataPosition, timerOut, dataIcon, dataMessage, alertfunction);
             } else if (data.success == false) {
-                console.waning(dataMessage);
                 if (data.valSelector) {
                     thisForm.querySelector(`[data-selector-input="${data.valSelector}"]`).classList.add("is-invalid");
                     thisForm.querySelector(`[data-selector-input="${data.valSelector}"]`).classList.remove("is-valid");
@@ -786,17 +785,6 @@ if (dropArea) {
                 }, itemId * 110);
             }, itemId * 90);
         };
-    }
-}
-
-// Template Alertas switalert ###################################################
-function typeOf(variable) {
-    if (Array.isArray(variable)) {
-        return "array";
-    } else if (variable === null) {
-        return "null";
-    } else {
-        return typeof variable;
     }
 }
 
