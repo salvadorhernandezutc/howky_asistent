@@ -15,6 +15,7 @@
     {% block extra_head %}{% endblock %}
 
     <link rel="stylesheet" href="{% static 'libs/mdb_fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/mdb.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
 </head>
 
@@ -116,8 +117,8 @@
     <div id="overlayMenu" class="menu_overlay"></div>
     
     <script src="{% static 'libs/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'libs/mdb.umd.min.js' %}"></script>
     <script src="{% static 'libs/jquery.min.js' %}"></script>
-    <script src="{% static 'libs/mdb.min.js' %}"></script>
     <script src="{% static 'js/settings.js' %}"></script>
     {% block scripts_end %} {% endblock %}
 </body>

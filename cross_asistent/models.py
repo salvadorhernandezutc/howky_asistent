@@ -24,7 +24,6 @@ def create_filename_path(filename, setname, sufix, length, lenghtrandom, strpath
     filename = f"{sufix}_{slugify(setname)}_{random_string}.{ext}"
     return os.path.join(strpath, filename)
 
-
 # Funciones para enviar el archivo a su carpeta correspondiente
 def set_imgDB_path(instance, filename):
     categoria = instance.categoria.categoria
@@ -137,6 +136,7 @@ class Mapa(models.Model):
     is_marker = models.BooleanField(default=False, help_text='Para los marcadores de imagen')
     hide_name = models.BooleanField(default=False)
     size_marker = models.CharField(max_length=4, default='0.05')
+    otheraction = models.TextField(blank=True, null=True, help_text='Acciones adicionales')
     
     def get_tag_list(self):
         if self.tags:
@@ -148,7 +148,7 @@ class Mapa(models.Model):
     
     class Meta:
         verbose_name = "Mapa"
-        verbose_name_plural = "Mapas"
+        verbose_name_plural = "Mapa"
 
 class galeria(models.Model):
     imagen = models.ImageField(upload_to=set_imgs_path, max_length=120, blank=True, null=True)

@@ -102,12 +102,23 @@ $(document).ready(function () {
                 $(targetId).slideToggle("slow");
             }
         });
+        $(document).on("click", "[data-toggle-class]", function () {
+            const itemData = $(this).attr("data-toggle-class").split("-");
+            const itemSelector = itemData[0];
+            const itemClass = itemData[1];
+
+            if (itemClass == "slide") {
+                $(itemSelector).slideToggle("slow");
+            } else {
+                $(itemSelector).toggleClass(itemClass);
+            }
+        });
 
         // Remover item #####################################
         $("[data-remove-item]").on("click", function () {
             var thisItemtId = $(this).data("remove-item");
             setTimeout(() => {
-                $("#" + thisItemtId).slideUp("slow");
+                $("#" + thisItemtId).slideUp("fast");
                 setTimeout(() => {
                     $("#" + thisItemtId).remove();
                 }, 500);
@@ -246,7 +257,7 @@ $(document).ready(function () {
             readURL(this, idImgDom);
         });
 
-        // Inpits del perfil ##########################################################
+        // Inputs del perfil ##########################################################
         $("[data-input_transparent]").on({
             focus: function () {
                 $(this).toggleClass("input_transparent");
@@ -606,7 +617,7 @@ function jsonSubmit(e) {
     if (formData.has("contenidoWord")) {
         const contenidoTiny = tinymce.activeEditor.getContent();
         formData.set("htmlTiny", contenidoTiny);
-        
+
         const contenidoTextTiny = tinymce.activeEditor.getContent({ format: "text" });
         formData.set("textTiny", contenidoTextTiny);
     }

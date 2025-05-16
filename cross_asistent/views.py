@@ -7,6 +7,7 @@ from django.db import models, transaction
 from django.http import JsonResponse
 from django.urls import reverse
 from . import functions, models
+import json
 
 mapaall = models.Mapa.objects.all()
 databaseall = models.Database.objects.all()
@@ -272,16 +273,17 @@ def update_create_pleace_map(request):
         return redirect('update_mapa')
 
     isNewPost = request.POST.get('isNew')
-    is_markerPost = request.POST.get('ismarker')
-    hide_namePost = request.POST.get('hidename')
     uuidPost = request.POST.get('uuid')
     nombrePost = request.POST.get('nombreEdificio')
     colorPost = request.POST.get('colorEdificio')
     informacionText = request.POST.get('textTiny')
-    sizemarkerPost = request.POST.get('sizemarker')
     informacionPost = request.POST.get('contenidoWord')
     coordsPost = request.POST.get('coords')
     doorPost = request.POST.get('doorcoords')
+    hide_namePost = request.POST.get('hidename')
+    is_markerPost = request.POST.get('ismarker')
+    sizemarkerPost = request.POST.get('sizemarker')
+    otheractionPost = request.POST.get('otheraction')
     imagenPost = request.FILES.get('fotoEdificio')
     
     if not nombrePost:
@@ -299,6 +301,7 @@ def update_create_pleace_map(request):
                 edificio.door = doorPost
                 edificio.is_marker = bool(is_markerPost)
                 edificio.hide_name = bool(hide_namePost)
+                edificio.otheraction = otheractionPost
                 edificio.save()
                 success_message = f'Se Actualizaron los datos de <span>"{nombrePost}"</span> en el mapa de forma exitosa 🧐😁🎈'
 
@@ -307,6 +310,10 @@ def update_create_pleace_map(request):
                 map_database.imagen = imagenPost
                 map_database.save()
                 success_message += '<br>Se actualizó su imagen en la Base de datos 😁🎉🎈'
+            
+            post_data = dict(request.POST)
+            print(json.dumps(post_data, indent=4))
+            
             return JsonResponse({'success': True, 'message': success_message}, status=200)
         else:
             # validar si este ya existe en el mapa y en db para que no se repitan
@@ -320,6 +327,7 @@ def update_create_pleace_map(request):
                 size_marker  =  sizemarkerPost,
                 is_marker = bool(is_markerPost),
                 hide_name = bool(hide_namePost),
+                otheraction = otheractionPost
             )
             
             models.Database.objects.create(
@@ -331,7 +339,10 @@ def update_create_pleace_map(request):
                 evento_lugar='',
                 evento_className='',
             )
-
+            
+            post_data = dict(request.POST)
+            print(json.dumps(post_data, indent=4))
+            
             return JsonResponse({'success': True, 'message': 'Se creó un nuevo edificio en el mapa y en la base de datos de forma exitosa 🎉🎉🎉', 'functions':'reload'}, status=200)
 
 #Paginas de error -----------------------------------------------

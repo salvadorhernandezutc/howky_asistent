@@ -36,26 +36,15 @@ const pickr = Pickr.create({
     },
 });
 function setColor(thisColor) {
-    const getColor = thisColor.toHEXA().toString();
-    const colorRBGA = thisColor.toRGBA().toString(0);
+    let [r, g, b, a] = thisColor.toRGBA();
+    if (a > 0.9) a = 0.9;
 
-    const colorLenght = getColor.length;
-    let solidColor = getColor;
-    if (colorLenght > 7) {
-        solidColor = getColor.slice(0, -2);
-    }
+    const toHex = (val) => Math.round(val).toString(16).padStart(2, "0").toUpperCase();
+    const alphaHex = Math.round(a * 255).toString(16).padStart(2, "0").toUpperCase();
+    const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}${alphaHex}`;
 
-    const rgbaParts = colorRBGA.replace(/\s+/g, "").replace("(", "").replace(")", "").split(",");
-    const opacity = rgbaParts[rgbaParts.length - 1];
-    let setOpacity = 0.4;
-    if (opacity > 0.85) {
-        setOpacity = 0.4;
-    } else {
-        setOpacity = opacity;
-    }
-
-    $("#colorpicker").css("background-color", getColor);
-    $("#colorEdificio").val(`${solidColor}-${setOpacity}`);
+    $("#colorpicker").css("background-color", hexColor);
+    $("#colorEdificio").val(hexColor);
 }
 
 pickr

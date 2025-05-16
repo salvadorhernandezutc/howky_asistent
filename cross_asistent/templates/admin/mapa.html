@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="{% static 'css/mapbox.css' %}"/>
 {% endblock %}
 {% block content %}
-<main class="full_page map_editing  " id='map' data-mapa_edif="{% url 'mapa_edificios' %}" data-mapa_markers="{% url 'mapa_markers' %}">
+<main class="full_page map_editing" id='map' data-mapa_edif="{% url 'mapa_edificios' %}" data-mapa_markers="{% url 'mapa_markers' %}">
     <!-- Controles de ruta -->
     <section class="controls_route card m-2 max_w250" id="controlsRoute">
         <div class="card-header d-flex justify-content-between align-items-center p-3">
@@ -95,7 +95,7 @@
         </div>
         <div class="p-3 pt-0">
             {% csrf_token %}
-            <div class="row mt-4">
+            <div class="row mt-4 formarkergroup" id="polygonGroup">
                 <div class="col">
                     <button type="button" id="colorpicker" class="btn btn-block text-white m-0 shadow_inset" style="background-color: #808080;">Color <i class="fa-solid fa-brush ms-1"></i></button>
                 </div>
@@ -119,17 +119,16 @@
                     <div class="accordion-header" id="flush-moreoptions">
                         <button data-mdb-collapse-init class="accordion-button bg-secondary text-white py-2 px-3 collapsed" type="button" data-mdb-target="#flush-oneOption" aria-expanded="false" aria-controls="flush-oneOption">
                             Más Opciones
-                      
                         </button>
                     </div>
                     <div id="flush-oneOption" class="accordion-collapse collapse" aria-labelledby="flush-moreoptions" data-mdb-parent="#moreoptions">
                         <div class="accordion-body pt-4 px-2">
-                            <div id="hideNameGroup">
-                                <input class="form-check-input" type="checkbox" id="checkHidename" />
+                            <div id="hideNameGroup" class="mb-4 formarkergroup">
+                                <input class="form-check-input" type="checkbox" id="checkHidename" name="hidename"/>
                                 <label class="form-check-label" for="checkHidename">: Ocultar Nombre</label>
                             </div>
-                            <div class="mt-4">
-                                <input class="form-check-input" type="checkbox" id="checkIsmarker" />
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="checkIsmarker" name="ismarker" data-toggle-class=".formarkergroup-slide"/>
                                 <label class="form-check-label" for="checkIsmarker">: Marcador de Imagen</label>
                             </div>
                             <div class="row mt-4">
@@ -140,12 +139,10 @@
                                     <button type="button" id="delDoor" class="btn btn-block btn-danger px-0">Eliminar Punto de Entrada <i class="fas fa-trash-can ms-1"></i></button>
                                 </div>
                             </div>
-                            <div id="markerGroup" class="none">
-                                <div class="mt-4" data-mdb-input-init id="otherActionGroup">
-                                    <select id="otherAction" class="form-control mb-3">
-                                        <option disabled selected hidden>Lugar Relacionado:</option>
-                                    </select>
-                                </div>
+                            <div class="formarkergroup none">
+                                <select name="otheraction" id="otherAction" class="form-control mt-4">
+                                    <option disabled selected hidden>Lugar Relacionado:</option>
+                                </select>
                                 <div class="form-outline mt-4" data-mdb-input-init>
                                     <input type="number" id="sizemarker" name="sizemarker" class="form-control text-end" min="0.01" max="1" step="0.01" value="0.05" required />
                                     <label class="form-label" for="sizemarker">Tamaño:</label>
@@ -270,15 +267,13 @@
             </div>
             <div class="modal-body">
                 <h4 class="col-8 col-md-12 mx-auto text-center">¿Quieres saber como llegar a la UTC?</h4>
-                <p class="p-3">Con esta opción te enviaremos a <span class="fw-bold style_google">Google</span> Maps, para que puedas ir desde tu ubicación
+                <p class="p-3">Con esta opcion te enviaremos a <span class="fw-bold style_google">Google</span> Maps, para que puedas ir desde tu ubicacion
                     hasta la UTC
                 </p>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn_detail" data-mdb-ripple-init data-mdb-dismiss="modal">Cancelar</button>
-                <a target="_blank"
-                    href="https://www.google.com.mx/maps/dir/25.5565711,-100.936538/Universidad+Tecnol%C3%B3gica+de+Coahuila,+Boulevard+del+Parque+Industrial+Francisco+R.+Alanis,+Zona+Industrial,+Ramos+Arizpe,+Coahuila+de+Zaragoza/@25.5564822,-100.9417562,16z/data=!3m1!4b1!4m10!4m9!1m1!4e1!1m5!1m1!1s0x868814c0002295ff:0x5c622cc711957b03!2m2!1d-100.9368619!2d25.5583972!3e2?entry=ttu"
-                    class="btn btn_detail" data-mdb-ripple-init>Abrir <i class="fa-solid fa-up-right-from-square ms-1"></i></a>
+                <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Cancelar</button>
+                <a target="_blank" href="https://www.google.com.mx/maps/dir/25.5565711,-100.936538/Universidad+Tecnol%C3%B3gica+de+Coahuila,+Boulevard+del+Parque+Industrial+Francisco+R.+Alanis,+Zona+Industrial,+Ramos+Arizpe,+Coahuila+de+Zaragoza/@25.5564822,-100.9417562,16z/data=!3m1!4b1!4m10!4m9!1m1!4e1!1m5!1m1!1s0x868814c0002295ff:0x5c622cc711957b03!2m2!1d-100.9368619!2d25.5583972!3e2?entry=ttu" class="btn btn_detail" data-mdb-ripple-init>Abrir <i class="fa-solid fa-up-right-from-square ms-1"></i></a>
             </div>
         </div>
     </div>
