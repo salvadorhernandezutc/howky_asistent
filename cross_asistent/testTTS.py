@@ -13,7 +13,7 @@ async def main() -> None:
         # model="tts-1-hd", # No Interpreta el español correctamente
         voice="ash",
         # voice="onyx",
-        input="¡Hoy es un día maravilloso para construir algo que la gente ama!",
+        input="¡Hola! Soy Hawky 👋😁, tu asistente virtual de la Universidad Tecnológica de Coahuila. Puedes preguntarme sobre trámites, carreras, costos u otros temas de la universidad. ¿En qué puedo ayudarte? 🫡🤘😋",
         instructions="Habla en un tono neutro.", # Es unicamente para gpt-4o-mini-tts
         response_format="pcm",
     ) as response:

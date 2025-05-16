@@ -1,0 +1,119 @@
+{% extends 'base/widget.html' %} {% load static %} {% block title %}Inicio | Bienvenidos 🦅{% endblock %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}" />
+<script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
+{% endblock %} {% block navbar %}
+<!-- Index Sin Navbar -->
+{% endblock %} {% block content %}
+<main class="main_anchor full_screen">
+    <!-- Asistente -->
+    <section href="#asistente" class="asistent_group {% if hawkyAlways %}open open_controls{% endif %}">
+        <div class="box_asistent" id="hawkySettings">
+            <model-viewer
+                id="asistent_model"
+                autoplay
+                loading="eager"
+                src="{{model_3D}}"
+                shadow-intensity="1"
+                tone-mapping="neutral"
+                camera-orbit="15deg 70deg 5m"
+                animation-name="{{anim_default}}"
+                data-settings-model="{% url 'modelsettings' %}"
+                environment-image=""
+                skybox-image=""
+            >
+                {% if active_areas %}
+                <div init-wave-click id="model_areas" class="model_areas slide_areas show"></div>
+                {% endif %}
+                <!-- <div class="model_response">
+                    <div class="output_block">
+                        <div class="bg_detail chat_msg user_submit visible" data-tokeid="101">Estamos trabajando en algo nuevo para ustedes...</div>
+                    </div>
+                </div> -->
+                <!-- Audio y animacion -->
+                <div class="box_asistent_controls controls_vertical-left controls_hide">
+                    <div class="d-flex flex-column gap_10 pop_buttons">
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="floatSettings" title="Cambiar Esena" style="--delay: 5" data-mdb-modal-init data-mdb-target="#configModal">
+                            <i class="fa-solid fa-gear fs-20"></i>
+                        </button>
+                        <button class="btn btn_detail btn-floating p-4 speak_btn text-white" style="--delay: 6">
+                            <i class="fa-solid fa-volume-high fs-15"></i>
+                        </button>
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="pauseAnim" title="Pausar Animacion" style="--delay: 7">
+                            <i class="fa-regular fa-circle-pause fs-20"></i>
+                        </button>
+                        <button class="btn btn_detail btn-floating p-4 text-white" id="changeScene" title="Cambiar Esena" style="--delay: 8">
+                            <i class="fa-solid fa-earth-africa fs-20"></i>
+                        </button>
+                    </div>
+                </div>
+            </model-viewer>
+            <!-- camera-controls -->
+            <!-- Controles iniciales -->
+            <div class="box_asistent_controls controls_vertical" id="asistentNavigation">
+                <div class="controls_buttons">
+                    <button type="button" class="btn btn_controls text-white toggle_controls">
+                        <i class="fa-regular fa-keyboard"></i>
+                    </button>
+                    <button type="button" class="btn btn_controls text-white {% if not hawkyAlways %}btn_detail{% endif %} controls_btn_microphone">
+                        <i class="fa-solid fa-comment tscale-1" id="btn_controls_icon"></i>
+                    </button>
+                    {% if hawkyAlways %}
+                    <a href="{% url 'map' %}" class="btn btn_controls text-white">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </a>
+                    {% endif %} {% if not hawkyAlways %}
+                    <button type="button" class="btn btn_controls text-white controls_btn_close">
+                        <i class="fa-solid fa-xmark tscale-1-2"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Controles del chat -->
+            <form id="chatForm" class="controls_input" method="POST" action="{% url 'chatbot' %}">
+                {% csrf_token %}
+                <div class="position-relative bottom-0 end-0">
+                    <div class="form-outline" data-mdb-input-init>
+                        <textarea class="form-control bg-body-tertiary" id="txtQuestion" name="question" required rows="5" maxlength="200"></textarea>
+                        <label class="form-label bg-body-tertiary" for="txtQuestion">Haz una pregunta:</label>
+                    </div>
+                    <div class="controls_input-buttons">
+                        {% if not hawkyAlways %}
+                        <button type="button" id="closeChat" class="btn btn_secondary btn-floating controls_btn_close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        {% endif %}
+                        <button type="button" class="btn btn_secondary btn-floating controls_btn_audio toggle_controls">
+                            <i class="fa-solid fa-microphone" id="btn_controls_icon"></i>
+                        </button>
+                        <button type="submit" id="chatForm_submit" class="btn btn_detail btn-floating">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="output_messages" id="output"></div>
+        </div>
+    </section>
+</main>
+{% endblock %} {% block moresettings %}
+<div class="text-center mt-5">
+    <h5>Configuraciones del Asistente</h5>
+    <h6 class="mt-4">Voz:</h6>
+    <div class="form-outline">
+        <select class="form-select" id="voice_select"></select>
+    </div>
+</div>
+<div class="row mt-4 mx-0">
+    <label class="col-4 d-flex align-items-center px-0" for="rate_input">Velocidad: </label>
+    <div class="form-outline col ps-0" data-mdb-input-init>
+        <input type="number" id="rate_input" name="asistentSpeedd" class="form-control" min="0.1" max="2" step="0.1" value="1.2" />
+    </div>
+</div>
+<div class="mt-4">
+    <input class="form-check-input" type="checkbox" id="vesticalCtrls" checked />
+    <label class="form-check-label" for="vesticalCtrls">Controles en Vertical</label>
+</div>
+{% endblock %} {% block scripts_end %}
+<script src="{% static 'js/settings_chatbot.js' %}"></script>
+<script src="{% static 'js/settings_model.js' %}"></script>
+{% endblock %}
