@@ -7,18 +7,31 @@
 
 .chat {
     position: absolute !important;
-    bottom: 5%;
+    bottom: 4%;
     left: 50%;
     border: none;
     border-radius: var(--border-radius);
     transform: translateX(-50%);
     overflow: hidden;
     max-width: 900px;
-    width: 80%;
+    width: 90%;
 }
 
 .chat textarea {
     background: transparent;
     border: none !important;
     border-radius: var(--border-radius);
+    field-sizing: content;
+    height: auto;
+    min-height: 25px;
+    max-height: 125px;
+}
+
+.chat .chat_controls i {
+    font-size: 1.2rem;
+}
+
+.chat .chat_controls .btn:hover,
+.chat .chat_controls .btn:focus {
+    transform: scale(1.1);
 }

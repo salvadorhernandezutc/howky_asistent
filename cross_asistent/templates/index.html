@@ -18,9 +18,18 @@
     <form action="" class="chat card">
         <textarea name="chatquestion" id="chatQuestion" class="p-3 pt-0 mt-3" placeholder="Preguntale a Howky: ... "></textarea>
         <div class="chat_controls d-flex flex-row-reverse justify-content-start p-2 gap_10">
-            <button type="submit" id="chatSubmit" class="btn btn-floating btn_detail"><i class="fa-solid fa-paper-plane"></i></button>
-            <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail"><i class="fa-solid fa-microphone"></i></button>
-            <a href="{% url 'map' %}" target="_blank" rel="noopener noreferrer" class="btn btn-floating btn_detail"><i class="fa-solid fa-map-location-dot"></i></a>
+            <button type="submit" id="chatSubmit" class="btn btn-floating btn_detail pe-1">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+            <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <a href="{% url 'map' %}" target="_blank" rel="noopener noreferrer" class="btn btn-floating btn_detail">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </a>
+            <button type="button" id="floatSettings" class="btn btn-floating btn_detail me-auto" data-mdb-modal-init data-mdb-target="#configModal">
+                <i class="fa-solid fa-gear"></i>
+            </button>
         </div>
     </form>
     <div class="chat_output"></div>
