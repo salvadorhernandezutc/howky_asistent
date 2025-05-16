@@ -8,8 +8,6 @@
 <link rel="stylesheet" href="{% static 'css/mapbox.css' %}"/>
 {% endblock %}
 
-{% block link_home %}{% endblock %}
-{% block link_default %}{% endblock %}
 {% block content %}
 <main class="full_page map_user" id='map' data-mapa_edif="{% url 'mapa_edificios' %}" data-mapa_markers="{% url 'mapa_markers' %}">
     <!-- Controles de ruta -->
