@@ -133,12 +133,13 @@ window.addEventListener("load", () => {
                     $("#offcanvasContent #isNewEdif").val("new");
                     $("#polygonGroup").slideDown("fast");
                     $("#hideNameGroup").slideDown("fast");
+                    $("#ismarkerGroup").addClass("none");
 
                     const newUID = $("#uuid").data("new-uid");
                     $("#uuid").removeClass("active").val(newUID);
                     $("#colorPicker").val("#808080");
                     $("#doorcoords").val("");
-                    $("#coords").val("");
+                    $("#coords").val("").attr('required', 'required');
                     pickr.setColor("#808080");
 
                     $("#fotoEdificio").attr("required", true);
@@ -360,7 +361,8 @@ window.addEventListener("load", () => {
                         if (features.length) {
                             const feature = features[0];
                             const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
-                            const coordinates = feature.geometry.coordinates.slice();
+                            // const coordinates = feature.geometry.coordinates.slice();
+                            const coordinates = feature.geometry.coordinates;
 
                             const all = draw.getAll();
                             deleteArea(all);
@@ -369,14 +371,16 @@ window.addEventListener("load", () => {
                             $("#btnDeletedPleace").show();
                             $("[data-namePleace]").text(nombre);
                             $("#isNewEdif").val("notnew");
+                            $("#coords").val("");
 
                             $("#hidename").slideUp();
                             $("[data-uuid]").addClass("active").val(uuid);
                             $("#nombreEdificio").addClass("active").val(nombre);
                             $("#sizemarker").addClass("active").val(icon_size);
-                            $("#doorcoords").addClass("active").val(coordinates);
+                            $("#doorcoords").addClass("active").val(JSON.stringify(coordinates));
                             $("#fotoEdificio").attr("required", false);
                             $("#delDoorGroup").removeClass("none");
+                            $("#ismarkerGroup").removeClass("none");
                             $("#polygonGroup").slideUp("fast");
                             $("#hideNameGroup").slideUp("fast");
 
@@ -403,6 +407,7 @@ window.addEventListener("load", () => {
                                 $("#flush-oneOption").removeClass("show");
                             }
                             $("#checkIsmarker").trigger("change");
+                            $("#coords").removeAttr('required');
                             changeIsMarker();
 
                             offcanvasInstance.show();
@@ -775,6 +780,7 @@ window.addEventListener("load", () => {
                         $("#sizemarker").val("0.5");
                         $("#colorPicker").val(color);
                         $("#doorcoords").val(door);
+                        $("#ismarkerGroup").addClass("none");
 
                         let colorHex = color;
                         let opacity = 0.4;
@@ -810,6 +816,7 @@ window.addEventListener("load", () => {
                             $('[data-mdb-target="#flush-oneOption"]').addClass("collapsed");
                             $("#flush-oneOption").removeClass("show");
                         }
+                        $("#coords").attr('required', 'required');
                         $("#checkIsmarker").trigger("change");
                         changeIsMarker();
 
@@ -1095,9 +1102,11 @@ window.addEventListener("load", () => {
             if (isChecked) {
                 $("#setDoor").html('Ubicacion <i class="fas fa-location-dot ms-1"></i>');
                 $("#delDoor").text("Eliminar ubicacion");
+                $("#coords").removeAttr('required', 'required');
             } else {
                 $("#setDoor").html('Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i>');
                 $("#delDoor").text("Eliminar Punto de Entrada");
+                $("#coords").attr('required', 'required');
             }
         }
     }

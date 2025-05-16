@@ -311,9 +311,6 @@ def update_create_pleace_map(request):
                 map_database.save()
                 success_message += '<br>Se actualizó su imagen en la Base de datos 😁🎉🎈'
             
-            post_data = dict(request.POST)
-            print(json.dumps(post_data, indent=4))
-            
             return JsonResponse({'success': True, 'message': success_message}, status=200)
         else:
             # validar si este ya existe en el mapa y en db para que no se repitan
@@ -339,9 +336,6 @@ def update_create_pleace_map(request):
                 evento_lugar='',
                 evento_className='',
             )
-            
-            post_data = dict(request.POST)
-            print(json.dumps(post_data, indent=4))
             
             return JsonResponse({'success': True, 'message': 'Se creó un nuevo edificio en el mapa y en la base de datos de forma exitosa 🎉🎉🎉', 'functions':'reload'}, status=200)
 

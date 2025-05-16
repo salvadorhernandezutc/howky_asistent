@@ -487,7 +487,6 @@ def mapa_markers(request):
             "imagen": imagen_mark.imagen.url,
             "icon_size": float(mapa.size_marker),
             "door": json.loads(mapa.door) if mapa.door else [],
-            "coords": json.loads(mapa.coords) if mapa.coords else [],
         }
         data.append(item)
 
