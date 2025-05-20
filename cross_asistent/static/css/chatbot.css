@@ -1,23 +1,24 @@
 #asistent_model {
     position: absolute;
     inset: 0;
-    height: inherit;
+    top: unset;
+    height: 85vh;
     width: inherit;
+    max-width: 1300px;
 }
 
-.chat {
+.chat_form {
     position: absolute !important;
-    bottom: 4%;
+    bottom: 2%;
+    top: unset;
     left: 50%;
-    border: none;
-    border-radius: var(--border-radius);
+    width: 94%;
+    max-width: 1300px;
     transform: translateX(-50%);
-    overflow: hidden;
-    max-width: 900px;
-    width: 90%;
+    overflow: visible !important;
 }
 
-.chat textarea {
+.chat_form textarea {
     background: transparent;
     border: none !important;
     border-radius: var(--border-radius);
@@ -27,11 +28,107 @@
     max-height: 125px;
 }
 
-.chat .chat_controls i {
+.chat_form .chat_controls i {
     font-size: 1.2rem;
 }
 
-.chat .chat_controls .btn:hover,
-.chat .chat_controls .btn:focus {
+.chat_form .chat_controls .btn:hover,
+.chat_form .chat_controls .btn:focus {
     transform: scale(1.1);
 }
+
+.chat_form .tab {
+    --size: 40px;
+    position: absolute;
+    top: calc((var(--size) / -1) + 10px);
+    left: 0;
+    background: var(--mdb-card-bg);
+    height: var(--size);
+    width: var(--size);
+    text-align: center;
+    border: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.chat_output {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding-inline: 5%;
+    max-height: calc(100vh - 200px);
+    border-radius: var(--border-radius);
+    display: flow-root;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform-origin: bottom center;
+    transform: scaleY(0);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.chat_output.show {
+    transform: scaleY(1);
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.chat_output .chat_msg {
+    overflow: hidden;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    margin: 20px 0 0 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, visibility 0.3s ease, margin 0.5s var(--transitionCubicVal);
+}
+
+.chat_output .chat_msg.show {
+    opacity: 1;
+    visibility: visible;
+    margin: 0;
+    transform: scale(1);
+}
+
+.chat_output .chat_msg .msg_user {
+    width: fit-content;
+    max-width: 85%;
+    border-radius: var(--border-radius);
+}
+
+.chat_output .chat_msg .msg_response {
+    width: 100%;
+    max-width: 100%;
+    text-align: justify;
+    margin-block: 20px;
+    background: var(--mdb-body-bg);
+    /* position: absolute; */
+}
+
+.chat_output .chat_msg img {
+    border-radius: var(--border-radius);
+}
+
+.chat_output .chat_msg .chat_img {
+    padding: 0;
+    width: 70%;
+    max-width: 500px;
+    margin-block: 20px;
+    border-radius: var(--border-radius);
+}
+
+/* 
+@media (min-width: 768px) {
+    #asistent_model {
+        left: -20%;
+        bottom: 15%;
+        top: unset;
+        width: 60%;
+        height: 50%;
+    }
+    .chat .chat_output {
+        max-width: 100%;
+    }
+} */

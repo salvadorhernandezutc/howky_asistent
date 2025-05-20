@@ -332,18 +332,18 @@ function chatSubmit(e) {
     const tokendid = cadenaRandom(5, alfabetico);
     const valID = `uuid${tokendid}`;
 
-    const htmlBlock = `<div class="output_block"><div class="bg_detail chat_msg user_submit" data-tokeid="${valID}">${pregunta}</div></div>`;
+    const htmlBlock = `<div class="chat_msg d-flex justify-content-end user_submit" data-tokeid="${valID}"><div class="msg_user p-2 bg_detail">${pregunta}</div></div>`;
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
     const user_submit = document.querySelector(`.user_submit[data-tokeid="${valID}"]`);
     setTimeout(() => {
-        user_submit.classList.add("visible");
+        user_submit.classList.add("show");
         setTimeout(scrollToBottom, 500);
     }, 20);
 
-    const loadInfo = `<div class="chat_msg asistent_response my-4" data-tokeid="loadInfoDelete"><div class="pulse-container"><div class="pulse-bubble bg_detail pulse-bubble-1"></div><div class="pulse-bubble bg_detail pulse-bubble-2"></div><div class="pulse-bubble bg_detail pulse-bubble-3"></div></div></div>`;
+    const loadInfo = `<div class="chat_msg chat_open" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;
     contOutput.insertAdjacentHTML("beforeend", loadInfo);
     setTimeout(function () {
-        document.querySelector(`.asistent_response[data-tokeid="loadInfoDelete"]`).classList.add("visible");
+        document.querySelector(`.chat_msg[data-tokeid="loadInfoDelete"]`).classList.add("show");
         setTimeout(scrollToBottom, 500);
     }, 200);
 
@@ -399,7 +399,7 @@ function displayChatbotResponse(varAnswer) {
     let btnRedir = "";
 
     if (dataImage != null) {
-        viewImage = `<br><br> <img src="${dataImage}" class="img-rounded max_w300 max_h350">`;
+        viewImage = `<div class="chat_msg show"><img src="${dataImage}" alt="${varAnswer.titulo}" class="chat_img" /></div>`;
     }
 
     if (dataRedirigirBlank) {
@@ -407,18 +407,18 @@ function displayChatbotResponse(varAnswer) {
     }
 
     if (dataRedirigir && dataRedirigir.trim() !== "") {
-        btnRedir = `<br><br> <a class="btn bg_detail mb-2 max_w300" ${btnBlanck} href="${dataRedirigir}" >Ver Más <i class="fa-solid fa-up-right-from-square ms-1"></i></a>`;
+        btnRedir = `<div class="chat_msg show msg_link"><a href="${dataRedirigir}" ${btnBlanck} class="btn bg_detail">Ver más <i class="fas fa-up-right-from-square ms-1"></i></a></div>`;
     }
 
     lastText = varAnswer.informacion;
     chatText = varAnswer.informacion.replace(/\n/g, "<br>");
-    const htmlBlock = `<div class="chat_msg asistent_response" data-tokeid="${valID}">${chatText} ${viewImage} ${btnRedir}</div>`;
+    const htmlBlock = `<div class="chat_msg chat_open" data-tokeid="${valID}"><div class="msg_response">${chatText}</div></div>${viewImage} ${btnRedir}`;
 
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
-    const asistent_response = document.querySelector(`.asistent_response[data-tokeid="${valID}"]`);
-    document.querySelector(`.asistent_response[data-tokeid="loadInfoDelete"]`).remove();
+    const asistent_response = document.querySelector(`.chat_msg[data-tokeid="${valID}"]`);
+    document.querySelector(`.chat_msg[data-tokeid="loadInfoDelete"]`).remove();
     setTimeout(function () {
-        asistent_response.classList.add("visible");
+        asistent_response.classList.add("show");
         setTimeout(scrollToBottom, 350);
 
         if (microphonerecord) {
@@ -436,12 +436,12 @@ speakButton.on("click", () => {
 
 // Saludo Inicial ######################
 if (contOutput && saludoMostrado) {
-    const initialMessage = `<div class="chat_msg asistent_response" data-tokeid="initialMessage"><span>¡Hola! Soy Hawky 👋😁, tu asistente virtual de la Universidad Tecnológica de Coahuila. Puedes preguntarme sobre trámites, carreras, costos u otros temas de la universidad. ¿En qué puedo ayudarte? 🫡🤘😋</span></div>`;
+    const initialMessage = `<div class="chat_msg chat_open" data-tokeid="initialMessage"><div class="msg_response">¡Hola! Soy Hawky 👋😁, tu asistente virtual de la Universidad Tecnológica de Coahuila. Puedes preguntarme sobre trámites, carreras, costos u otros temas de la universidad. ¿En qué puedo ayudarte?😉😊😁</div></div>`;
 
     contOutput.insertAdjacentHTML("beforeend", initialMessage);
-    const elementInitMsg = document.querySelector(`.asistent_response[data-tokeid="initialMessage"]`);
+    const elementInitMsg = document.querySelector(`.chat_msg[data-tokeid="initialMessage"]`);
     setTimeout(function () {
-        elementInitMsg.classList.add("visible");
+        elementInitMsg.classList.add("show");
     }, 500);
 }
 
