@@ -46,6 +46,15 @@ $(document).ready(function () {
             changeMicrophone();
         }
         // Abrir chat #######################
+        let isPaused = false;
+        $("#openChat").on("click", function () {
+            $("main").toggleClass("open");
+
+            const modelViewer = $("#asistent_model");
+            isPaused = !isPaused;
+            isPaused ? modelViewer[0].pause() : modelViewer[0].play();
+            isPaused ? console.log("PAUSE: ",modelViewer[0].pause()) : console.log("PLAY: ",modelViewer[0].play());
+        })
         $(".toggle_controls").click(() => {
             microphonerecord = false;
             const asistentGroup = $(".asistent_group.open");
@@ -334,10 +343,13 @@ function chatSubmit(e) {
 
     const htmlBlock = `<div class="chat_msg d-flex justify-content-end user_submit" data-tokeid="${valID}"><div class="msg_user p-2 bg_detail">${pregunta}</div></div>`;
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
-    const user_submit = document.querySelector(`.user_submit[data-tokeid="${valID}"]`);
+    const user_submit = $(`.user_submit[data-tokeid="${valID}"]`);
     setTimeout(() => {
-        user_submit.classList.add("show");
+        user_submit.addClass("show active");
         setTimeout(scrollToBottom, 500);
+        setTimeout(() => {
+            user_submit.removeClass("active");
+        }, 1000);
     }, 20);
 
     const loadInfo = `<div class="chat_msg chat_open" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;

@@ -5,6 +5,13 @@
     height: 85vh;
     width: inherit;
     max-width: 1300px;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.open #asistent_model {
+    opacity: 0;
+    visibility: hidden;
 }
 
 .chat_form {
@@ -49,6 +56,13 @@
     border: none;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
+.chat_form .tab i {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+.open .chat_form .tab i {
+    transform: rotate(180deg);
+}
 
 .chat_output {
     position: absolute;
@@ -91,7 +105,29 @@
     margin: 0;
     transform: scale(1);
 }
-
+.chat_output .chat_msg.chat_open {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    z-index: -2;
+}
+.chat_output .user_submit {
+    opacity: 1;
+    visibility: visible;
+    position: unset;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.chat_output .user_submit.active {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+.open .chat_output .chat_msg.chat_open {
+    opacity: 1;
+    visibility: visible;
+    position: unset;
+    z-index: unset;
+}
 .chat_output .chat_msg .msg_user {
     width: fit-content;
     max-width: 85%;
@@ -104,7 +140,6 @@
     text-align: justify;
     margin-block: 20px;
     background: var(--mdb-body-bg);
-    /* position: absolute; */
 }
 
 .chat_output .chat_msg img {

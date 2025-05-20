@@ -17,7 +17,7 @@
     </model-viewer>
     <form action="{% url 'chatbot' %}" method="POST" id="chatForm" class="chat_form card">
         {% csrf_token %}
-        <button type="button" class="tab" id="open_msgs"><i class="fas fa-angle-up"></i></button>
+        <button type="button" class="tab" id="openChat"><i class="fas fa-angle-up"></i></button>
         <textarea name="chatquestion" id="txtQuestion" class="pb-4 mx-3 mt-3" placeholder="Preguntale a Howky: ... "></textarea>
         <div class="chat_controls d-flex flex-row-reverse justify-content-start p-2 gap_10">
             <button type="submit" id="chatForm_submit" class="btn btn-floating btn_detail pe-1">
