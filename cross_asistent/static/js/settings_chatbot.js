@@ -345,11 +345,11 @@ function chatSubmit(e) {
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
     const user_submit = $(`.user_submit[data-tokeid="${valID}"]`);
     setTimeout(() => {
-        user_submit.addClass("show active");
+        user_submit.removeClass("active").addClass("show");
         setTimeout(scrollToBottom, 500);
         setTimeout(() => {
-            user_submit.removeClass("active");
-        }, 1000);
+            user_submit.addClass("active");
+        }, 5000);
     }, 20);
 
     const loadInfo = `<div class="chat_msg chat_open" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;

@@ -122,6 +122,11 @@
     visibility: hidden;
     position: absolute;
 }
+.open .chat_output .user_submit.active {
+    opacity: 1;
+    visibility: visible;
+    position: unset;
+}
 .open .chat_output .chat_msg.chat_open {
     opacity: 1;
     visibility: visible;
