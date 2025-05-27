@@ -1,6 +1,6 @@
 window.addEventListener("load", () => {
     var mapToken = "pk.eyJ1IjoiY2hhdmEtdXRjIiwiYSI6ImNtOTdqdm13cjA4ZGsyaW9rc2g0OGRmdWoifQ.oxLDSCy8_q3xLJNVtDHmDw";
-    var mapElement = document.getElementById("map");
+    const mainMap = $("#map");
     const savedLastLayerMap = localStorage.getItem("mapbox-last_layer");
     const inputsLayer = document.querySelectorAll("#offcanvasbody input[type='radio']");
     const labelsLayer = document.querySelectorAll("#offcanvasbody label");
@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
         container: "map",
         style: "mapbox://styles/mapbox/streets-v12",
         center: [-100.93655, 25.55701],
-        zoom: 16,
+        zoom: 17,
         maxZoom: 20,
         minZoom: 15,
         maxBounds: [
@@ -41,7 +41,7 @@ window.addEventListener("load", () => {
     });
 
     mapMapbox.addControl(locateUser);
-    if (mapElement.classList.contains("map_editing")) {
+    if (mainMap.hasClass("map_editing")) {
         // Dibujar poligonos con mapbox Draw ###########################################
         draw = new MapboxDraw({
             displayControlsDefault: false,
@@ -102,6 +102,16 @@ window.addEventListener("load", () => {
                 var myModal = new mdb.Modal(document.getElementById("beforeSend"));
                 myModal.show();
             });
+            const settingsGlobal = createButton("gmaps", `<div class="mapboxgl-ctrl-icon"><i class="fa-solid fa-gear"></i></div>`, "Configuraciones", () => {
+                document.querySelectorAll(".offcanvas.show").forEach((openOffcanvasElement) => {
+                    const openOffcanvasInstance = bootstrap.Offcanvas.getInstance(openOffcanvasElement);
+                    if (openOffcanvasInstance) {
+                        openOffcanvasInstance.hide();
+                    }
+                });
+                var settingsModal = new mdb.Modal(document.getElementById("configModal"));
+                settingsModal.show();
+            });
             const layers = createButton("styles", '<i class="fa-solid fa-layer-group"></i>', "Cambiar Aspecto", () => {
                 document.querySelectorAll(".offcanvas.show").forEach((openOffcanvasElement) => {
                     const openOffcanvasInstance = bootstrap.Offcanvas.getInstance(openOffcanvasElement);
@@ -118,8 +128,11 @@ window.addEventListener("load", () => {
             this._container.appendChild(linkmaps);
             this._container.appendChild(layers);
             this._container.appendChild(btnroute);
+            if (mainMap.hasClass("map_user")) {
+                this._container.appendChild(settingsGlobal);
+            }
 
-            if (mapElement.classList.contains("map_editing")) {
+            if (mainMap.hasClass("map_editing")) {
                 const newBuild = createButton("newBuild", `<i class="fa-solid fa-building-flag"></i>`, "Crear Nuevo Edificio", () => {
                     $("#btnDeletedPleace").hide();
                     $("[data-namePleace]").text("");
@@ -139,7 +152,7 @@ window.addEventListener("load", () => {
                     $("#uuid").removeClass("active").val(newUID);
                     $("#colorPicker").val("#808080");
                     $("#doorcoords").val("");
-                    $("#coords").val("").attr('required', 'required');
+                    $("#coords").val("").attr("required", "required");
                     pickr.setColor("#808080");
 
                     $("#fotoEdificio").attr("required", true);
@@ -166,7 +179,7 @@ window.addEventListener("load", () => {
                     // }
 
                     if (!offcanvasOpen) {
-                        if (offcanvasElement.classList.contains("show")) {
+                        if (offcanvasElement.hasClass("show")) {
                             offcanvasInstance.hide();
                         } else {
                             offcanvasInstance.show();
@@ -265,7 +278,7 @@ window.addEventListener("load", () => {
             .setLngLat(lngLat)
             .addTo(mapMapbox);
     }
-    if (mapElement.classList.contains("map_user")) {
+    if (mainMap.hasClass("map_user")) {
         mapMapbox.on("click", function (e) {
             const lngLat = e.lngLat;
             addMarkerToMap(lngLat);
@@ -357,7 +370,7 @@ window.addEventListener("load", () => {
                     const features = mapMapbox.queryRenderedFeatures(e.point, {
                         layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
                     });
-                    if (mapElement.classList.contains("map_editing")) {
+                    if (mainMap.hasClass("map_editing")) {
                         if (features.length) {
                             const feature = features[0];
                             const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
@@ -407,7 +420,7 @@ window.addEventListener("load", () => {
                                 $("#flush-oneOption").removeClass("show");
                             }
                             $("#checkIsmarker").trigger("change");
-                            $("#coords").removeAttr('required');
+                            $("#coords").removeAttr("required");
                             changeIsMarker();
 
                             offcanvasInstance.show();
@@ -761,10 +774,10 @@ window.addEventListener("load", () => {
                         siblingDiv.removeClass("mask_white");
                     }
 
-                    if (mapElement.classList.contains("map_user")) {
+                    if (mainMap.hasClass("map_user")) {
                         $("#lateralTitle").text(nombre);
                         offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
-                    } else if (mapElement.classList.contains("map_editing")) {
+                    } else if (mainMap.hasClass("map_editing")) {
                         if (!imagen_url) {
                             imageOffCanvas.attr("src", "/static/img/default_image.webp").removeClass("invisible");
                             siblingDiv.addClass("mask_white");
@@ -816,7 +829,7 @@ window.addEventListener("load", () => {
                             $('[data-mdb-target="#flush-oneOption"]').addClass("collapsed");
                             $("#flush-oneOption").removeClass("show");
                         }
-                        $("#coords").attr('required', 'required');
+                        $("#coords").attr("required", "required");
                         $("#checkIsmarker").trigger("change");
                         changeIsMarker();
 
@@ -864,7 +877,7 @@ window.addEventListener("load", () => {
                 const option = new Option(nombre, nombre);
                 document.getElementById("origen").add(option);
                 document.getElementById("destino").add(option.cloneNode(true));
-                if (mapElement.classList.contains("map_editing")) {
+                if (mainMap.hasClass("map_editing")) {
                     document.getElementById("otherAction").add(option.cloneNode(true));
                 }
             });
@@ -983,7 +996,7 @@ window.addEventListener("load", () => {
         };
     }
 
-    if (mapElement.classList.contains("map_editing")) {
+    if (mainMap.hasClass("map_editing")) {
         mapMapbox.addControl(draw);
 
         mapMapbox.on("draw.create", updateArea);
@@ -1102,11 +1115,11 @@ window.addEventListener("load", () => {
             if (isChecked) {
                 $("#setDoor").html('Ubicacion <i class="fas fa-location-dot ms-1"></i>');
                 $("#delDoor").text("Eliminar ubicacion");
-                $("#coords").removeAttr('required', 'required');
+                $("#coords").removeAttr("required", "required");
             } else {
                 $("#setDoor").html('Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i>');
                 $("#delDoor").text("Eliminar Punto de Entrada");
-                $("#coords").attr('required', 'required');
+                $("#coords").attr("required", "required");
             }
         }
     }

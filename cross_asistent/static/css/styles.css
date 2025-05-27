@@ -208,6 +208,18 @@ iframe {
     min-width: 10px;
 } */
 
+.img_logo {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    height: 50px;
+    filter: var(--img-filter) drop-shadow(2px 2px 2px var(--mdb-surface-color));
+    z-index: 10;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+}
+
 /*########################## Navbar ##########################*/
 nav {
     height: var(--nav_height);
@@ -516,7 +528,6 @@ main.main_anchor {
         align-content: center;
     }
 }
-
 
 /*########################### Mascara / mask ###########################*/
 .mask_dark {

@@ -13,10 +13,12 @@
     </script>
 
     {% block extra_head %}{% endblock %}
-
+    
     <link rel="stylesheet" href="{% static 'libs/mdb_fontawesome.min.css' %}" />
     <link rel="stylesheet" href="{% static 'libs/mdb.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    
+    {% block last_head %}{% endblock %}
 </head>
 
 <body>
@@ -94,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h6 class="text-center mb-3">Color de la Interfaz</h6>
+                        <h6 class="mb-3">Color de la Interfaz:</h6>
                         <div class="d-flex justify-content-around mb-3">
                             <button class="btn btn-floating btn-success" data-change-color="green" data-rgb="#02913c"></button>
                             <button class="btn btn-floating btn-primary" data-change-color="blue" data-rgb="#3b71ca"></button>
