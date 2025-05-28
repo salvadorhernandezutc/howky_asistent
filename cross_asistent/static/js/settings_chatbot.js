@@ -48,13 +48,18 @@ $(document).ready(function () {
         // Abrir chat #######################
         let isPaused = false;
         $("#openChat").on("click", function () {
-            $("main").toggleClass("open");
+            $("#model").toggleClass("open");
 
             const modelViewer = $("#asistent_model");
             isPaused = !isPaused;
             isPaused ? modelViewer[0].pause() : modelViewer[0].play();
-            isPaused ? console.log("PAUSE: ",modelViewer[0].pause()) : console.log("PLAY: ",modelViewer[0].play());
-        })
+        });
+        $("#chatOpenMap").on("click", function () {
+            const modelViewer = $("#asistent_model");
+            if ($("#model").hasClass("open")) {
+                modelViewer[0].play()
+            }
+        });
         $(".toggle_controls").click(() => {
             microphonerecord = false;
             const asistentGroup = $(".asistent_group.open");

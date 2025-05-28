@@ -1,7 +1,30 @@
+.open_map .img_logo {
+    filter: var(--img-filter) drop-shadow(0 0 2px var(--mdb-form-control-border-color));
+}
+
+.main_model {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    width: 100%;
+    background: var(--mdb-body-bg);
+}
+.open_map .main_model {
+    left: 2%;
+    top: unset;
+    bottom: 2%;
+    right: unset;
+    width: 100%;
+    max-width: 260px;
+    height: 40vh;
+    min-height: unset;
+    background: transparent;
+}
+
 #asistent_model {
     position: absolute;
     inset: 0;
-    top: unset;
+    bottom: unset;
     height: 85vh;
     width: inherit;
     max-width: 1300px;
@@ -12,6 +35,13 @@
 .open #asistent_model {
     opacity: 0;
     visibility: hidden;
+}
+.open_map #asistent_model {
+    height: inherit;
+}
+.open_map .open #asistent_model {
+    opacity: 1;
+    visibility: visible;
 }
 
 .chat_form {
@@ -24,6 +54,10 @@
     transform: translateX(-50%);
     overflow: visible !important;
 }
+.open_map .chat_form {
+    background: transparent !important;
+    box-shadow: none !important;
+}
 
 .chat_form textarea {
     background: transparent;
@@ -33,6 +67,24 @@
     height: auto;
     min-height: 25px;
     max-height: 125px;
+}
+.open_map .chat_form textarea {
+    transform: scale(0);
+    min-height: 0;
+    max-height: 0;
+}
+
+.chat_form .chat_controls {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+}
+.open_map .chat_form .chat_controls {
+    justify-content: center;
+}
+.open_map .chat_form .chat_controls #chatForm_submit,
+.open_map .chat_form .chat_controls #floatSettings {
+    display: none;
 }
 
 .chat_form .chat_controls i {
@@ -51,43 +103,69 @@
     left: 0;
     background: var(--mdb-card-bg);
     height: var(--size);
-    width: var(--size);
     text-align: center;
     border: none;
+    padding-inline: 10px;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
+    outline: none;
 }
-.chat_form .tab i {
+.chat_form .tab::before {
+    --size: calc(var(--border-radius) * 2);
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 100%;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 0 var(--border-radius);
+    box-shadow: -2px 2px 0 2px var(--mdb-card-bg);
+    cursor: default;
+}
+.chat_form .tab i.fas {
     transform: rotate(0deg);
     transition: transform 0.3s ease;
 }
-.open .chat_form .tab i {
+.open .chat_form .tab i.fas {
     transform: rotate(180deg);
+}
+.chat_form .tab:focus i,
+.chat_form .tab:hover i {
+    color: var(--var-detail_flat);
+}
+.chat_form .tab:focus i.fas,
+.chat_form .tab:hover i.fas {
+    transform: scale(1.1) rotate(0deg);
+}
+.open_map .chat_form .tab {
+    display: none;
 }
 
 .chat_output {
     position: absolute;
-    inset: 0;
-    width: 100%;
+    left: 50%;
+    top: 60px;
+    width: 94%;
     height: 100%;
-    padding-inline: 5%;
-    max-height: calc(100vh - 200px);
+    max-width: 1300px;
+    max-height: calc(100vh - 260px);
     border-radius: var(--border-radius);
     display: flow-root;
     overflow-x: hidden;
     overflow-y: auto;
     transform-origin: bottom center;
-    transform: scaleY(0);
+    transform: scaleY(0) translateX(-50%);
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-
 .chat_output.show {
-    transform: scaleY(1);
+    transform: scaleY(1) translateX(-50%);
     visibility: visible;
     opacity: 1;
 }
-
+.open_map .chat_output {
+    display: none;
+}
 
 .chat_output .chat_msg {
     overflow: hidden;
