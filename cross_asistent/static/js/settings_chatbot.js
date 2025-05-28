@@ -46,20 +46,39 @@ $(document).ready(function () {
             changeMicrophone();
         }
         // Abrir chat #######################
+        const modelViewer = $("#asistent_model");
         let isPaused = false;
         $("#openChat").on("click", function () {
             $("#model").toggleClass("open");
 
-            const modelViewer = $("#asistent_model");
             isPaused = !isPaused;
             isPaused ? modelViewer[0].pause() : modelViewer[0].play();
         });
+        // Abrir mapa #######################
         $("#chatOpenMap").on("click", function () {
-            const modelViewer = $("#asistent_model");
+            if (window.location.hash === "#mapa") {
+                history.replaceState(null, null, " ");
+            } else {
+                window.location.hash = "mapa";
+            }
+
             if ($("#model").hasClass("open")) {
-                modelViewer[0].play()
+                modelViewer[0].play();
+                console.log("When click, models pause is: ", isPaused);
             }
         });
+        if (window.location.hash === "#mapa") {
+            $("body").addClass("open_map");
+            modelViewer[0].play();
+            console.log("When URL has map, models pause is: ", isPaused);
+        } else {
+            $("body").removeClass("open_map");
+            if ($("#model").hasClass("open")) {
+                modelViewer[0].pause();
+                console.log("When URL dont has map, models pause is: ", isPaused);
+            }
+        }
+
         $(".toggle_controls").click(() => {
             microphonerecord = false;
             const asistentGroup = $(".asistent_group.open");
