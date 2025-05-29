@@ -48,11 +48,14 @@ $(document).ready(function () {
         // Abrir chat #######################
         const modelViewer = $("#asistent_model");
         let isPaused = false;
+        function togglePlayModel() {
+            isPaused = !isPaused;
+            isPaused ? modelViewer[0].pause() : modelViewer[0].play();
+        }
         $("#openChat").on("click", function () {
             $("#model").toggleClass("open");
 
-            isPaused = !isPaused;
-            isPaused ? modelViewer[0].pause() : modelViewer[0].play();
+            togglePlayModel();
         });
         // Abrir mapa #######################
         $("#chatOpenMap").on("click", function () {
@@ -62,21 +65,27 @@ $(document).ready(function () {
                 window.location.hash = "mapa";
             }
 
+            if ($("body").hasClass("open_map")) {
+                $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
+                setTimeout(() => {
+                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
+                }, 1000);
+            } else {
+                $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
+                setTimeout(() => {
+                    modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
+                }, 1000);
+            }
+
             if ($("#model").hasClass("open")) {
-                modelViewer[0].play();
-                console.log("When click, models pause is: ", isPaused);
+                togglePlayModel();
             }
         });
-        if (window.location.hash === "#mapa") {
+        if ($("body").hasClass("open_map")) {
+            $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
             $("body").addClass("open_map");
             modelViewer[0].play();
-            console.log("When URL has map, models pause is: ", isPaused);
-        } else {
-            $("body").removeClass("open_map");
-            if ($("#model").hasClass("open")) {
-                modelViewer[0].pause();
-                console.log("When URL dont has map, models pause is: ", isPaused);
-            }
+            modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
         }
 
         $(".toggle_controls").click(() => {
@@ -494,30 +503,4 @@ if (contOutput) {
     });
     scrollToBottom();
     observer.observe(contOutput, { childList: true, subtree: true });
-}
-
-function alertSToast(posittionS, timerS, iconS, titleS, didDestroyS) {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: posittionS,
-        showConfirmButton: false,
-        showCloseButton: true,
-        timer: timerS,
-        timerProgressBar: true,
-        customClass: {
-            icon: "icon_alert",
-            title: "title_alert",
-            timerProgressBar: "progressbar_alert",
-            closeButton: "close_button_alert",
-        },
-        didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-        didDestroy: didDestroyS,
-    });
-    Toast.fire({
-        icon: iconS,
-        title: titleS,
-    });
 }

@@ -119,7 +119,7 @@ def chatbot(request):
                     info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
 
                     params = urlencode({'origin': origen or 'Caseta 1', 'destiny': destino})
-                    base_url = f"#mapa?{params}"
+                    base_url = params
                 
                 else:
                     info_respuesta = chatgpt(pregunta, system_prompt)

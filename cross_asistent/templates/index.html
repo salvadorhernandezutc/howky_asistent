@@ -65,9 +65,9 @@
             <button type="submit" id="chatForm_submit" class="btn btn-floating btn_detail pe-1">
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
-            <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
+            <!-- <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
                 <i class="fa-solid fa-microphone"></i>
-            </button>
+            </button> -->
             <button type="button" id="chatOpenMap" class="btn btn-floating btn_detail" data-toggle-class="body-open_map">
                 <i class="fa-solid fa-map-location-dot"></i>
             </button>
@@ -87,7 +87,7 @@
             <img src="{% static 'img/default_image.webp' %}" id="imagen_actual" class="img-fluid" />
             <div class="mask mask_white">
                 <div class="d-flex align-items-end h-100 p-3 pt-0">
-                    <h3 class="fw-bold mb-0" id="lateralTitle"></h3>
+                    <h3 class="fw-bold mb-0 lateralTitle"></h3>
                 </div>
             </div>
         </div>
@@ -95,6 +95,16 @@
     <div class="offcanvas-body">
         <div class="rounded" id="offcanvasContent"></div>
         <div class="d-flex flex-column mt-4 gap_10" id="offcanvasGalery"></div>
+    </div>
+    <div class="offcanvas-footer p-3">
+        <div class="dropdown">
+            <button class="btn btn_detail btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false" >
+                <i class="fa-solid fa-route me-1"></i> Como ir de <span class="lateralTitle"></span> a...
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="?origin=Rectoria&destiny=Vinculacion">Vinculacion</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 

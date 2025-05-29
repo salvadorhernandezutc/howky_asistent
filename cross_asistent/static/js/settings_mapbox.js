@@ -775,7 +775,7 @@ window.addEventListener("load", () => {
                     }
 
                     if (mainMap.hasClass("map_user")) {
-                        $("#lateralTitle").text(nombre);
+                        $(".lateralTitle").text(nombre);
                         offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
                     } else if (mainMap.hasClass("map_editing")) {
                         if (!imagen_url) {

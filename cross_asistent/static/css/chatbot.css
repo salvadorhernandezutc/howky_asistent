@@ -8,15 +8,16 @@
     z-index: 5;
     width: 100%;
     background: var(--mdb-body-bg);
+    transition: all 0.3s ease;
 }
 .open_map .main_model {
-    left: 2%;
+    left: 0;
     top: unset;
-    bottom: 2%;
+    bottom: 3%;
     right: unset;
-    width: 100%;
-    max-width: 260px;
-    height: 40vh;
+    width: 40vw;
+    max-width: 300px;
+    height: 25vh;
     min-height: unset;
     background: transparent;
 }
@@ -38,6 +39,7 @@
 }
 .open_map #asistent_model {
     height: inherit;
+    max-width: 300px;
 }
 .open_map .open #asistent_model {
     opacity: 1;
@@ -67,20 +69,25 @@
     height: auto;
     min-height: 25px;
     max-height: 125px;
+    visibility: visible;
 }
 .open_map .chat_form textarea {
     transform: scale(0);
     min-height: 0;
     max-height: 0;
+    position: absolute;
+    visibility: hidden;
 }
 
 .chat_form .chat_controls {
     display: flex;
     justify-content: flex-start;
     flex-direction: row-reverse;
+    padding: 0.5rem;
 }
 .open_map .chat_form .chat_controls {
-    justify-content: center;
+    justify-content: flex-end;
+    padding: 0;
 }
 .open_map .chat_form .chat_controls #chatForm_submit,
 .open_map .chat_form .chat_controls #floatSettings {
