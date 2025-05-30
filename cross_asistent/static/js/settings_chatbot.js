@@ -58,35 +58,39 @@ $(document).ready(function () {
             togglePlayModel();
         });
         // Abrir mapa #######################
-        $("#chatOpenMap").on("click", function () {
-            if (window.location.hash === "#mapa") {
-                history.replaceState(null, null, " ");
-            } else {
-                window.location.hash = "mapa";
-            }
+        function toggleMapChat() {
+            // if (window.location.hash === "#mapa") {
+            //     history.replaceState(null, null, " ");
+            // } else {
+            //     window.location.hash = "mapa";
+            // }
 
             if ($("body").hasClass("open_map")) {
-                $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
-                setTimeout(() => {
-                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
-                }, 1000);
-            } else {
                 $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
                 setTimeout(() => {
                     modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
-                }, 1000);
+                }, 500);
+            } else {
+                $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
+                setTimeout(() => {
+                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
+                }, 500);
             }
 
             if ($("#model").hasClass("open")) {
                 togglePlayModel();
             }
-        });
-        if ($("body").hasClass("open_map")) {
-            $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
-            $("body").addClass("open_map");
-            modelViewer[0].play();
-            modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
         }
+        $("#chatOpenMap").on("click", () => {
+            setTimeout(() => {
+                toggleMapChat();
+            }, 500);
+        });
+        $(document).on("click", "[data-route]", () => {
+            setTimeout(() => {
+                toggleMapChat();
+            }, 500);
+        });
 
         $(".toggle_controls").click(() => {
             microphonerecord = false;
@@ -388,7 +392,7 @@ function chatSubmit(e) {
     const loadInfo = `<div class="chat_msg chat_open" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;
     contOutput.insertAdjacentHTML("beforeend", loadInfo);
     setTimeout(function () {
-        document.querySelector(`.chat_msg[data-tokeid="loadInfoDelete"]`).classList.add("show");
+        $(`.chat_msg[data-tokeid="loadInfoDelete"]`).addClass("show");
         setTimeout(scrollToBottom, 500);
     }, 200);
 
@@ -434,25 +438,27 @@ function chatSubmit(e) {
 function displayChatbotResponse(varAnswer) {
     const tokendid = cadenaRandom(5, alfabetico);
     const valID = `uuid${tokendid}`;
-
     const dataImage = varAnswer.imagenes;
     const dataRedirigir = varAnswer.redirigir;
-    const dataRedirigirBlank = varAnswer.blank;
-
     let viewImage = "";
-    let btnBlanck = "";
     let btnRedir = "";
 
     if (dataImage != null) {
         viewImage = `<div class="chat_msg show"><img src="${dataImage}" alt="${varAnswer.titulo}" class="chat_img" /></div>`;
     }
 
-    if (dataRedirigirBlank) {
-        btnBlanck = 'target="_blank" rel="noopener noreferrer"';
-    }
-
     if (dataRedirigir && dataRedirigir.trim() !== "") {
-        btnRedir = `<div class="chat_msg show msg_link"><a href="${dataRedirigir}" ${btnBlanck} class="btn bg_detail">Ver más <i class="fas fa-up-right-from-square ms-1"></i></a></div>`;
+        const isRoute = dataRedirigir.includes("origin");
+        const tag = isRoute ? 'button type="button" data-toggle-class="body-open_map" data-route' : "a href";
+        const text = isRoute ? "Abrir ruta en el Mapa" : "Ver más";
+
+        btnRedir = `
+            <div class="chat_msg show msg_link">
+                <${tag}="${dataRedirigir}" class="btn btn_detail_inset">
+                    ${text} <i class="fas fa-up-right-from-square ms-1"></i>
+                </${isRoute ? "button" : "a"}>
+            </div>
+        `;
     }
 
     lastText = varAnswer.informacion;
@@ -461,7 +467,7 @@ function displayChatbotResponse(varAnswer) {
 
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
     const asistent_response = document.querySelector(`.chat_msg[data-tokeid="${valID}"]`);
-    document.querySelector(`.chat_msg[data-tokeid="loadInfoDelete"]`).remove();
+    $(`.chat_msg[data-tokeid="loadInfoDelete"]`).remove();
     setTimeout(function () {
         asistent_response.classList.add("show");
         setTimeout(scrollToBottom, 350);

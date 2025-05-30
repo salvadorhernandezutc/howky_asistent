@@ -371,12 +371,25 @@ main.main_anchor {
 }
 
 .bg_detail,
+.btn_detail_inset,
 .btn_detail {
     background-color: var(--var-detail) !important;
     background: var(--var-detail) !important;
     color: var(--var-white) !important;
     filter: none;
     transition: 0.3s ease;
+}
+.btn_detail_inset {
+    position: relative;
+    z-index: 1;
+}
+.btn_detail_inset::before {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    background: var(--mdb-body-bg);
+    border-radius: inherit;
+    z-index: -1;
 }
 
 .bg_detail-only {

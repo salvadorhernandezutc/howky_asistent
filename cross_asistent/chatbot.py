@@ -119,7 +119,7 @@ def chatbot(request):
                     info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
 
                     params = urlencode({'origin': origen or 'Caseta 1', 'destiny': destino})
-                    base_url = params
+                    base_url = f"?{params}"
                 
                 else:
                     info_respuesta = chatgpt(pregunta, system_prompt)
@@ -142,7 +142,6 @@ def chatbot(request):
                     "informacion": "Lo siento, no encontré información relacionada con lo que me pides 🤔. "
                                    "Puedes consultar la página oficial de la UTC o escribirnos directamente. 😊",
                     "redirigir": f"{baseUrl}?tab={pill}",
-                    "blank": False,
                 }
             
             return JsonResponse({'success': True, 'answer': respuesta})

@@ -153,12 +153,12 @@
     top: 60px;
     width: 94%;
     height: 100%;
-    max-width: 1300px;
-    max-height: calc(100vh - 260px);
-    border-radius: var(--border-radius);
+    max-width: 1330px;
+    max-height: calc(100vh - 270px);
     display: flow-root;
     overflow-x: hidden;
     overflow-y: auto;
+    padding-inline: 15px;
     transform-origin: bottom center;
     transform: scaleY(0) translateX(-50%);
     visibility: hidden;
