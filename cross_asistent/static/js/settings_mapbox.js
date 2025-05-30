@@ -914,30 +914,57 @@ window.addEventListener("load", () => {
                 }
             });
 
-            const { origin, destiny } = getParamsFromURL();
-            if (origin && destiny && origin !== destiny) {
-                const origenValido = geojsonEdificios.features.find((f) => f.properties.nombre === origin);
-                const destinoValido = geojsonEdificios.features.find((f) => f.properties.nombre === destiny);
-
-                if (origenValido && destinoValido) {
-                    const originOption = selectOrigin.querySelector(`option[value="${origin}"]`);
-                    const destinyOption = selectDestiny.querySelector(`option[value="${destiny}"]`);
-
-                    if (originOption) {
-                        originOption.selected = true;
-                        selectOrigin.dispatchEvent(new Event("change"));
+            function executeRoute(originVal, destinyVal) {
+                if (originVal && destinyVal && originVal !== destinyVal) {
+                    if (mainMap.hasClass("map_user")) {
+                        $("#chatOpenMap").click();
                     }
+                    const origenValido = geojsonEdificios.features.find((f) => f.properties.nombre === originVal);
+                    const destinoValido = geojsonEdificios.features.find((f) => f.properties.nombre === destinyVal);
 
-                    setTimeout(() => {
-                        if (destinyOption) {
-                            destinyOption.selected = true;
-                            selectDestiny.dispatchEvent(new Event("change"));
+                    if (origenValido && destinoValido) {
+                        const originOption = selectOrigin.querySelector(`option[value="${originVal}"]`);
+                        const destinyOption = selectDestiny.querySelector(`option[value="${destinyVal}"]`);
+
+                        if (originOption) {
+                            originOption.selected = true;
+                            selectOrigin.dispatchEvent(new Event("change"));
                         }
 
-                        calcularRuta();
-                    }, 3000);
+                        setTimeout(() => {
+                            if (destinyOption) {
+                                destinyOption.selected = true;
+                                selectDestiny.dispatchEvent(new Event("change"));
+                            }
+
+                            calcularRuta();
+                        }, 3000);
+                    }
                 }
             }
+
+            const { origin, destiny } = getParamsFromURL();
+            executeRoute(origin, destiny, true);
+
+            $(document).on("click", "[data-route]", function () {
+                const routeParts = $(this).attr("data-route").split("=");
+                const optionOrigen = routeParts[0];
+                const optionDestino = routeParts[1];
+                const selectOptionOrigin = $(`#form_route #origen`);
+                const selectOptionDestiny = $(`#form_route #destino`);
+
+                selectOptionOrigin.find(`option[value="${optionOrigen}"]`).prop("selected", true);
+                selectOptionDestiny.find(`option[value="${optionDestino}"]`).prop("selected", true);
+                selectOptionOrigin.find(`option[value="${optionDestino}"]`).prop("disabled", true);
+                selectOptionDestiny.find(`option[value="${optionOrigen}"]`).prop("disabled", true);
+
+                selectOptionOrigin.trigger("change");
+                selectOptionDestiny.trigger("change");
+
+                setTimeout(() => {
+                    calcularRuta();
+                }, 2000);
+            });
         })
         .catch((error) => {
             console.error("(MAPBOX) Error al obtener lugares del mapa:");

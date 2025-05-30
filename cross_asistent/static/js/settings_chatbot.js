@@ -86,10 +86,16 @@ $(document).ready(function () {
                 toggleMapChat();
             }, 500);
         });
-        $(document).on("click", "[data-route]", () => {
+        $(document).on("click", "[data-route]", function () {
             setTimeout(() => {
                 toggleMapChat();
             }, 500);
+
+            const routeParts = $(this).attr("data-route").split("=");
+            const params = new URLSearchParams(window.location.search);
+            params.set("origin", routeParts[0]);
+            params.set("destiny", routeParts[1]);
+            history.replaceState({}, "", `${location.pathname}?${params}`);
         });
 
         $(".toggle_controls").click(() => {
@@ -448,7 +454,7 @@ function displayChatbotResponse(varAnswer) {
     }
 
     if (dataRedirigir && dataRedirigir.trim() !== "") {
-        const isRoute = dataRedirigir.includes("origin");
+        const isRoute = dataRedirigir.includes("=");
         const tag = isRoute ? 'button type="button" data-toggle-class="body-open_map" data-route' : "a href";
         const text = isRoute ? "Abrir ruta en el Mapa" : "Ver más";
 
