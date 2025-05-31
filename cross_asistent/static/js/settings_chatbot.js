@@ -67,14 +67,10 @@ $(document).ready(function () {
 
             if ($("body").hasClass("open_map")) {
                 $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
-                setTimeout(() => {
-                    modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
-                }, 500);
+                modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
             } else {
                 $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
-                setTimeout(() => {
-                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
-                }, 500);
+                modelViewer.attr("camera-orbit", "15deg 70deg 5m");
             }
 
             if ($("#model").hasClass("open")) {

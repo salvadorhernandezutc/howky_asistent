@@ -10,7 +10,6 @@ window.addEventListener("load", () => {
     let mapInteractions = true;
     let offcanvasOpen = false;
     let colorlabels = "#000";
-    let formChanges = false;
     var currentMarker;
     let currentRoute;
     let draw;
@@ -38,7 +37,28 @@ window.addEventListener("load", () => {
         positionOPtions: { enableHighAccuracy: true },
         trackUserLocation: true,
         ShowUserHeading: true,
+        fitBoundsOptions: false,
     });
+
+    let hasCentered = false;
+    locateUser.on("geolocate", (e) => {
+        if (!hasCentered) {
+            const lng = e.coords.longitude;
+            const lat = e.coords.latitude;
+            mapMapbox.setCenter([lng, lat]);
+            mapMapbox.setZoom(18);
+            hasCentered = true;
+        }
+    });
+    // Centrar mapa constantemente en la ubicacion del usuario
+    // mapMapbox.on("load", () => {
+    //     locateUser.on("geolocate", (e) => {
+    //         const lng = e.coords.longitude;
+    //         const lat = e.coords.latitude;
+    //         mapMapbox.setCenter([lng, lat]);
+    //         // mapMapbox.setZoom(17);
+    //     });
+    // });
 
     mapMapbox.addControl(locateUser);
     if (mainMap.hasClass("map_editing")) {
