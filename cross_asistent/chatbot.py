@@ -119,7 +119,7 @@ def chatbot(request):
                     info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
 
                     originParams = origen or 'Caseta 1'
-                    base_url = f"{originParams}={destino}"
+                    base_url = f"{originParams}~{destino}"
                 
                 else:
                     info_respuesta = chatgpt(pregunta, system_prompt)

@@ -238,7 +238,7 @@
 
 .chat_output .chat_msg .chat_img {
     padding: 0;
-    width: 70%;
+    width: 30%;
     max-width: 500px;
     margin-block: 20px;
     border-radius: var(--border-radius);

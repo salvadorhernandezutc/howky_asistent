@@ -629,7 +629,7 @@ window.addEventListener("load", () => {
                                         <i class="fa-solid fa-hourglass-half me-1"></i>
                                     </div>
                                     <div class="col-10">
-                                        Duración: <strong>${durationStr} aprox.</strong>
+                                        Tiempo: <strong>${durationStr} (aprox.)</strong>
                                     </div>
                                 </div>`
                             );
@@ -958,7 +958,7 @@ window.addEventListener("load", () => {
                             }
 
                             calcularRuta();
-                        }, 3000);
+                        }, 5000);
                     }
                 }
             }
@@ -967,7 +967,7 @@ window.addEventListener("load", () => {
             executeRoute(origin, destiny, true);
 
             $(document).on("click", "[data-route]", function () {
-                const routeParts = $(this).attr("data-route").split("=");
+                const routeParts = $(this).attr("data-route").split("~");
                 const optionOrigen = routeParts[0];
                 const optionDestino = routeParts[1];
                 const selectOptionOrigin = $(`#form_route #origen`);
@@ -1031,7 +1031,9 @@ window.addEventListener("load", () => {
         const params = new URLSearchParams(window.location.search);
         params.delete("origin");
         params.delete("destiny");
-        history.replaceState({}, "", `${location.pathname}?${params.toString()}`);
+
+        const newUrl = params.toString() ? `${location.pathname}?${params.toString()}` : location.pathname;
+        history.replaceState({}, "", newUrl);
     });
 
     // Obtener los parámetros de la URL y devolverlos como un objeto ######################################

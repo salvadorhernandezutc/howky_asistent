@@ -382,6 +382,7 @@ main.main_anchor {
 .btn_detail_inset {
     position: relative;
     z-index: 1;
+    color: var(--mdb-surface-color) !important;
 }
 .btn_detail_inset::before {
     content: "";
@@ -1022,6 +1023,13 @@ input:checked + .slider:before {
 }
 
 /*########################### Clases Genericas ###########################*/
+.d-grid {
+    display: grid;
+}
+.d-grid-center {
+    display: grid;
+    place-content: center;
+}
 .flex-between-wrap {
     display: flex;
     justify-content: space-between;
