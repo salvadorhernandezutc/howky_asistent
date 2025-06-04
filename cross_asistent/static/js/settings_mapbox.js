@@ -13,6 +13,10 @@ window.addEventListener("load", () => {
     var currentMarker;
     let currentRoute;
     let draw;
+    let geojsonEdificios = {
+        type: "FeatureCollection",
+        features: [],
+    };
 
     const offcanvasElement = document.querySelector("#infoLateral");
     const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
@@ -348,7 +352,34 @@ window.addEventListener("load", () => {
                     const features = mapMapbox.queryRenderedFeatures(e.point, {
                         layers: data.map((item) => `points${item.nombre.replace(" ", "")}`),
                     });
-                    if (mainMap.hasClass("map_editing")) {
+
+                    if (mainMap.hasClass("map_user")) {
+                        const feature = features[0];
+                        const otherAction = feature.properties.otheraction;
+                        const matchedPolygon = geojsonEdificios.features.find((f) => f.properties.uuid === otherAction);
+
+                        if (matchedPolygon) {
+                            const { nombre, informacion, imagen_url, galery_count, galery_items } = matchedPolygon.properties;
+
+                            const offcanvasContent = $("#offcanvasContent");
+                            const imageOffCanvas = $("#imagen_actual");
+                            const siblingDiv = imageOffCanvas.siblings("div"); // Div Hermano
+
+                            if (imagen_url) {
+                                imageOffCanvas.attr("src", `/media/${imagen_url}`).removeClass("invisible");
+                                siblingDiv.addClass("mask_white");
+                            } else {
+                                imageOffCanvas.addClass("invisible");
+                                siblingDiv.removeClass("mask_white");
+                            }
+
+                            $(".lateralTitle").text(nombre);
+                            offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
+
+                            offcanvasInstance.show();
+                            offcanvasOpen = true;
+                        }
+                    } else if (mainMap.hasClass("map_editing")) {
                         if (features.length) {
                             const feature = features[0];
                             const { nombre, imagen, uuid, ismarker, icon_size, otheraction } = feature.properties;
@@ -427,7 +458,7 @@ window.addEventListener("load", () => {
     fetch(dataPleaces)
         .then((response) => response.json())
         .then((data) => {
-            const geojsonEdificios = {
+            geojsonEdificios = {
                 type: "FeatureCollection",
                 features: data.map((item) => {
                     let colorHex = "#808080";
@@ -740,6 +771,7 @@ window.addEventListener("load", () => {
                     if (mainMap.hasClass("map_user")) {
                         $(".lateralTitle").text(nombre);
                         offcanvasContent.html(`<div class="feature-info">${informacion}</div>`);
+
                     } else if (mainMap.hasClass("map_editing")) {
                         if (!imagen_url) {
                             imageOffCanvas.attr("src", "/static/img/default_image.webp").removeClass("invisible");
