@@ -21,27 +21,23 @@ $(document).ready(function () {
         });
         // Abrir mapa #######################################################################
         function toggleMapChat() {
-            if ($("body").hasClass("open_map")) {
-                $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
-                modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
-            } else {
-                $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
-                modelViewer.attr("camera-orbit", "15deg 70deg 5m");
-            }
+            setTimeout(() => {
+                if ($("body").hasClass("open_map")) {
+                    $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
+                    modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
+                } else {
+                    $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
+                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
+                }
 
-            if ($("#model").hasClass("open")) {
-                togglePlayModel();
-            }
+                if ($("#model").hasClass("open")) {
+                    togglePlayModel();
+                }
+            }, 500);
         }
-        $("#chatOpenMap").on("click", () => {
-            setTimeout(() => {
-                toggleMapChat();
-            }, 500);
-        });
+        $("#chatOpenMap").on("click", toggleMapChat);
         $(document).on("click", "[data-route]", function () {
-            setTimeout(() => {
-                toggleMapChat();
-            }, 500);
+            toggleMapChat();
 
             const routeParts = $(this).attr("data-route").split("~");
             const params = new URLSearchParams(window.location.search);

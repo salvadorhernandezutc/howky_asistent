@@ -907,7 +907,7 @@ window.addEventListener("load", () => {
                             }
 
                             calcularRuta();
-                        }, 5000);
+                        }, 3500);
                     }
                 }
             }
