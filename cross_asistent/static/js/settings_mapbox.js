@@ -82,12 +82,12 @@ window.addEventListener("load", () => {
     });
 
     // Detectar cuando un offcanvas se cierra
-    offcanvasElement.addEventListener("hidden.bs.offcanvas", function () {
-        offcanvasOpen = false;
-    });
+    // offcanvasElement.addEventListener("hidden.bs.offcanvas", function () {
+    //     offcanvasOpen = false;
+    // });
     // Cuando se cierra el modal de eliminar
     $("#deletePleace").on("hidden.bs.modal", function (e) {
-        $("#btnDeletedPleace").hide();
+        $(".btnExistPlace").hide();
         $("[data-namePleace]").text("");
     });
 
@@ -154,56 +154,14 @@ window.addEventListener("load", () => {
 
             if (mainMap.hasClass("map_editing")) {
                 const newBuild = createButton("newBuild", `<i class="fa-solid fa-building-flag"></i>`, "Crear Nuevo Edificio", () => {
-                    $("#btnDeletedPleace").hide();
-                    $("[data-namePleace]").text("");
-
-                    // if (formChanges) {
-                    // $("#offcanvasContent input").removeClass("active is-invalid is-valid").val("");
-                    $("#offcanvasContent input").removeClass("active is-invalid is-valid");
-                    $(".error.bg-danger").slideUp("fast");
-                    $("#imagen_actual").attr("src", "/static/img/default_image.webp");
-                    $("#nombreEdificio").val("");
-                    $("#offcanvasContent #isNewEdif").val("new");
-                    $("#polygonGroup").slideDown("fast");
-                    $("#hideNameGroup").slideDown("fast");
-                    $("#ismarkerGroup").addClass("none");
-
-                    const newUID = $("#uuid").data("new-uid");
-                    $("#uuid").removeClass("active").val(newUID);
-                    $("#colorPicker").val("#808080");
-                    $("#doorcoords").val("");
-                    $("#coords").val("").attr("required", "required");
-                    pickr.setColor("#808080");
-
-                    $("#fotoEdificio").attr("required", true);
-                    tinymce.get("textTiny").setContent("");
-
-                    $("[data-notmarker]").slideDown();
-                    $("#hidename").slideDown();
-                    $("#delPoligonGroup").addClass("none");
-                    $("#btnPoligon").html('Dibujar <i class="fa-solid fa-draw-polygon ms-1"></i>').removeClass("bg_purple-anim");
-
-                    $("#otherAction option").each(function () {
-                        $(this).prop("disabled", false);
-                    });
-
-                    $("#checkIsmarker").removeAttr("checked");
-                    $('[data-mdb-target="#flush-oneOption"]').addClass("collapsed");
-                    $("#flush-oneOption").removeClass("show");
-                    $("#checkIsmarker").trigger("change");
-                    changeIsMarker();
-
-                    const all = draw.getAll();
-                    deleteArea(all);
-                    $("#delDoorGroup").addClass("none");
-                    // }
+                    if ($("#infoLateral").hasClass("show")) {
+                        offcanvasInstance.hide();
+                    } else {
+                        offcanvasInstance.show();
+                    }
 
                     if (!offcanvasOpen) {
-                        if (offcanvasElement.hasClass("show")) {
-                            offcanvasInstance.hide();
-                        } else {
-                            offcanvasInstance.show();
-                        }
+                        resetMapForm();
                     }
                 });
                 const OSMgo = createButton("OSMgo", `<i class="fa-solid fa-book-atlas"></i>`, "Editar en OpenStreetMaps", () => {
@@ -393,7 +351,7 @@ window.addEventListener("load", () => {
                     if (mainMap.hasClass("map_editing")) {
                         if (features.length) {
                             const feature = features[0];
-                            const { nombre, imagen, uuid, ismarker, icon_size } = feature.properties;
+                            const { nombre, imagen, uuid, ismarker, icon_size, otheraction } = feature.properties;
                             // const coordinates = feature.geometry.coordinates.slice();
                             const coordinates = feature.geometry.coordinates;
 
@@ -401,7 +359,7 @@ window.addEventListener("load", () => {
                             deleteArea(all);
 
                             $("#imagen_actual").attr("src", imagen);
-                            $("#btnDeletedPleace").show();
+                            $(".btnExistPlace").show();
                             $("[data-namePleace]").text(nombre);
                             $("#isNewEdif").val("notnew");
                             $("#coords").val("");
@@ -441,10 +399,18 @@ window.addEventListener("load", () => {
                             }
                             $("#checkIsmarker").trigger("change");
                             $("#coords").removeAttr("required");
+                            $("#submitText").text("Guardar Cambios del Marcador");
                             changeIsMarker();
 
                             offcanvasInstance.show();
                             offcanvasOpen = true;
+
+                            $(`#otherAction option`).prop("selected", false);
+                            if (otheraction) {
+                                setTimeout(() => {
+                                    $(`#otherAction option[value="${otheraction}"]`).prop("selected", true);
+                                }, 500);
+                            }
                         }
                     }
                 }
@@ -539,30 +505,6 @@ window.addEventListener("load", () => {
                     });
                     mapMapbox.moveLayer("places-label");
                 }
-            }
-            function getCentroidCoords(feature) {
-                const centroid = turf.centroid(feature);
-                return centroid.geometry.coordinates;
-            }
-            function getFeatureCoords(feature) {
-                let door = feature.properties.door;
-
-                if (door) {
-                    if (typeof door === "string") {
-                        try {
-                            door = JSON.parse(door);
-                        } catch (e) {
-                            console.error("(MAPBOX) Error al hacer JSON.parse en 'door':", e);
-                            door = null;
-                        }
-                    }
-
-                    if (Array.isArray(door) && door.length === 2) {
-                        return door;
-                    }
-                }
-
-                return getCentroidCoords(feature);
             }
             function calcularRuta() {
                 const origen = selectOrigin.value;
@@ -777,13 +719,14 @@ window.addEventListener("load", () => {
             // Abrir offcanvas: Informacion del edificio
             mapMapbox.on("click", "places-layer", (e) => {
                 const feature = e.features[0];
-                const { nombre, informacion, imagen_url, door, otherAction, galery_count, galery_items } = feature.properties;
+                const { uuid, nombre, informacion, imagen_url, door, otherAction, galery_count, galery_items } = feature.properties;
                 const { coordinates } = feature.geometry;
                 // let galeryObj = JSON.parse(galery_items);
 
                 const offcanvasContent = $("#offcanvasContent");
                 const imageOffCanvas = $("#imagen_actual");
                 const siblingDiv = imageOffCanvas.siblings("div"); // Div Hermano
+                console.log(uuid, nombre);
 
                 if (mapInteractions) {
                     if (imagen_url) {
@@ -807,7 +750,7 @@ window.addEventListener("load", () => {
                         $(".error.bg-danger").slideUp("fast");
                         const { color, uuid, label, ismarker } = feature.properties;
 
-                        $("#btnDeletedPleace").show();
+                        $(".btnExistPlace").show();
                         $("[data-namePleace]").text(nombre);
                         $("#isNewEdif").val("notnew");
                         $("#sizemarker").val("0.5");
@@ -851,6 +794,7 @@ window.addEventListener("load", () => {
                         }
                         $("#coords").attr("required", "required");
                         $("#checkIsmarker").trigger("change");
+                        $("#submitText").text("Guardar Cambios del Lugar");
                         changeIsMarker();
 
                         tinymce.get("textTiny").setContent(informacion);
@@ -892,13 +836,15 @@ window.addEventListener("load", () => {
                 }
             });
 
-            const nombresEdificios = geojsonEdificios.features.map((feature) => feature.properties.nombre).sort();
-            nombresEdificios.forEach((nombre) => {
-                const option = new Option(nombre, nombre);
-                document.getElementById("origen").add(option);
-                document.getElementById("destino").add(option.cloneNode(true));
+            const nombresEdificios = geojsonEdificios.features.map((feature) => feature.properties).sort((a, b) => a.nombre.localeCompare(b.nombre));
+            $.each(nombresEdificios, function (index, place) {
+                const $option = $("<option>").val(place.nombre).text(place.nombre);
+                $("#origen").append($option.clone());
+                $("#destino").append($option.clone());
+
+                const $optionUuid = $("<option>").val(place.uuid).text(place.nombre);
                 if (mainMap.hasClass("map_editing")) {
-                    document.getElementById("otherAction").add(option.cloneNode(true));
+                    $("#otherAction").append($optionUuid.clone());
                 }
             });
 
@@ -936,6 +882,9 @@ window.addEventListener("load", () => {
 
             function executeRoute(originVal, destinyVal) {
                 if (originVal && destinyVal && originVal !== destinyVal) {
+                    if (!$("#controlsRoute").hasClass("show")) {
+                        $("#controlsRoute").addClass("show");
+                    }
                     if (mainMap.hasClass("map_user")) {
                         $("#chatOpenMap").click();
                     }
@@ -963,7 +912,7 @@ window.addEventListener("load", () => {
                 }
             }
 
-            const { origin, destiny } = getParamsFromURL();
+            const { origin, destiny } = getParamsRoute();
             executeRoute(origin, destiny, true);
 
             $(document).on("click", "[data-route]", function () {
@@ -1037,7 +986,7 @@ window.addEventListener("load", () => {
     });
 
     // Obtener los parámetros de la URL y devolverlos como un objeto ######################################
-    function getParamsFromURL() {
+    function getParamsRoute() {
         const params = new URLSearchParams(window.location.search);
         return {
             origin: params.get("origin"),
@@ -1045,7 +994,80 @@ window.addEventListener("load", () => {
         };
     }
 
+    // Obtener centroide o coordenadas de puerta ################################################
+    function getCentroidCoords(feature) {
+        const centroid = turf.centroid(feature);
+        return centroid.geometry.coordinates;
+    }
+    function getFeatureCoords(feature) {
+        let door = feature.properties.door;
+
+        if (door) {
+            if (typeof door === "string") {
+                try {
+                    door = JSON.parse(door);
+                } catch (e) {
+                    console.error("(MAPBOX) Error al hacer JSON.parse en 'door':", e);
+                    door = null;
+                }
+            }
+
+            if (Array.isArray(door) && door.length === 2) {
+                return door;
+            }
+        }
+
+        return getCentroidCoords(feature);
+    }
+
+    // Reestablecer formulario de registro
+    function resetMapForm() {
+        $(".btnExistPlace").hide();
+        $("[data-namePleace]").text("");
+
+        // if (formChanges) {
+        $("#offcanvasContent input").removeClass("active is-invalid is-valid");
+        $(".error.bg-danger").slideUp("fast");
+        $("#imagen_actual").attr("src", "/static/img/default_image.webp");
+        $("#nombreEdificio").val("");
+        $("#offcanvasContent #isNewEdif").val("new");
+        $("#polygonGroup").slideDown("fast");
+        $("#hideNameGroup").slideDown("fast");
+        $("#ismarkerGroup").addClass("none");
+
+        const newUID = $("#uuid").data("new-uid");
+        $("#uuid").removeClass("active").val(newUID);
+        $("#colorPicker").val("#808080");
+        $("#doorcoords").val("");
+        $("#coords").val("").attr("required", "required");
+        pickr.setColor("#808080");
+
+        $("#fotoEdificio").attr("required", true);
+        tinymce.get("textTiny").setContent("");
+
+        $("[data-notmarker]").slideDown();
+        $("#hidename").slideDown();
+        $("#delPoligonGroup").addClass("none");
+        $("#btnPoligon").html('Dibujar <i class="fa-solid fa-draw-polygon ms-1"></i>').removeClass("bg_purple-anim");
+
+        $("#otherAction option").each(function () {
+            $(this).prop("disabled", false);
+        });
+
+        $("#checkIsmarker").removeAttr("checked");
+        $('[data-mdb-target="#flush-oneOption"]').addClass("collapsed");
+        $("#flush-oneOption").removeClass("show");
+        $("#checkIsmarker").trigger("change");
+        changeIsMarker();
+
+        const all = draw.getAll();
+        deleteArea(all);
+        $("#delDoorGroup").addClass("none");
+        $("#submitText").text("Registrar Lugar");
+    }
+
     if (mainMap.hasClass("map_editing")) {
+        // Inicializar Mapbox Draw ################################################
         mapMapbox.addControl(draw);
 
         mapMapbox.on("draw.create", updateArea);
@@ -1158,18 +1180,34 @@ window.addEventListener("load", () => {
         }
 
         // Agregar marcador de entrada ################################################
-        $("#checkIsmarker").on("change", changeIsMarker);
-        function changeIsMarker() {
+        $("#checkIsmarker").on("change", function () {
+            changeIsMarker();
+
             const isChecked = $("#checkIsmarker").is(":checked");
             if (isChecked) {
-                $("#setDoor").html('Ubicacion <i class="fas fa-location-dot ms-1"></i>');
-                $("#delDoor").text("Eliminar ubicacion");
-                $("#coords").removeAttr("required", "required");
+                $("#submitText").text("Guardar cambios del Marcador");
             } else {
-                $("#setDoor").html('Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i>');
-                $("#delDoor").text("Eliminar Punto de Entrada");
-                $("#coords").attr("required", "required");
+                $("#submitText").text("Guardar cambios del Lugar");
             }
+        });
+        function changeIsMarker() {
+            setTimeout(() => {
+                const isChecked = $("#checkIsmarker").is(":checked");
+                if (isChecked) {
+                    $("#setDoor").html('Ubicacion <i class="fas fa-location-dot ms-1"></i>');
+                    $("#delDoor").text("Eliminar ubicacion");
+                    $("#coords").removeAttr("required", "required");
+                    $("#textTinyGroup").slideUp("fast");
+                } else {
+                    $("#setDoor").html('Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i>');
+                    $("#delDoor").text("Eliminar Punto de Entrada");
+                    $("#coords").attr("required", "required");
+                    $("#textTinyGroup").slideDown("fast");
+                }
+            }, 500);
         }
+
+        // Reestablecer formulario de registro del mapa con el boton #####################
+        $("#newPlace").on("click", resetMapForm);
     }
 });

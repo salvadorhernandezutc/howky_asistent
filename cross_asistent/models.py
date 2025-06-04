@@ -137,6 +137,7 @@ class Mapa(models.Model):
     hide_name = models.BooleanField(default=False)
     size_marker = models.CharField(max_length=4, default='0.05')
     otheraction = models.TextField(blank=True, null=True, help_text='Acciones adicionales')
+    status = models.CharField(max_length=20, default='Activo')
     
     def get_tag_list(self):
         if self.tags:

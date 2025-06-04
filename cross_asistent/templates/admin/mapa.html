@@ -34,11 +34,8 @@
             </form>
             <div class="none mt-3" id="buttons_route">
                 <div class="d-flex justify-content-between">
-                    <button title="Borrar Formulario" type="button" class="btn btn_detail btn-sm p-2 px-3 fs-10" data-reset_form="form_route">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                    <button title="Borrar Ruta" type="button" class="none btn btn-danger p-2 px-3 fs-13" data-reset_form="form_route" data-del_route>
-                        <i class="fa-regular fa-trash-can"></i>
+                    <button title="Borrar Formulario" type="button" class="btn btn_detail btn-block px-2" data-reset_form="form_route">
+                        Borrar ruta<i class="fa-solid fa-delete-left ms-1"></i>
                     </button>
                 </div>
             </div>
@@ -103,7 +100,7 @@
                     <button type="button" id="btnPoligon" class="btn btn-block btn_detail text-white px-0">Edificio <i class="fa-solid fa-draw-polygon ms-1"></i></button>
                 </div>
                 <div class="col none" id="delPoligonGroup">
-                    <button type="button" id="delPoligon" class="btn btn-block btn-danger text-white px-0">Borrar <i class="fas fa-trash-can ms-1"></i></button>
+                    <button type="button" id="delPoligon" class="btn btn-block btn-danger text-white px-0">Quitar <i class="fa-solid fa-draw-polygon ms-1"></i></button>
                 </div>
             </div>
             
@@ -133,7 +130,7 @@
                             </div>
                             <div class="row mt-4">
                                 <div class="col">
-                                    <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-0">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
+                                    <button type="button" id="setDoor" class="btn btn-block bg_purple text-white px-1">Definir Punto de Entrada <i class="fas fa-door-open ms-1"></i></button>
                                 </div>
                                 <div class="col none" id="delDoorGroup">
                                     <button type="button" id="delDoor" class="btn btn-block btn-danger px-0">Eliminar Punto de Entrada <i class="fas fa-trash-can ms-1"></i></button>
@@ -154,18 +151,23 @@
             </div>
             
             <!-- TinyMCE: Contenido de texto -->
-            <div class="mt-2">
+            <div class="mt-2" id="textTinyGroup">
                 <textarea id="textTiny" class="form-control" name="contenidoWord" placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
             </div>
             <div id="submitEdificio" class="mt-4 row">
-                <div class="col-2 none" id="btnDeletedPleace">
-                    <button title="Borrar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
+                <div class="col-2 none btnExistPlace">
+                    <button title="Eliminar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
                         <i class="fa-regular fa-trash-can tscale-1-4"></i>
                     </button>
                 </div>
+                <div class="col-2 none btnExistPlace btnReset">
+                    <button title="Nuevo Lugar" type="button" id="newPlace" class="btn btn-info btn-block px-1" data-reset_form="infoLateral" data-toggle-class=".btnReset-none">
+                        <i class="fa-solid fa-feather tscale-1-4"></i>
+                    </button>
+                </div>
                 <div class="col">
-                    <button type="submit" class="btn btn_detail btn-block">
-                        Registrar Lugar <i class="fa-regular fa-floppy-disk ms-1"></i>
+                    <button type="submit" class="btn btn_detail btn-block px-1">
+                        <span id="submitText">Registrar Lugar</span> <i class="fa-regular fa-floppy-disk ms-1"></i>
                     </button>
                 </div>
             </div>

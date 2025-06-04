@@ -143,6 +143,11 @@
     accent-color: var(--var-detail_flat);
 }
 
+/*########################### Temas ###########################*/
+[data-mdb-theme="light"] {
+    --mdb-card-bg: #eaeaea !important;
+}
+
 [data-mdb-theme="dark"] {
     --fc-page-bg-color: #333;
 }
@@ -562,6 +567,7 @@ main.main_anchor {
     box-shadow: 0 0 8px var(--darkA2) !important;
     overflow: hidden;
     border: none !important;
+    --mdb-card-bg: #f1f1f1 !important;
 }
 
 .card.card_mxh-450 {

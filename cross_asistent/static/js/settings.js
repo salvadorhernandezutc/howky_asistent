@@ -137,10 +137,7 @@ $(document).ready(function () {
         function resetForm() {
             var formId = $(this).data("reset_form");
             var formElement = $("#" + formId)[0];
-            if (formElement) {
-                formElement.reset();
-                setRangeVal();
-            }
+            if (formElement) formElement.reset();
         }
 
         // Estilo Texto Google ####################################
@@ -378,15 +375,6 @@ $(document).ready(function () {
             const thisValue = $(this).val();
             $(`[data-range-val="#${thisId}"]`).text(thisValue);
         });
-
-        function setRangeVal() {
-            $(`[data-range-val]`).each((index, thisObj) => {
-                const getItemRange = $(thisObj).attr("data-range-val");
-                const itemRangeValue = $(`${getItemRange}`).val();
-                $(thisObj).text(itemRangeValue);
-            });
-        }
-        setRangeVal();
 
         // Función para obtener los parámetros de la URL
         function getUrlParams() {
