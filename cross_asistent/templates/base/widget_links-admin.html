@@ -1,7 +1,7 @@
 {% load static %}
 <li class="nav-item">
     {% if user.is_authenticated %}
-    <a class="btn {% if active_page == 'home' %}btn_secondary{% else %}btn_detail{% endif %} m-1 my-lg-0 d-block" href="{% url 'vista_programador' %}">Inicio <i
+    <a class="btn {% if active_page == 'home' %}btn_secondary{% else %}btn_detail{% endif %} m-1 my-lg-0 d-block" href="{% url 'admin' %}">Inicio <i
             class="fa-solid fa-house-chimney ms-1"></i></a>
     {% endif %}
 </li>

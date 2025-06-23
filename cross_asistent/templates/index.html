@@ -67,9 +67,9 @@
             <button type="submit" id="chatForm_submit" class="btn btn-floating btn_detail pe-1">
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
-            <!-- <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
+            <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
                 <i class="fa-solid fa-microphone"></i>
-            </button> -->
+            </button>
             <button type="button" id="chatOpenMap" class="btn btn-floating btn_detail" data-toggle-class="body-open_map">
                 <i class="fa-solid fa-map-location-dot"></i>
             </button>
@@ -177,6 +177,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block moresettings %}
+    <div class="text-center mt-4">
+        <div class="d-flex justify-content-between align-items-center gap_10">
+            <p class="m-0">Microfono Activo Siempre: <span id="switchText">Si</span></p>
+            <div>
+                <label class="switch">
+                    <input type="checkbox" checked id="chatListeningAll">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts_end %}

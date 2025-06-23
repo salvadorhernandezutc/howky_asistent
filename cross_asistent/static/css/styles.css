@@ -782,6 +782,13 @@ form button[disabled] {
     cursor: not-allowed;
 }
 
+.input_transparent {
+    border-radius: var(--mdb-border-radius) !important;
+    border-color: transparent;
+    background: transparent;
+    transition: 0.2s ease;
+}
+
 /* fildset */
 form fieldset {
     border: 2px solid;
@@ -857,13 +864,6 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(100%) translateY(-50%);
     box-shadow: inset 15px -4px 0px 15px #fff000;
-}
-
-.input_transparent {
-    border-radius: var(--mdb-border-radius) !important;
-    border-color: transparent;
-    background: transparent;
-    transition: 0.2s ease;
 }
 
 .was-validated .form-control:valid,

@@ -165,7 +165,7 @@ def singinpage(request):
                 return JsonResponse({'success': False, 'functions': 'singin', 'message': 'Revisa el usuario o contraseña 😅.'}, status=200)
             else:
                 login(request, user)
-                pageRedirect = reverse('vista_programador')
+                pageRedirect = reverse('admin')
                 return JsonResponse({'success': True, 'functions': 'singin', 'redirect_url': pageRedirect}, status=200)
         else:
             return JsonResponse({'success': False, 'functions': 'singin', 'message': 'Usuario no registrado 😅. Verifica tu nombre de usuario o contraseña'}, status=200)
@@ -185,7 +185,7 @@ def singout(request):
 
 @login_required
 @never_cache
-def vista_programador(request):
+def admin_dash(request):
     users = User.objects.all().order_by('-id')
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
@@ -221,7 +221,7 @@ def vista_programador(request):
         status = 200 if response['success'] else 400
         return JsonResponse(response, status=status)
 
-    return render(request, 'admin/vista_programador.html', contexto)
+    return render(request, 'admin/dashboard.html', contexto)
 
 @login_required
 @never_cache

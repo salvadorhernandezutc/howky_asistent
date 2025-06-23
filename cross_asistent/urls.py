@@ -26,7 +26,7 @@ urlpatterns = [
     path('registro/', views.singup, name='singup'),
     
     # Administracion y programacion ----------------------------------------------------------
-    path('administracion/', views.vista_programador, name='vista_programador'),
+    path('administracion/', views.admin_dash, name='admin'),
     path('administracion/perfil/', views.ver_perfil, name='perfil'),
     path('administracion/perfil/editar_perfil/', functions.editar_perfil, name='editprofile'),
     

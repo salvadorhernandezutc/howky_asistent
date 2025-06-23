@@ -56,6 +56,114 @@ $(document).ready(function () {
 
         // ChatGPT Submit ####################################################
         $("#chatForm").submit(chatSubmit);
+
+        // Reconocimiento de voz ##################################################
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            // alert("Tu navegador no soporta reconocimiento de voz.");
+            $("#chatMicrophone").remove();
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = "es-ES";
+        recognition.continuous = true;
+        recognition.interimResults = false;
+
+        let isListening = false;
+        let autoListen = localStorage.getItem("howky-auto") === "true";
+
+        // Estado inicial del checkbox
+        $("#chatListeningAll").prop("checked", autoListen);
+
+        // Función para iniciar y detener
+        function startListening() {
+            if (!isListening) {
+                recognition.start();
+                isListening = true;
+                $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
+            }
+        }
+
+        function stopListening() {
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+                $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
+            }
+        }
+
+        // Escucha manual
+        $("#chatMicrophone").on("click", function () {
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
+        });
+
+        // Activar/desactivar escucha automática
+        $("#chatListeningAll").on("change", function () {
+            const checked = $(this).is(":checked");
+            localStorage.setItem("howky-auto", checked);
+            if (checked) {
+                startListening();
+            } else {
+                stopListening();
+            }
+        });
+
+        // Si autolistening ya estaba activado
+        if (autoListen) {
+            startListening();
+        }
+
+        // Procesamiento del reconocimiento
+        recognition.onresult = function (event) {
+            const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+            console.log("Detectado:", transcript);
+
+            if (!transcript.startsWith("howky")) return;
+
+            const command = transcript.replace("howky", "").trim();
+
+            // === ACCIONES ===
+            // if (/abre el mapa|muestra el mapa/.test(command)) {
+            //     abrirMapa();
+            //     return;
+            // }
+
+            // if (/pausa la música|detén la música/.test(command)) {
+            //     pausarMusica();
+            //     return;
+            // }
+
+            // if (/pon música|reproduce música/.test(command)) {
+            //     reproducirMusica();
+            //     return;
+            // }
+
+            // if (/dime el clima|qué clima hace/.test(command)) {
+            //     obtenerClima();
+            //     return;
+            // }
+
+            // === PREGUNTA al CHAT ===
+            if (command) {
+                $("#txtQuestion").val(command);
+                $("#chatForm").submit();
+            }
+        };
+
+        recognition.onerror = function (event) {
+            console.error("Error en reconocimiento:", event.error);
+            if (autoListen && event.error === "not-allowed") {
+
+                alertSToast("center", 8000, "error", "No se permiten permisos de micrófono. 😥");
+                $("#chatListeningAll").prop("checked", false);
+                localStorage.setItem("howky-auto", false);
+            }
+        };
     } catch (error) {
         console.error("Error Inesperado: ", error);
         alertSToast("center", 8000, "error", `😥 Ha ocurrido un error inesperado. código: #304`);
