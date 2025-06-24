@@ -147,8 +147,8 @@
 [data-mdb-theme="light"] {
     --mdb-card-bg: #eaeaea !important;
 }
-
 [data-mdb-theme="dark"] {
+    --mdb-card-bg: #2b2b2b !important;
     --fc-page-bg-color: #333;
 }
 
@@ -567,7 +567,7 @@ main.main_anchor {
     box-shadow: 0 0 8px var(--darkA2) !important;
     overflow: hidden;
     border: none !important;
-    --mdb-card-bg: #f1f1f1 !important;
+    /* --mdb-card-bg: #f1f1f1 !important; */
 }
 
 .card.card_mxh-450 {
@@ -832,9 +832,8 @@ form fieldset legend {
     width: 0;
     height: 0;
 }
-
-.slider {
-    --background: #28096b;
+.switch .slider {
+    --background: var(--mdb-card-bg);
     position: absolute;
     cursor: pointer;
     inset: 0;
@@ -842,8 +841,10 @@ form fieldset legend {
     border-radius: var(--var-height);
     transition: 0.5s ease;
 }
-
-.slider:before {
+.switch.switch_theme .slider {
+    --background: #28096b;
+}
+.switch .slider:before {
     position: absolute;
     content: "";
     height: calc(var(--var-height) - 15px);
@@ -852,16 +853,20 @@ form fieldset legend {
     top: 50%;
     left: 10px;
     transform: translateY(-50%);
-    box-shadow: inset 8px -4px 0px 0px #fff000;
+    box-shadow: inset 15px -4px 0px 15px var(--mdb-surface-color);
     background: var(--background);
     transition: 0.5s ease;
 }
-
-input:checked + .slider {
+.switch.switch_theme .slider:before {
+    box-shadow: inset 8px -4px 0px 0px #fff000;
+}
+.switch.switch_theme input:checked + .slider {
     background-color: #12abd1;
 }
-
-input:checked + .slider:before {
+.switch input:checked + .slider:before {
+    transform: translateX(100%) translateY(-50%);
+}
+.switch.switch_theme input:checked + .slider:before {
     transform: translateX(100%) translateY(-50%);
     box-shadow: inset 15px -4px 0px 15px #fff000;
 }
