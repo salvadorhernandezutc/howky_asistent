@@ -37,7 +37,10 @@ $(document).ready(function () {
         }
         $("#chatOpenMap").on("click", toggleMapChat);
         $(document).on("click", "[data-route]", function () {
-            toggleMapChat();
+            if ($("body").hasClass("open_map")) {
+                toggleMapChat();
+                console.log("----------------------------------- Intercambiando mapa / chat.");
+            }
 
             const routeParts = $(this).attr("data-route").split("~");
             const params = new URLSearchParams(window.location.search);
@@ -60,7 +63,6 @@ $(document).ready(function () {
         // Reconocimiento de voz ##################################################
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            // alert("Tu navegador no soporta reconocimiento de voz.");
             $("#chatMicrophone").remove();
             return;
         }
@@ -75,6 +77,7 @@ $(document).ready(function () {
 
         // Estado inicial del checkbox
         $("#chatListeningAll").prop("checked", autoListen);
+        $("#chatListeningText").text(autoListen ? "Si" : "No");
 
         // Función para iniciar y detener
         function startListening() {
@@ -82,6 +85,7 @@ $(document).ready(function () {
                 recognition.start();
                 isListening = true;
                 $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
+                console.log("Iniciado reconocimiento de voz.---------------------");
             }
         }
 
@@ -90,6 +94,7 @@ $(document).ready(function () {
                 recognition.stop();
                 isListening = false;
                 $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
+                console.log("Detenido reconocimiento de voz.---------------------");
             }
         }
 
@@ -108,9 +113,14 @@ $(document).ready(function () {
             localStorage.setItem("howky-auto", checked);
             if (checked) {
                 startListening();
+                $("#chatListeningText").text("Si");
             } else {
                 stopListening();
+                $("#chatListeningText").text("No");
             }
+            console.log("##############################");
+            console.log("###### Auto escucha:", checked);
+            console.log("##############################");
         });
 
         // Si autolistening ya estaba activado
@@ -123,14 +133,17 @@ $(document).ready(function () {
             const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
             console.log("Detectado:", transcript);
 
-            if (!transcript.startsWith("howky")) return;
+            const palabrasClave = ["howky", "hockey", "hawkie", "hawking"];
+            const inicio = transcript.split(" ")[0]; // primera palabra hablada
 
-            const command = transcript.replace("howky", "").trim();
+            if (!palabrasClave.includes(inicio)) return;
+
+            const command = transcript.replace(inicio, "").trim();
             const comandos = {
                 abrirMapa: /abre el mapa|muestra el mapa/,
                 cerrarMapa: /cerrar el mapa|cierra el mapa/,
                 iniciarRuta: /como ir|cómo ir|ruta a|como llegar|direcciones|indicaciones|camino a/,
-                borrarRuta: /borrar ruta|eliminar ruta/,
+                borrarRuta: /borrar ruta|eliminar ruta|borra la ruta/,
             };
 
             if (comandos.abrirMapa.test(command)) {
@@ -141,13 +154,13 @@ $(document).ready(function () {
                     $("#chatOpenMap").click();
                     return;
                 }
+            } else if (comandos.borrarRuta.test(command)) {
+                $('[data-reset_form="form_route"]').click();
+                return;
             } else if (comandos.iniciarRuta.test(command)) {
                 setTimeout(() => {
                     $("[data-route]").last().click();
                 }, 2000);
-            } else if (comandos.borrarRuta.test(command)) {
-                $('[data-reset_form="form_route"]').click();
-                return;
             }
 
             // === PREGUNTA al CHAT ===
@@ -161,19 +174,16 @@ $(document).ready(function () {
                 }, 1000);
             }
         };
+
         recognition.onend = function () {
             console.log("Reconocimiento finalizado automáticamente.");
-            isListening = false;
+            const autoListen = localStorage.getItem("howky-auto") === "true";
 
-            // Si no está en modo automático, detenemos visualmente el estado
             if (!autoListen) {
-                console.log(autoListen);
                 stopListening();
             } else {
-                console.log(autoListen);
-                // Reinicia automáticamente si la escucha automática está activada
-                console.log("Reiniciando escucha automática...");
                 startListening();
+                console.log("Reiniciando escucha automática...");
             }
         };
 
