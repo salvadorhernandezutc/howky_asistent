@@ -9,8 +9,8 @@
 {% endblock %}
 {% block last_head %}
 <script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/chatbot.css' %}" />
-<link rel="stylesheet" href="{% static 'css/mapbox.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/chatbot.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/mapbox.min.css' %}"/>
 {% endblock %}
 {% block navbar %}
 <!--  -->
@@ -61,8 +61,7 @@
     </model-viewer>
     <form action="{% url 'chatbot' %}" method="POST" id="chatForm" class="chat_form card">
         {% csrf_token %}
-        <button type="button" class="tab" id="openChat"><i class="fa-solid fa-comment-dots me-2"></i><i class="fas fa-angle-up"></i></button>
-        <textarea name="chatquestion" id="txtQuestion" class="pb-4 mx-3 mt-3" placeholder="Preguntale a Howky: ... " autofocus></textarea>
+        <textarea name="chatquestion" id="txtQuestion" class="pb-4 mx-3 mt-3" placeholder="Preguntale a Howky: ... " autofocus minlength="4"></textarea>
         <div class="chat_controls p-2 gap_10">
             <button type="submit" id="chatForm_submit" class="btn btn-floating btn_detail pe-1">
                 <i class="fa-solid fa-paper-plane"></i>
@@ -73,7 +72,10 @@
             <button type="button" id="chatOpenMap" class="btn btn-floating btn_detail" data-toggle-class="body-open_map">
                 <i class="fa-solid fa-map-location-dot"></i>
             </button>
-            <button type="button" id="floatSettings" class="btn btn-floating btn_detail me-auto" data-mdb-modal-init data-mdb-target="#configModal">
+            <button type="button" id="openChat" class="btn btn-floating btn_detail me-auto">
+                <i class="fa-solid fa-comments"></i>
+            </button>
+            <button type="button" id="floatSettings" class="btn btn-floating btn_detail" data-mdb-modal-init data-mdb-target="#configModal">
                 <i class="fa-solid fa-gear"></i>
             </button>
         </div>

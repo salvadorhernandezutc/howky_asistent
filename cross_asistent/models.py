@@ -138,6 +138,7 @@ class Mapa(models.Model):
     size_marker = models.CharField(max_length=4, default='0.05')
     otheraction = models.TextField(blank=True, null=True, help_text='Acciones adicionales')
     status = models.CharField(max_length=20, default='Activo')
+    access_to = models.TextField(blank=True, null=True, help_text='Acceso desde ciertas ubicaciones, ej. "Caseta 1, Caseta 2"')
     
     def get_tag_list(self):
         if self.tags:

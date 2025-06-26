@@ -137,7 +137,7 @@ $(document).ready(function () {
             const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
             console.log("Detectado:", transcript);
 
-            const palabrasClave = ["howky", "hockey", "hawkie", "hawking"];
+            const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki ", "houki", "asistente"];
             const inicio = transcript.split(" ")[0]; // primera palabra hablada
 
             if (!palabrasClave.includes(inicio)) return;
@@ -147,7 +147,7 @@ $(document).ready(function () {
                 abrirMapa: /abre el mapa|muestra el mapa/,
                 cerrarMapa: /cerrar el mapa|cierra el mapa/,
                 iniciarRuta: /como ir|cómo ir|ruta a|como llegar|direcciones|indicaciones|camino a/,
-                borrarRuta: /borrar ruta|eliminar ruta|borra la ruta/,
+                borrarRuta: /borrar ruta|eliminar ruta|borra la ruta|borrar la ruta|borrar el camino|borrar el camino/,
             };
 
             if (comandos.abrirMapa.test(command)) {
@@ -180,14 +180,12 @@ $(document).ready(function () {
         };
 
         recognition.onend = function () {
-            console.log("Reconocimiento finalizado automáticamente.");
+            console.log("Reconocimiento finalizado automáticamente.--------");
             const autoListen = localStorage.getItem("howky-auto") === "true";
+            stopListening();
 
-            if (!autoListen) {
-                stopListening();
-            } else {
+            if (autoListen) {
                 startListening();
-                console.log("Reiniciando escucha automática...");
             }
         };
 
@@ -274,8 +272,7 @@ function chatSubmit(e) {
                 console.error(data.message);
                 console.log();
 
-                const errorMessage =
-                    "Lo siento pero en este momento no puedo responderte. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
+                const errorMessage = "Lo siento pero en este momento no puedo responderte. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
                 displayText(errorMessage);
             }
         })

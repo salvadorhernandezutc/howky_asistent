@@ -89,6 +89,7 @@
     justify-content: flex-end;
     padding: 0;
 }
+.open_map .chat_form .chat_controls #openChat,
 .open_map .chat_form .chat_controls #chatForm_submit,
 .open_map .chat_form .chat_controls #floatSettings {
     display: none;

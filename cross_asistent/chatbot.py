@@ -1,12 +1,13 @@
 from .views import obtener_configuraciones
 from django.http import JsonResponse
 from .models import Database, Mapa
-from urllib.parse import urlencode
 from django.utils import timezone
 from django.conf import settings
 from unidecode import unidecode
 from django.urls import reverse
 from django.db.models import Q
+import requests
+import ollama
 import random
 import openai
 import json
@@ -41,8 +42,40 @@ def chatgpt(question, instructions):
     print()
 
     print(f"Respuesta: {response.choices[0].message.content}")
-
     return response.choices[0].message.content
+
+def localLLM_bad1(question, instructions):
+    payload = {
+        "model": "llama3.2",
+        "messages": [
+            {"role": "system", "content": instructions},
+            {"role": "user", "content": question}
+        ],
+        "stream": False
+    }
+
+    response = requests.post("http://localhost:11434/api/chat -d", payload)
+    response.raise_for_status()
+    result = response.json()
+
+    print(f"Response: {response}")
+    print(f"Result: {result["message"]["content"]}")
+
+    return result["message"]["content"]
+
+def localLLM(question, instructions):
+    ollamaModel = "llama3.2:1b"
+    response = ollama.chat(
+        model=ollamaModel,
+        messages=[
+            {"role": "system", "content": instructions},
+            {"role": "user", "content": question}
+        ],
+        stream=False
+    )
+
+    print(f"Respuesta: {response['message']['content']}")
+    return response['message']['content']
 
 def buscar_por_tags(pregunta):
     pregunta_tokens = re.findall(r'\b\w+\b', pregunta.lower())
@@ -122,7 +155,7 @@ def chatbot(request):
                     base_url = f"{originParams}~{destino}"
                 
                 else:
-                    info_respuesta = chatgpt(pregunta, system_prompt)
+                    info_respuesta = localLLM(pregunta, system_prompt)
                     base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
 
                 respuesta = {

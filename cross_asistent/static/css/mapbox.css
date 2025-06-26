@@ -97,11 +97,11 @@
     background: var(--darkA4);
     backdrop-filter: blur(1px);
 }
-
+/* 
 .offcanvas-backdrop.fade,
 .offcanvas-backdrop.show {
     opacity: unset !important;
-}
+} */
 
 #infoLateral .offcanvas-header::before {
     content: "";
