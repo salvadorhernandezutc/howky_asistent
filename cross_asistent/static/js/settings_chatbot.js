@@ -37,7 +37,11 @@ $(document).ready(function () {
         }
         $("#chatOpenMap").on("click", toggleMapChat);
         $(document).on("click", "[data-route]", function () {
-            if ($("body").hasClass("open_map")) {
+            const bodyHasClass = $("body").hasClass("open_map") === true;
+            console.log("Clase body:", bodyHasClass);
+            console.log(typeof bodyHasClass);
+
+            if (!bodyHasClass) {
                 toggleMapChat();
                 console.log("----------------------------------- Intercambiando mapa / chat.");
             }
