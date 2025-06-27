@@ -20,6 +20,7 @@ $(document).ready(function () {
             togglePlayModel();
         });
         // Abrir mapa #######################################################################
+        $("#chatOpenMap").on("click", toggleMapChat);
         function toggleMapChat() {
             setTimeout(() => {
                 if ($("body").hasClass("open_map")) {
@@ -35,15 +36,12 @@ $(document).ready(function () {
                 }
             }, 500);
         }
-        $("#chatOpenMap").on("click", toggleMapChat);
         $(document).on("click", "[data-route]", function () {
             const bodyHasClass = $("body").hasClass("open_map") === true;
-            console.log("Clase body:", bodyHasClass);
-            console.log(typeof bodyHasClass);
 
             if (!bodyHasClass) {
                 toggleMapChat();
-                console.log("----------------------------------- Intercambiando mapa / chat.");
+                $("body").addClass("open_map");
             }
 
             const routeParts = $(this).attr("data-route").split("~");
@@ -272,7 +270,8 @@ function chatSubmit(e) {
                 console.error(data.message);
                 console.log();
 
-                const errorMessage = "Lo siento pero en este momento no puedo responderte. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
+                const errorMessage =
+                    "Lo siento pero en este momento no puedo responderte. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
                 displayText(errorMessage);
             }
         })
@@ -296,7 +295,7 @@ function displayResponse(varAnswer) {
 
     if (dataRedirigir && dataRedirigir.trim() !== "") {
         const isRoute = dataRedirigir.includes("~");
-        const tag = isRoute ? 'button type="button" data-toggle-class="body-open_map" data-route' : "a href";
+        const tag = isRoute ? 'button type="button" data-route' : "a href";
         const text = isRoute ? "Abrir ruta en el Mapa" : "Ver más";
 
         btnRedir = `

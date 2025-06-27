@@ -71,7 +71,8 @@ def localLLM(question, instructions):
             {"role": "system", "content": instructions},
             {"role": "user", "content": question}
         ],
-        stream=False
+        stream=False,
+        options={"temperature": 0}
     )
 
     print(f"Respuesta: {response['message']['content']}")
@@ -131,9 +132,10 @@ def chatbot(request):
                 bloques_info = "\n\n".join([f"Tema relacionado:\n{r.informacion}" for r in mejores_resultados])
                 system_prompt = (
                     f"Eres Hawky, asistente virtual de la Universidad Tecnológica de Coahuila (UTC)."
-                    f"Usa emojis, no saludes, no repreguntes."
-                    f"Responde únicamente en base a la siguiente información:{bloques_info}"
-                    f"Hoy es {ahora}."
+                    f"Responde únicamente con la información proporcionada a continuación."
+                    f"No inventes ni asumas datos que no estén explícitamente en el contenido."
+                    f"\n\nInformación de referencia:\n{bloques_info}\n\n"
+                    f"Fecha actual: {ahora}."
                 )
                 info_respuesta = None
                 base_url = None
@@ -149,10 +151,13 @@ def chatbot(request):
                     except:
                         info_random = mejores_resultados[0].informacion
 
-                    info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
+                    if destino != origen:
+                        info_respuesta = f"Para ir de {origen or 'Caseta 1'} a {destino}.\n{info_random} \n        👇👇👇"
 
-                    originParams = origen or 'Caseta 1'
-                    base_url = f"{originParams}~{destino}"
+                        originParams = origen or 'Caseta 1'
+                        base_url = f"{originParams}~{destino}"
+                    else:
+                        info_respuesta = "Lo siento pero no puedo ayudarte con eso. 😕 \n Intenta hacer una ruta con dos lugares distintos"
                 
                 else:
                     info_respuesta = localLLM(pregunta, system_prompt)
