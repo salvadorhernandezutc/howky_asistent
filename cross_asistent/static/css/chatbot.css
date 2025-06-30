@@ -85,6 +85,19 @@
     flex-direction: row-reverse;
     padding: 0.5rem;
 }
+.chat_form .chat_controls button {
+    box-shadow: none !important;
+}
+.chat_form .chat_controls i {
+    font-size: 1.2rem;
+}
+
+.chat_form .chat_controls .btn:hover {
+    transform: scale(1.1);
+}
+.chat_form .chat_controls .btn:focus {
+    border: 2px solid var(--mdb-body-color);
+}
 .open_map .chat_form .chat_controls {
     justify-content: flex-end;
     padding: 0;
@@ -94,14 +107,9 @@
 .open_map .chat_form .chat_controls #floatSettings {
     display: none;
 }
-
-.chat_form .chat_controls i {
-    font-size: 1.2rem;
-}
-
-.chat_form .chat_controls .btn:hover,
-.chat_form .chat_controls .btn:focus {
-    transform: scale(1.1);
+.open_map .chat_form .chat_controls #chatMicrophone,
+.open_map .chat_form .chat_controls #chatOpenMap {
+    background: var(--var-detail);
 }
 
 .chat_form .tab {

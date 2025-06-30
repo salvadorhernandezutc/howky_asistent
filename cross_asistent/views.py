@@ -51,17 +51,23 @@ def index(request):
     if not request.user.is_staff:
         logout(request)
     
-    configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
-    
+    cameraOrbitJson = hawkySettings[f'redes_sociales_{idHawky}']
+    data = json.loads(cameraOrbitJson)
+
+    if "cameraOrbit" in data and isinstance(data["cameraOrbit"], list):
+        cameraOrbit = data["cameraOrbit"]
+        if len(cameraOrbit) == 3:
+            orbit_string = f"{cameraOrbit[0]}deg {cameraOrbit[1]}deg {cameraOrbit[2]}m"
+        else:
+            orbit_string = "15deg 70deg 5m"
+
     return render(request, 'index.html', {
         'active_page': 'inicio',
-        'img_qr': configuraciones[f'qr_image_{idConfig}'],
-        'btn_qr': configuraciones[f'qr_button_{idConfig}'],
         'model_3D': hawkySettings[f'qr_image_{idHawky}'],
         'active_areas': hawkySettings[f'qr_button_{idHawky}'],
         'anim_default': hawkySettings[f'utc_link_{idHawky}'],
-        'hawkyAlways': hawkySettings[f'calendar_btnsYear_{idHawky}'],
+        'camera_orbit': orbit_string,
     })
 
 def fqt_questions(request):

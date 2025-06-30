@@ -1,6 +1,6 @@
+from .models import Database, Mapa, Configuraciones
 from .views import obtener_configuraciones
 from django.http import JsonResponse
-from .models import Database, Mapa
 from django.utils import timezone
 from django.conf import settings
 from unidecode import unidecode
@@ -160,7 +160,20 @@ def chatbot(request):
                         info_respuesta = "Lo siento pero no puedo ayudarte con eso. 😕 \n Intenta hacer una ruta con dos lugares distintos"
                 
                 else:
-                    info_respuesta = localLLM(pregunta, system_prompt)
+                    try:
+                        config = Configuraciones.objects.get(id=2)
+                        model = (config.about_img_first or "").strip().lower()
+
+                        if model == "ollama":
+                            info_respuesta = localLLM(pregunta, system_prompt)
+                        elif model == "chatgpt":
+                            info_respuesta = chatgpt(pregunta, system_prompt)
+                        else:
+                            return JsonResponse({'success': False, 'message': 'Modelo no soportado.'}, status=400)
+                    except Configuraciones.DoesNotExist:
+                        return JsonResponse({'success': False, 'message': 'Configuración no encontrada.'}, status=404)
+
+
                     base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
 
                 respuesta = {

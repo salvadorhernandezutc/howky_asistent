@@ -54,7 +54,7 @@
 </main>
 
 <main id="model" class="main_model">
-    <model-viewer id="asistent_model" class="mx-auto" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="15deg 70deg 5m" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="">
+    <model-viewer id="asistent_model" class="mx-auto" autoplay loading="eager" src="{{model_3D}}" shadow-intensity="1" tone-mapping="neutral" camera-orbit="{{camera_orbit}}" animation-name="{{anim_default}}" data-settings-model="{% url 'modelsettings' %}" environment-image="" skybox-image="">
         {% if active_areas %}
         <div id="model_areas" class="model_areas slide_areas show"></div>
         {% endif %}
@@ -66,13 +66,13 @@
             <button type="submit" id="chatForm_submit" class="btn btn-floating btn_detail pe-1">
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
-            <button type="button" id="chatMicrophone" class="btn btn-floating btn_detail">
+            <button type="button" id="chatMicrophone" class="btn btn-floating">
                 <i class="fa-solid fa-microphone"></i>
             </button>
-            <button type="button" id="chatOpenMap" class="btn btn-floating btn_detail" data-toggle-class="body-open_map">
+            <button type="button" id="chatOpenMap" class="btn btn-floating" data-toggle-class="body-open_map">
                 <i class="fa-solid fa-map-location-dot"></i>
             </button>
-            <button type="button" id="openChat" class="btn btn-floating btn_detail me-auto">
+            <button type="button" id="openChat" class="btn btn-floating me-auto">
                 <i class="fa-solid fa-comments"></i>
             </button>
             <button type="button" id="floatSettings" class="btn btn-floating btn_detail" data-mdb-modal-init data-mdb-target="#configModal">
