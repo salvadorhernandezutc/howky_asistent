@@ -162,7 +162,7 @@ def chatbot(request):
                 else:
                     try:
                         config = Configuraciones.objects.get(id=2)
-                        model = (config.about_img_first or "").strip().lower()
+                        model = (config.about_text_first or "").strip().lower()
 
                         if model == "ollama":
                             info_respuesta = localLLM(pregunta, system_prompt)
@@ -172,8 +172,7 @@ def chatbot(request):
                             return JsonResponse({'success': False, 'message': 'Modelo no soportado.'}, status=400)
                     except Configuraciones.DoesNotExist:
                         return JsonResponse({'success': False, 'message': 'Configuración no encontrada.'}, status=404)
-
-
+                    
                     base_url = mejores_resultados[0].redirigir if hasattr(mejores_resultados[0], 'redirigir') else None
 
                 respuesta = {

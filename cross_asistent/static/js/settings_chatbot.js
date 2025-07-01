@@ -277,11 +277,10 @@ function chatSubmit(e) {
             } else {
                 console.error("😥 Error: ------------------------------");
                 console.error(data.message);
-                console.log();
+                console.error("😥 Error: ------------------------------");
 
-                const errorMessage =
-                    "Lo siento pero en este momento no puedo responderte. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
-                displayText(errorMessage);
+                const errorMsg = "Lo siento pero no puedo responder en este momento. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
+                displayText(errorMsg);
             }
         })
         .catch((error) => {
