@@ -20,15 +20,22 @@ $(document).ready(function () {
             togglePlayModel();
         });
         // Abrir mapa #######################################################################
+        const modelInitialOrbit = modelViewer.attr("data-camera-orbit");
         $("#chatOpenMap").on("click", toggleMapChat);
         function toggleMapChat() {
+            const modelOrbitParts = modelInitialOrbit.split(" ");
+            const modelOrbitHorz = modelOrbitParts[0].replace("deg", "");
+            const modelOrbitVert = modelOrbitParts[1];
+            const modelOrbitDist = modelOrbitParts[2];
+            const newOrbit = `${modelOrbitHorz * -1}deg ${modelOrbitVert} ${modelOrbitDist}`;
+
             setTimeout(() => {
                 if ($("body").hasClass("open_map")) {
                     $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
-                    modelViewer.attr("camera-orbit", "-15deg 70deg 5m");
+                    modelViewer.attr("camera-orbit", newOrbit);
                 } else {
                     $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
-                    modelViewer.attr("camera-orbit", "15deg 70deg 5m");
+                    modelViewer.attr("camera-orbit", modelInitialOrbit);
                 }
 
                 if ($("#model").hasClass("open")) {
@@ -66,6 +73,8 @@ $(document).ready(function () {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
             $("#chatMicrophone").remove();
+            $("#chatListeningGroup").remove();
+            $("#chatListeningAll").prop("checked", false);
             return;
         }
 

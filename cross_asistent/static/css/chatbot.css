@@ -96,7 +96,7 @@
     transform: scale(1.1);
 }
 .chat_form .chat_controls .btn:focus {
-    border: 2px solid var(--mdb-body-color);
+    border: 1px solid var(--mdb-body-color);
 }
 .open_map .chat_form .chat_controls {
     justify-content: flex-end;
@@ -110,6 +110,7 @@
 .open_map .chat_form .chat_controls #chatMicrophone,
 .open_map .chat_form .chat_controls #chatOpenMap {
     background: var(--var-detail);
+    color: white;
 }
 
 .chat_form .tab {
