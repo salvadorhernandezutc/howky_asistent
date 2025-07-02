@@ -169,7 +169,7 @@ def chatbot(request):
                         elif model == "chatgpt":
                             info_respuesta = chatgpt(pregunta, system_prompt)
                         else:
-                            return JsonResponse({'success': False, 'message': 'Modelo no soportado.'}, status=400)
+                            info_respuesta = "El Asistente Hawky no está disponible actualmente. por favor regrese mas tarde. 😕"
                     except Configuraciones.DoesNotExist:
                         return JsonResponse({'success': False, 'message': 'Configuración no encontrada.'}, status=404)
                     

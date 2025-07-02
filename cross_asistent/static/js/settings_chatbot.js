@@ -241,7 +241,7 @@ function chatSubmit(e) {
         }, 5000);
     }, 20);
 
-    const loadInfo = `<div class="chat_msg chat_open" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;
+    const loadInfo = `<div class="chat_msg chat_open my-4" data-tokeid="loadInfoDelete"><div class="msg_response"><div class="mx-auto pulse-container"><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div><div class="pulse-bubble bg_detail"></div></div></div></div>`;
     contOutput.insertAdjacentHTML("beforeend", loadInfo);
     setTimeout(function () {
         $(`.chat_msg[data-tokeid="loadInfoDelete"]`).addClass("show");
@@ -279,7 +279,8 @@ function chatSubmit(e) {
                 console.error(data.message);
                 console.error("😥 Error: ------------------------------");
 
-                const errorMsg = "Lo siento pero no puedo responder en este momento. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
+                const errorMsg =
+                    "Lo siento pero no puedo responder en este momento. <br> La verdad es que hoy me sature de tantas solicitudes y no puedo procesar más. 😥🤒 <br> Estare de nuevo en funcionamineto muy pronto. 😊😉😌";
                 displayText(errorMsg);
             }
         })
@@ -315,7 +316,12 @@ function displayResponse(varAnswer) {
         `;
     }
 
-    const chatText = varAnswer.informacion.replace(/\n/g, "<br>");
+    const chatText = varAnswer.informacion
+        .replace(/\n/g, "<br>")
+        .replace(/\*\*(.*?)\*\*/g, "$1") // Negritas **texto**
+        .replace(/\*(.*?)\*/g, "$1") // Cursivas *texto*
+        .replace(/^\s*[\-\*]\s+/gm, "") // Listas con - o *
+        .replace(/`([^`]*)`/g, "$1"); // Código inline `code`
     const htmlBlock = `<div class="chat_msg chat_open" data-tokeid="uuid${tokendid}"><div class="msg_response">${chatText}</div></div>${viewImage} ${btnRedir}`;
 
     contOutput.insertAdjacentHTML("beforeend", htmlBlock);
