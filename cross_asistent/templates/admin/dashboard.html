@@ -295,6 +295,33 @@
       </div>
     </div>
     <!-- Configuraciones de Hawky -->
+     <div class="mt-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="text-center mb-4">Configuraciones de Hawky</h3>
+          <div class="row">
+            <div class="col-sm-1 col-md-6"></div>
+            <div class="col-sm-1 col-md-6">
+              <form action="{% url 'update_settings' %}" method="post" data-submit-blur="btnChangeChatbot" data-submit-form>
+                {% csrf_token %}
+                <input type="hidden" name="setId" value="2">
+                <input type="hidden" name="firstsection" value="true">
+                <div class="form-outline">
+                  <select class="form-select input_change" id="contenidoWord" name="contenidoWord" required>
+                    <option selected hidden value="">Modelo del Chatbot</option>
+                    <option value="ollama">Ollama</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="false">Ninguno</option>
+                  </select>
+                </div>
+                <button type="submit" class="d-none" id="btnChangeChatbot"></button>
+              </form>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+     </div>
     <div class="mt-4">
       <div class="card">
         <div class="card-body">
@@ -304,10 +331,7 @@
           <form id="hawkySettings" action="{% url 'update_settings' %}" method="post" class="row px-0" data-submit-form>
             {% csrf_token %}
             <div class="col-12 col-lg-6">
-              <model-viewer id="asistent_model" class="min_h400 col-12 rounded" tone-mapping="neutral" camera-orbit="15deg 70deg 5m"
-                poster="{% static 'img/hawky.0011.webp' %}" loading="eager" shadow-intensity="1" animation-name="{{utc_link_2}}" autoplay
-                data-settings-model="{% url 'modelsettings' %}">
-                <!-- Areas -->
+              <model-viewer id="asistent_model" class="min_h400 col-12 rounded" tone-mapping="neutral" camera-orbit="{{camera_orbit}}" loading="eager" shadow-intensity="1" animation-name="{{utc_link_2}}" autoplay data-settings-model="{% url 'modelsettings' %}">
                 <div id="model_areas" class="model_areas visible-btns slide_areas none" style="--grid-row: 3;--grid-column: 3;"></div>
               </model-viewer>
 

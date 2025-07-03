@@ -196,6 +196,17 @@ def admin_dash(request):
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
     
+    hawkySettings = obtener_configuraciones(idHawky)
+    cameraOrbitJson = hawkySettings[f'redes_sociales_{idHawky}']
+    data = json.loads(cameraOrbitJson)
+
+    if "cameraOrbit" in data and isinstance(data["cameraOrbit"], list):
+        cameraOrbit = data["cameraOrbit"]
+        if len(cameraOrbit) == 3:
+            orbit_string = f"{cameraOrbit[0]}deg {cameraOrbit[1]}deg {cameraOrbit[2]}m"
+        else:
+            orbit_string = "15deg 70deg 5m"
+    
     contexto = {
         'users':users,
         'user':request.user,
@@ -208,8 +219,7 @@ def admin_dash(request):
         'num_preguntas':databaseall.count(),
         **configuraciones,
         **hawkySettings,
-        'copyright_year': configuraciones[f'copyright_year_{idConfig}'],
-        'utc_link': configuraciones[f'utc_link_{idConfig}'],
+        'camera_orbit': orbit_string,
     }
     
     if request.method == 'POST':
