@@ -44,7 +44,7 @@ $(document).ready(function () {
     });
 
     const hdrSaved = localStorage.getItem("model_hdr");
-    if (hdrSaved) {        
+    if (hdrSaved) {
         modelViewer.attr("environment-image", `/media/hdri/${hdrSaved}.hdr`);
         modelViewer.attr("skybox-image", `/media/hdri/${hdrSaved}.hdr`);
     }
@@ -55,9 +55,7 @@ $(document).ready(function () {
     pauseAnim.on("click", function () {
         isPaused = !isPaused;
         isPaused ? modelViewer[0].pause() : modelViewer[0].play();
-        pauseAnim
-            .attr("title", isPaused ? "Activar Animación" : "Pausar Animación")
-            .html(isPaused ? '<i class="fa-solid fa-circle-play fs-20"></i>' : '<i class="fa-regular fa-circle-pause fs-20"></i>');
+        pauseAnim.attr("title", isPaused ? "Activar Animación" : "Pausar Animación").html(isPaused ? '<i class="fa-solid fa-circle-play fs-20"></i>' : '<i class="fa-regular fa-circle-pause fs-20"></i>');
     });
 
     // Cargar animaciones #########################################

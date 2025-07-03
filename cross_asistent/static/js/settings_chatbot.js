@@ -29,6 +29,12 @@ $(document).ready(function () {
             const modelOrbitDist = modelOrbitParts[2];
             const newOrbit = `${modelOrbitHorz * -1}deg ${modelOrbitVert} ${modelOrbitDist}`;
 
+            const storageHRDI = localStorage.getItem("model_hdr");
+
+            if (!$("body").hasClass("open_map")) {
+                modelViewer.attr("environment-image", "");
+                modelViewer.attr("skybox-image", "");
+            }
             setTimeout(() => {
                 if ($("body").hasClass("open_map")) {
                     $("#chatOpenMap i.fa-solid").addClass("fa-comment-dots").removeClass("fa-map-location-dot");
@@ -36,6 +42,10 @@ $(document).ready(function () {
                 } else {
                     $("#chatOpenMap i.fa-solid").addClass("fa-map-location-dot").removeClass("fa-comment-dots");
                     modelViewer.attr("camera-orbit", modelInitialOrbit);
+                    if (storageHRDI !== null && storageHRDI !== "") {
+                        modelViewer.attr("environment-image", `/media/hdri/${storageHRDI}.hdr`);
+                        modelViewer.attr("skybox-image", `/media/hdri/${storageHRDI}.hdr`);
+                    }
                 }
 
                 if ($("#model").hasClass("open")) {
@@ -151,8 +161,10 @@ $(document).ready(function () {
 
             const command = transcript.replace(inicio, "").trim();
             const comandos = {
-                abrirMapa: /abre el mapa|muestra el mapa/,
-                cerrarMapa: /cerrar el mapa|cierra el mapa/,
+                abrirMapa: /abre el mapa|muestra el mapa|abrir mapa|abrir el mapa/,
+                cerrarMapa: /cerrar el mapa|cierra el mapa|cerrar mapa|ocultar mapa|ocultar el mapa/,
+                abrirChat: /abre el chat|muestra el chat|abrir chat| abrir el chat|mostrar chat|mostrar el chat|/,
+                cerrarChat: /cerrar el chat|cierra el chat|cerrar chat|ocultar chat|ocultar el chat/,
                 iniciarRuta: /como ir|cómo ir|ruta a|como llegar|direcciones|indicaciones|camino a/,
                 borrarRuta: /borrar ruta|eliminar ruta|borra la ruta|borrar la ruta|borrar el camino|borrar el camino/,
             };
@@ -165,6 +177,18 @@ $(document).ready(function () {
                     $("#chatOpenMap").click();
                     return;
                 }
+            } else if (comandos.abrirChat.test(command)) {
+                if ($("body").hasClass("open_map")) {
+                    $("#chatOpenMap").click();
+                }
+                $("#model").addClass("open")
+                return;
+            } else if (comandos.cerrarChat.test(command)) {
+                if ($("body").hasClass("open_map")) {
+                    $("#chatOpenMap").click();
+                }
+                $("#model").removeClass("open")
+                return;
             } else if (comandos.borrarRuta.test(command)) {
                 $('[data-reset_form="form_route"]').click();
                 return;

@@ -755,7 +755,6 @@ window.addEventListener("load", () => {
                 const offcanvasContent = $("#offcanvasContent");
                 const imageOffCanvas = $("#imagen_actual");
                 const siblingDiv = imageOffCanvas.siblings("div"); // Div Hermano
-                console.log(uuid, nombre);
 
                 if (mapInteractions) {
                     if (imagen_url) {
