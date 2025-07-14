@@ -169,6 +169,7 @@ $(document).ready(function () {
                 borrarRuta: /borrar ruta|eliminar ruta|borra la ruta|borrar la ruta|borrar el camino|borrar el camino/,
             };
 
+            console.log("Comando detectado:", command);
             if (comandos.abrirMapa.test(command)) {
                 $("#chatOpenMap").click();
                 return;
@@ -177,18 +178,6 @@ $(document).ready(function () {
                     $("#chatOpenMap").click();
                     return;
                 }
-            } else if (comandos.abrirChat.test(command)) {
-                if ($("body").hasClass("open_map")) {
-                    $("#chatOpenMap").click();
-                }
-                $("#model").addClass("open")
-                return;
-            } else if (comandos.cerrarChat.test(command)) {
-                if ($("body").hasClass("open_map")) {
-                    $("#chatOpenMap").click();
-                }
-                $("#model").removeClass("open")
-                return;
             } else if (comandos.borrarRuta.test(command)) {
                 $('[data-reset_form="form_route"]').click();
                 return;
@@ -197,12 +186,13 @@ $(document).ready(function () {
                     $("[data-route]").last().click();
                 }, 2000);
             }
-
-            // === PREGUNTA al CHAT ===
+            
             if (command) {
+                // === PREGUNTA al CHAT ===
                 $("#txtQuestion").text(command);
                 setTimeout(() => {
                     $("#chatForm").submit();
+
                     setTimeout(() => {
                         $("#txtQuestion").text("");
                     }, 500);

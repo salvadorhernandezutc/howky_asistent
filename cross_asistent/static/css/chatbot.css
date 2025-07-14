@@ -26,7 +26,7 @@
     position: absolute;
     inset: 0;
     bottom: unset;
-    height: 85vh;
+    height: 100vh;
     width: inherit;
     max-width: 1300px;
     opacity: 1;
@@ -161,11 +161,11 @@
 .chat_output {
     position: absolute;
     left: 50%;
-    top: 60px;
+    top: 80px;
     width: 94%;
     height: 100%;
     max-width: 1330px;
-    max-height: calc(100vh - 270px);
+    max-height: calc(100vh - 240px);
     display: flow-root;
     overflow-x: hidden;
     overflow-y: auto;
