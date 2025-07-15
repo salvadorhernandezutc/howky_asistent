@@ -154,7 +154,7 @@ $(document).ready(function () {
             const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
             console.log("Detectado:", transcript);
 
-            const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki ", "houki", "asistente"];
+            const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki ", "houki", "asistente", "okay", "ok"];
             const inicio = transcript.split(" ")[0]; // primera palabra hablada
 
             if (!palabrasClave.includes(inicio)) return;
