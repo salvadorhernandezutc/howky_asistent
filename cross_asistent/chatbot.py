@@ -44,25 +44,6 @@ def chatgpt(question, instructions):
     print(f"Respuesta: {response.choices[0].message.content}")
     return response.choices[0].message.content
 
-def localLLM_bad1(question, instructions):
-    payload = {
-        "model": "llama3.2",
-        "messages": [
-            {"role": "system", "content": instructions},
-            {"role": "user", "content": question}
-        ],
-        "stream": False
-    }
-
-    response = requests.post("http://localhost:11434/api/chat -d", payload)
-    response.raise_for_status()
-    result = response.json()
-
-    print(f"Response: {response}")
-    print(f"Result: {result["message"]["content"]}")
-
-    return result["message"]["content"]
-
 def localLLM(question, instructions):
     ollamaModel = "llama3.2:1b"
     response = ollama.chat(

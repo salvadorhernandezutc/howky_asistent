@@ -431,9 +431,11 @@ $(document).ready(function () {
                 if (!val) return [];
 
                 const cleaned = val
-                    .replace(/[\s;:.]+/g, ",")
-                    .replace(/,+/g, ",")
-                    .replace(/^,|,$/g, "");
+                    .replace(/[;:.]+/g, ",")
+                    .replace(/[\t\n]/g, " ") // Reemplaza tabulaciones y saltos de línea por espacios
+                    .replace(/^,|,$/g, "")
+                    .replace(/,+/g, ",");
+                // .replace(/[\s;:.]+/g, ",")
 
                 return cleaned
                     .split(",")
@@ -481,12 +483,14 @@ $(document).ready(function () {
             }
 
             $addTagsInput.on("keydown", function (e) {
-                if (["Enter", " ", ",", ".", ";", ":"].includes(e.key)) {
+                // if (["Enter", " ", ",", ".", ";", ":"].includes(e.key)) {
+                if (["Enter", ",", ".", ";", ":"].includes(e.key)) {
                     e.preventDefault();
                     const input = $addTagsInput.val().trim();
 
                     // Soporta múltiples etiquetas en el mismo input
-                    input.split(/[\s,;:.]+/).forEach((subTag) => {
+                    // input.split(/[\s,;:.]+/).forEach((subTag) => {
+                    input.split(/[\t\n,;:.]+/).forEach((subTag) => {
                         if (subTag) addTag(subTag);
                     });
                 }
