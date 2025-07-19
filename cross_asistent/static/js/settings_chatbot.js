@@ -171,8 +171,10 @@ $(document).ready(function () {
 
             console.log("Comando detectado:", command);
             if (comandos.abrirMapa.test(command)) {
-                $("#chatOpenMap").click();
-                return;
+                if (!$("body").hasClass("open_map")) {
+                    $("#chatOpenMap").click();
+                    return;
+                }
             } else if (comandos.cerrarMapa.test(command)) {
                 if ($("body").hasClass("open_map")) {
                     $("#chatOpenMap").click();
@@ -186,7 +188,7 @@ $(document).ready(function () {
                     $("[data-route]").last().click();
                 }, 2000);
             }
-            
+
             if (command) {
                 // === PREGUNTA al CHAT ===
                 $("#txtQuestion").text(command);

@@ -186,7 +186,7 @@ $(document).ready(function () {
             passwordSend: {
                 required: "Confirma tu contraseña actual.",
                 minlength: "Tu contraseña debe tener al menos 8 caracteres.",
-                validpassword: 'Completa la contraseña ("Mayusculas", "m", 0-9, !@#$)',
+                validpassword: 'Completa la contraseña ("Mayusculas", "minusculas", 0-9, !@#$)',
             },
             newPass: {
                 minlength: "Tu nueva contraseña debe tener al menos 8 caracteres.",

@@ -1,12 +1,12 @@
-import os
-import environ
 from pathlib import Path
+import environ
+import os
 
-env = environ.Env(DEBUG=(bool, True),ALLOWED_HOSTS=(list, []))
-environ.Env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env(DEBUG=(bool, True),ALLOWED_HOSTS=(list, []))
+env.read_env(BASE_DIR / '.env')
 
-OPENAI_API_KEY = env('OPENAI_API_KEY')
+OPENAI_APIKEY = env('OPENAI_API_KEY')
 SECRET_KEY = env('SECRET_KEY', default='django-secure-dwkz!xn+ahpk*ah)69dvo3x6@xw%^$u3du-ia$zjf^_(w+9r2b')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')

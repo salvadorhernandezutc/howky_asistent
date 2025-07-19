@@ -6,7 +6,6 @@ from django.conf import settings
 from unidecode import unidecode
 from django.urls import reverse
 from django.db.models import Q
-import requests
 import ollama
 import random
 import openai
@@ -26,7 +25,7 @@ def modelsettings(request):
     return JsonResponse({'success': False, 'message': 'Acción no permitida.'}, status=400)
 
 def chatgpt(question, instructions):
-    client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+    client = openai.OpenAI(api_key=settings.OPENAI_APIKEY)
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -59,7 +58,7 @@ def localLLM(question, instructions):
     print(f"Respuesta: {response['message']['content']}")
     return response['message']['content']
 
-def buscar_por_tags(pregunta):
+def tags_search(pregunta):
     pregunta_tokens = re.findall(r'\b\w+\b', pregunta.lower())
     query = Q()
     for token in pregunta_tokens:
@@ -80,25 +79,34 @@ def buscar_por_tags(pregunta):
 
     return [item for item, score in resultados if score > 0][:3]
 
-def extraer_origen_destino(question):
+import re
+from unidecode import unidecode
+from .models import Mapa
+
+def export_locations(question):
     pregunta_normalizada = unidecode(question.lower())
     lugares = Mapa.objects.filter(is_marker=False)
 
     coincidencias = []
-    for lugar in lugares:
-        nombre_normalizado = unidecode(lugar.nombre.lower())
-        if nombre_normalizado in pregunta_normalizada:
-            posicion = pregunta_normalizada.find(nombre_normalizado)
-            coincidencias.append((posicion, lugar.nombre))
 
-    coincidencias.sort()  # ordena por posición en la pregunta
+    for lugar in lugares:
+        tags = unidecode((lugar.tags or "").lower())
+        if tags and any(tag in pregunta_normalizada for tag in tags.split(",")):
+            coincidencias.append(lugar.nombre)
+
+    if not coincidencias:
+        for lugar in lugares:
+            nombre_normalizado = unidecode(lugar.nombre.lower())
+            if re.search(r'\b{}\b'.format(re.escape(nombre_normalizado)), pregunta_normalizada):
+                coincidencias.append(lugar.nombre)
 
     if not coincidencias:
         return None, None
     elif len(coincidencias) == 1:
-        return "Caseta 1", coincidencias[0][1]
+        return "Caseta 1", coincidencias[0]
     else:
-        return coincidencias[0][1], coincidencias[1][1]
+        return coincidencias[0], coincidencias[1]
+
 
 def chatbot(request):
     if request.method == 'POST':
@@ -107,7 +115,7 @@ def chatbot(request):
             pregunta = data.get('question', '').strip()
             ahora = timezone.localtime(timezone.now()).strftime('%d-%m-%Y_%H%M')
 
-            mejores_resultados = buscar_por_tags(pregunta)
+            mejores_resultados = tags_search(pregunta)
 
             if mejores_resultados:
                 bloques_info = "\n\n".join([f"Tema relacionado:\n{r.informacion}" for r in mejores_resultados])
@@ -121,7 +129,7 @@ def chatbot(request):
                 info_respuesta = None
                 base_url = None
 
-                origen, destino = extraer_origen_destino(pregunta)
+                origen, destino = export_locations(pregunta)
                 if destino:
                     try:
                         this_info = json.loads(mejores_resultados[0].informacion)
