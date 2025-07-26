@@ -73,8 +73,11 @@ def tags_search(pregunta):
         resultados.append((item, len(coincidencias)))
 
     resultados = sorted(resultados, key=lambda x: x[1], reverse=True)
+    print("##############################")
     print(f"Pregunta: {pregunta}")
-    print(f"Tokens: {pregunta_tokens}")
+    print("##############################")
+    print("")
+    print(f"Palabras: {pregunta_tokens}")
     print(f"Resultados: {resultados}")
 
     return [item for item, score in resultados if score > 0][:3]
@@ -90,23 +93,40 @@ def export_locations(question):
     coincidencias = []
 
     for lugar in lugares:
+        agregado = False
         tags = unidecode((lugar.tags or "").lower())
-        if tags and any(tag in pregunta_normalizada for tag in tags.split(",")):
-            coincidencias.append(lugar.nombre)
 
-    if not coincidencias:
-        for lugar in lugares:
+        for tag in tags.split(","):
+            tag = tag.strip()
+            if tag and tag in pregunta_normalizada:
+                if lugar.access_to:
+                    coincidencias.append(f"{lugar.nombre}~{lugar.access_to}")
+                else:
+                    coincidencias.append(f"{lugar.nombre}~Caseta 1")
+                agregado = True
+                break  # ya fue agregado por tag
+
+        if not agregado:
             nombre_normalizado = unidecode(lugar.nombre.lower())
             if re.search(r'\b{}\b'.format(re.escape(nombre_normalizado)), pregunta_normalizada):
-                coincidencias.append(lugar.nombre)
+                if lugar.access_to:
+                    coincidencias.append(f"{lugar.nombre}~{lugar.access_to}")
+                else:
+                    coincidencias.append(f"{lugar.nombre}~Caseta 1")
+
+    print("----------------------------")
+    print(coincidencias)
+    print("----------------------------")
 
     if not coincidencias:
         return None, None
     elif len(coincidencias) == 1:
-        return "Caseta 1", coincidencias[0]
+        resultSplit = coincidencias[0].split("~")
+        return resultSplit[1], resultSplit[0]
     else:
-        return coincidencias[0], coincidencias[1]
-
+        resultSplit0 = coincidencias[0].split("~")
+        resultSplit1 = coincidencias[1].split("~")
+        return resultSplit0[0], resultSplit1[0]
 
 def chatbot(request):
     if request.method == 'POST':

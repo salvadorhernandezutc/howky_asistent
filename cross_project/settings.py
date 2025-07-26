@@ -3,7 +3,7 @@ import environ
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env(DEBUG=(bool, True),ALLOWED_HOSTS=(list, []))
+env = environ.Env(DEBUG=(bool, True), ALLOWED_HOSTS=(list, []))
 env.read_env(BASE_DIR / '.env')
 
 OPENAI_APIKEY = env('OPENAI_API_KEY')
