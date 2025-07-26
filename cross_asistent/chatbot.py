@@ -186,7 +186,7 @@ def chatbot(request):
                     "redirigir": f"{baseUrl}?tab={pill}",
                 }
                 fallquestion = Preguntas.objects.create(
-                    pregunta=pregunta,
+                    pregunta=f"#CHATBOT: {pregunta}",
                     descripcion="No se encontró información relacionada en la Base de datos. Enviado desde el chatbot.",
                     fecha=timezone.now(),
                 )
