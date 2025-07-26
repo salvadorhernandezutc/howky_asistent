@@ -82,10 +82,6 @@ def tags_search(pregunta):
 
     return [item for item, score in resultados if score > 0][:3]
 
-import re
-from unidecode import unidecode
-from .models import Mapa
-
 def export_locations(question):
     pregunta_normalizada = unidecode(question.lower())
     lugares = Mapa.objects.filter(is_marker=False)
@@ -93,26 +89,16 @@ def export_locations(question):
     coincidencias = []
 
     for lugar in lugares:
-        agregado = False
-        tags = unidecode((lugar.tags or "").lower())
+        tags = unidecode((lugar.tags or "")).lower().split(",")
+        nombre_normalizado = unidecode(lugar.nombre.lower())
+        access = lugar.access_to or "Caseta 1"
 
-        for tag in tags.split(","):
-            tag = tag.strip()
-            if tag and tag in pregunta_normalizada:
-                if lugar.access_to:
-                    coincidencias.append(f"{lugar.nombre}~{lugar.access_to}")
-                else:
-                    coincidencias.append(f"{lugar.nombre}~Caseta 1")
-                agregado = True
-                break  # ya fue agregado por tag
+        if any(tag.strip() in pregunta_normalizada for tag in tags if tag.strip()):
+            coincidencias.append((lugar.nombre, access))
+            continue
 
-        if not agregado:
-            nombre_normalizado = unidecode(lugar.nombre.lower())
-            if re.search(r'\b{}\b'.format(re.escape(nombre_normalizado)), pregunta_normalizada):
-                if lugar.access_to:
-                    coincidencias.append(f"{lugar.nombre}~{lugar.access_to}")
-                else:
-                    coincidencias.append(f"{lugar.nombre}~Caseta 1")
+        if re.search(r'\b{}\b'.format(re.escape(nombre_normalizado)), pregunta_normalizada):
+            coincidencias.append((lugar.nombre, access))
 
     print("----------------------------")
     print(coincidencias)
@@ -121,12 +107,9 @@ def export_locations(question):
     if not coincidencias:
         return None, None
     elif len(coincidencias) == 1:
-        resultSplit = coincidencias[0].split("~")
-        return resultSplit[1], resultSplit[0]
+        return coincidencias[0][1], coincidencias[0][0]  # (access_to, nombre)
     else:
-        resultSplit0 = coincidencias[0].split("~")
-        resultSplit1 = coincidencias[1].split("~")
-        return resultSplit0[0], resultSplit1[0]
+        return coincidencias[0][0], coincidencias[1][0]  # (nombre1, nombre2)
 
 def chatbot(request):
     if request.method == 'POST':
