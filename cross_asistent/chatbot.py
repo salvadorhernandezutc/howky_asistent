@@ -1,4 +1,4 @@
-from .models import Database, Mapa, Configuraciones
+from .models import Database, Mapa, Configuraciones, Preguntas
 from .views import obtener_configuraciones
 from django.http import JsonResponse
 from django.utils import timezone
@@ -185,6 +185,12 @@ def chatbot(request):
                                    "Puedes consultar la página oficial de la UTC o escribirnos directamente. 😊",
                     "redirigir": f"{baseUrl}?tab={pill}",
                 }
+                fallquestion = Preguntas.objects.create(
+                    pregunta=pregunta,
+                    descripcion="No se encontró información relacionada en la Base de datos. Enviado desde el chatbot.",
+                    fecha=timezone.now(),
+                )
+                fallquestion.save()
             
             return JsonResponse({'success': True, 'answer': respuesta})
         except Exception as e:
