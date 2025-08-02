@@ -361,7 +361,7 @@ function displayText(varText) {
 
 // Saludo Inicial ##################################################
 if (contOutput && saludoMostrado) {
-    const initialMessage = `<div class="chat_msg chat_open" data-tokeid="initialMessage"><div class="msg_response">¡Hola! Soy Hawky 👋😁, tu asistente virtual de la Universidad Tecnológica de Coahuila. Puedes preguntarme sobre trámites, carreras, costos u otros temas de la universidad. ¿En qué puedo ayudarte?😉😊😁</div></div>`;
+    const initialMessage = `<div class="chat_msg chat_open" data-tokeid="initialMessage"><div class="msg_response">Soy Hawky 👋😁, tu asistente virtual de la Universidad Tecnológica de Coahuila. Puedes preguntarme sobre trámites, carreras, costos u otros temas de la universidad. ¿En qué puedo ayudarte?😉😊😁</div></div>`;
 
     contOutput.insertAdjacentHTML("beforeend", initialMessage);
     const elementInitMsg = document.querySelector(`.chat_msg[data-tokeid="initialMessage"]`);
