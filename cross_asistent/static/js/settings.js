@@ -554,19 +554,21 @@ $(document).ready(function () {
             const switchId = $(this).data("switch");
             const isChecked = $(this).prop("checked");
             localStorage.setItem(switchId, isChecked);
-            
+
             const switchText = $("#" + switchId + "Text");
-            const switchVals = $(this).data("switch-vals").split(",");
+            const vals = $(this).data("switch-vals");
+            const switchVals = vals ? vals.split(",") : ["No", "Si"];
             switchText.text(isChecked ? switchVals[1] : switchVals[0]);
         });
-        // Cargar switches -localStorage
+        // Cargar switches - localStorage
         $("[data-switch]").each(function () {
             const switchId = $(this).data("switch");
             const isChecked = localStorage.getItem(switchId) === "true";
             $(this).prop("checked", isChecked);
 
             const switchText = $("#" + switchId + "Text");
-            const switchVals = $(this).data("switch-vals").split(",");
+            const vals = $(this).data("switch-vals");
+            const switchVals = vals ? vals.split(",") : ["No", "Si"];
             switchText.text(isChecked ? switchVals[1] : switchVals[0]);
         });
 
