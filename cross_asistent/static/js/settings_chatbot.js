@@ -68,7 +68,7 @@ $(document).ready(function () {
             history.replaceState({}, "", `${location.pathname}?${params}`);
         });
 
-        // Enviar chat con enter chatGPT ######################################
+        // Enviar chat con enter chatGPT ##################################################
         $("#txtQuestion").keydown((evento) => {
             if (evento.keyCode === 13 && !evento.shiftKey) {
                 evento.preventDefault();
@@ -76,7 +76,7 @@ $(document).ready(function () {
             }
         });
 
-        // ChatGPT Submit ####################################################
+        // ChatGPT Submit ##################################################
         $("#chatForm").submit(chatSubmit);
 
         // Reconocimiento de voz ##################################################
@@ -209,6 +209,15 @@ $(document).ready(function () {
                 localStorage.setItem("chatListening", false);
             }
         };
+
+        // Cambiar estado del chat ##################################################
+        $("#chatCtrlsAll").on("change", function () {
+            const isChecked = $(this).is(":checked");
+            isChecked ? $("#chatForm").addClass("hidden_chat") : $("#chatForm").removeClass("hidden_chat");
+        });
+        const chatCtrlsStorage = localStorage.getItem("chatCtrls") === "true";
+        chatCtrlsStorage ? $("#chatForm").addClass("hidden_chat") : $("#chatForm").removeClass("hidden_chat");
+
     } catch (error) {
         console.error("Error Inesperado: ", error);
         alertSToast("center", 8000, "error", `😥 Ha ocurrido un error inesperado. código: #304`);

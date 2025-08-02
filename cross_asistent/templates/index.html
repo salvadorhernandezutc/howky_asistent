@@ -9,7 +9,7 @@
 {% endblock %}
 {% block last_head %}
 <script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/chatbot.css' %}" />
+<link rel="stylesheet" href="{% static 'css/chatbot.min.css' %}" />
 <link rel="stylesheet" href="{% static 'css/mapbox.min.css' %}"/>
 {% endblock %}
 {% block navbar %}
@@ -59,7 +59,7 @@
         <div id="model_areas" class="model_areas slide_areas show"></div>
         {% endif %}
     </model-viewer>
-    <form action="{% url 'chatbot' %}" method="POST" id="chatForm" class="chat_form card hidden_chat">
+    <form action="{% url 'chatbot' %}" method="POST" id="chatForm" class="chat_form card">
         {% csrf_token %}
         <textarea name="chatquestion" id="txtQuestion" class="pb-4 mx-3 mt-3" placeholder="Preguntale a Howky: ... " autofocus minlength="4"></textarea>
         <div class="chat_controls p-2 gap_10">

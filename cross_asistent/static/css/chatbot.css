@@ -28,7 +28,7 @@
     bottom: unset;
     height: 100vh;
     width: inherit;
-    max-width: 1300px;
+    /* max-width: 1300px; */
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -278,12 +278,19 @@
     box-shadow: none !important;
     bottom: 4%;
 }
+.open_map .chat_form.hidden_chat {
+    bottom: 2%;
+}
 .chat_form.hidden_chat textarea {
     display: none !important;
 }
 .chat_form.hidden_chat .chat_controls {
     justify-content: center;
     flex-direction: row;
+}
+.open_map .chat_form.hidden_chat .chat_controls {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
 }
 .chat_form.hidden_chat .chat_controls #chatForm_submit {
     position: absolute;
