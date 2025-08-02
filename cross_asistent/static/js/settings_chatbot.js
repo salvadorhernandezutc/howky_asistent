@@ -94,7 +94,7 @@ $(document).ready(function () {
         recognition.interimResults = false;
 
         let isListening = false;
-        let autoListen = localStorage.getItem("howky-auto") === "true";
+        let autoListen = localStorage.getItem("chatListening") === "true";
 
         // Estado inicial del checkbox
         $("#chatListeningAll").prop("checked", autoListen);
@@ -131,17 +131,7 @@ $(document).ready(function () {
         // Activar/desactivar escucha automática
         $("#chatListeningAll").on("change", function () {
             const checked = $(this).is(":checked");
-            localStorage.setItem("howky-auto", checked);
-            if (checked) {
-                startListening();
-                $("#chatListeningText").text("Si");
-            } else {
-                stopListening();
-                $("#chatListeningText").text("No");
-            }
-            console.log("##############################");
-            console.log("###### Auto escucha:", checked);
-            console.log("##############################");
+            checked ? startListening() : stopListening();
         });
 
         // Si autolistening ya estaba activado
@@ -204,12 +194,8 @@ $(document).ready(function () {
 
         recognition.onend = function () {
             console.log("Reconocimiento finalizado automáticamente.--------");
-            const autoListen = localStorage.getItem("howky-auto") === "true";
-            stopListening();
-
-            if (autoListen) {
-                startListening();
-            }
+            const autoListen = localStorage.getItem("chatListening") === "true";
+            autoListen ? startListening() : stopListening();
         };
 
         recognition.onerror = function (event) {
@@ -220,7 +206,7 @@ $(document).ready(function () {
             if (autoListen && event.error === "not-allowed") {
                 alertSToast("center", 8000, "error", "No se permiten permisos de micrófono. 😥");
                 $("#chatListeningAll").prop("checked", false);
-                localStorage.setItem("howky-auto", false);
+                localStorage.setItem("chatListening", false);
             }
         };
     } catch (error) {

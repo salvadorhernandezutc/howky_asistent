@@ -369,7 +369,7 @@ $(document).ready(function () {
             }
         });
 
-        // Valor del input range ####################
+        // Valor del input range ######################################
         $('input[type="range"]').on("input", function () {
             const thisId = $(this).attr("id");
             const thisValue = $(this).val();
@@ -413,14 +413,14 @@ $(document).ready(function () {
             activarTabDesdeParametro();
         }
 
-        // Cambiar min del siguiente inpput Date ###############################
+        // Cambiar min del siguiente inpput Date ######################################
         $("[data-blur-min]").on("blur", function () {
             const minValue = $(this).val();
             const targetSelector = $(this).attr("data-blur-min");
             $(targetSelector).attr("min", minValue);
         });
 
-        // Sistema para Crear Tags / Etiquetas (Modulos) ###############################
+        // Sistema para Crear Tags / Etiquetas (Modulos) ######################################
         function initTagGroup($group) {
             const $addTagsInput = $group.find(".addTags");
             const $textareaTags = $group.find(".tags");
@@ -548,6 +548,27 @@ $(document).ready(function () {
             value = value.replace(/,+/g, ",").replace(/^,|,$/g, ""); // Elimina comas al principio y final
             $textareaTags.val(value).trigger("input");
         }
+
+        // Checkbox Switch ######################################
+        $("[data-switch]").on("click", function () {
+            const switchId = $(this).data("switch");
+            const isChecked = $(this).prop("checked");
+            localStorage.setItem(switchId, isChecked);
+            
+            const switchText = $("#" + switchId + "Text");
+            const switchVals = $(this).data("switch-vals").split(",");
+            switchText.text(isChecked ? switchVals[1] : switchVals[0]);
+        });
+        // Cargar switches -localStorage
+        $("[data-switch]").each(function () {
+            const switchId = $(this).data("switch");
+            const isChecked = localStorage.getItem(switchId) === "true";
+            $(this).prop("checked", isChecked);
+
+            const switchText = $("#" + switchId + "Text");
+            const switchVals = $(this).data("switch-vals").split(",");
+            switchText.text(isChecked ? switchVals[1] : switchVals[0]);
+        });
 
         //
         //
