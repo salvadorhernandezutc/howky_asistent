@@ -186,23 +186,35 @@ $(document).ready(function () {
             const comando = raw.replace(primeraPalabra, "").trim();
             console.log("🎯 Comando filtrado:", comando);
 
+            let seEjecutoComando = false;
+
             for (let cmd of comandosVoz) {
                 if (cmd.expresiones.some((exp) => exp.test(comando))) {
                     console.log("✅ Ejecutando:", cmd.nombre);
                     cmd.accion();
-                    return;
+
+                    if (cmd.nombre === "iniciarRuta") {
+                        enviarAlChat(comando);
+                    }
+
+                    seEjecutoComando = true;
+                    break;
                 }
             }
 
-            // Si no coincide con ningún comando, se trata como pregunta
-            if (comando) {
-                $("#txtQuestion").text(comando);
-                setTimeout(() => {
-                    $("#chatForm").submit();
-                    setTimeout(() => $("#txtQuestion").text(""), 500);
-                }, 1000);
+            if (!seEjecutoComando && comando) {
+                enviarAlChat(comando);
             }
         };
+
+        function enviarAlChat(texto) {
+            console.log("💬 Enviando al chat:", texto);
+            $("#txtQuestion").text(texto);
+            setTimeout(() => {
+                $("#chatForm").submit();
+                setTimeout(() => $("#txtQuestion").text(""), 500);
+            }, 1000);
+        }
 
         recognition.onend = function () {
             console.log("🔁 Reconocimiento finalizado automáticamente.--------");
