@@ -94,7 +94,8 @@ $(document).ready(function () {
         recognition.interimResults = false;
 
         let isListening = false;
-        let autoListen = localStorage.getItem("chatListening") === "true";
+        const autoListen = localStorage.getItem("chatListening") === "true";
+        if (autoListen) startListening();
 
         // Función para iniciar y detener
         function startListening() {
@@ -102,7 +103,7 @@ $(document).ready(function () {
                 recognition.start();
                 isListening = true;
                 $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
-                console.log("Iniciado reconocimiento de voz.---------------------");
+                console.log("🎤 Iniciando reconocimiento de voz.---------------------");
             }
         }
 
@@ -111,18 +112,12 @@ $(document).ready(function () {
                 recognition.stop();
                 isListening = false;
                 $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
-                console.log("Detenido reconocimiento de voz.---------------------");
+                console.log("🛑 Detenido reconocimiento de voz.---------------------");
             }
         }
 
         // Escucha manual
-        $("#chatMicrophone").on("click", function () {
-            if (isListening) {
-                stopListening();
-            } else {
-                startListening();
-            }
-        });
+        $("#chatMicrophone").on("click", () => (isListening ? stopListening() : startListening()));
 
         // Activar/desactivar escucha automática
         $("#chatListeningAll").on("change", function () {
@@ -130,72 +125,100 @@ $(document).ready(function () {
             checked ? startListening() : stopListening();
         });
 
-        // Si autolistening ya estaba activado
-        if (autoListen) {
-            startListening();
-        }
+        // ---------------- COMANDOS -----------------------
+        const comandosVoz = [
+            {
+                nombre: "abrirMapa",
+                expresiones: [/\b(abrir|abre|muestra|mostrar)(\s+el)?\s+mapa\b/i],
+                accion: () => {
+                    if (!$("body").hasClass("open_map")) $("#chatOpenMap").click();
+                },
+            },
+            {
+                nombre: "cerrarMapa",
+                expresiones: [/\b(cerrar|cierra|oculta(r)?)(\s+el)?\s+mapa\b/i],
+                accion: () => {
+                    if ($("body").hasClass("open_map")) $("#chatOpenMap").click();
+                },
+            },
+            {
+                nombre: "abrirChat",
+                expresiones: [/\b(abrir|abre|mostrar|muestra)(\s+el)?\s+chat\b/i],
+                accion: () => {
+                    if (!$("body").hasClass("open_chat")) $("#chatOpen").click();
+                },
+            },
+            {
+                nombre: "cerrarChat",
+                expresiones: [/\b(cerrar|cierra|oculta(r)?)(\s+el)?\s+chat\b/i],
+                accion: () => {
+                    if ($("body").hasClass("open_chat")) $("#chatOpen").click();
+                },
+            },
+            {
+                nombre: "iniciarRuta",
+                expresiones: [/\b(cómo\s+ir|como\s+ir|como\s+llegar|cómo\s+llegar|ruta\s+a|indicaciones?)\b/i],
+                accion: () => {
+                    setTimeout(() => {
+                        $("[data-route]").last().click();
+                    }, 2000);
+                },
+            },
+            {
+                nombre: "borrarRuta",
+                expresiones: [/\b(borra(r)?|elimina(r)?)(\s+la|\s+una|\s+las|\s+los)?\s+ruta\b|\b(borra(r)?|elimina(r)?)(\s+el|\s+las|\s+los)?\s+camino(s)?\b/i],
+                accion: () => {
+                    $('[data-reset_form="form_route"]').click();
+                },
+            },
+        ];
 
         // Procesamiento del reconocimiento
         recognition.onresult = function (event) {
-            const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-            console.log("Detectado:", transcript);
+            const raw = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+            console.log("🗣️ Detectado:", raw);
 
             const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki", "houki", "asistente", "okay", "ok"];
-            const inicio = transcript.split(" ")[0]; // primera palabra hablada
+            const primeraPalabra = raw.split(" ")[0];
 
-            if (!palabrasClave.includes(inicio)) return;
+            if (!palabrasClave.includes(primeraPalabra)) return;
 
-            const command = transcript.replace(inicio, "").trim();
-            const comandos = {
-                abrirMapa: /abre el mapa|muestra el mapa|abrir mapa|abrir el mapa/,
-                cerrarMapa: /cerrar el mapa|cierra el mapa|cerrar mapa|ocultar mapa|ocultar el mapa/,
-                abrirChat: /abre el chat|muestra el chat|abrir chat| abrir el chat|mostrar chat|mostrar el chat|/,
-                cerrarChat: /cerrar el chat|cierra el chat|cerrar chat|ocultar chat|ocultar el chat/,
-                iniciarRuta: /como ir|cómo ir|ruta a|como llegar|direcciones|indicaciones|camino a/,
-                borrarRuta: /borrar ruta|eliminar ruta|borra la ruta|borrar la ruta|borrar el camino|borrar el camino/,
-            };
+            const comando = raw.replace(primeraPalabra, "").trim();
+            console.log("🎯 Comando filtrado:", comando);
 
-            console.log("Comando detectado:", command);
-            if (comandos.abrirMapa.test(command)) {
-                if (!$("body").hasClass("open_map")) {
-                    $("#chatOpenMap").click();
+            for (let cmd of comandosVoz) {
+                if (cmd.expresiones.some((exp) => exp.test(comando))) {
+                    console.log("✅ Ejecutando:", cmd.nombre);
+                    cmd.accion();
                     return;
                 }
-            } else if (comandos.cerrarMapa.test(command)) {
-                if ($("body").hasClass("open_map")) {
-                    $("#chatOpenMap").click();
-                    return;
-                }
-            } else if (comandos.borrarRuta.test(command)) {
-                $('[data-reset_form="form_route"]').click();
-                return;
-            } else if (comandos.iniciarRuta.test(command)) {
-                setTimeout(() => {
-                    $("[data-route]").last().click();
-                }, 2000);
             }
 
-            if (command) {
-                // === PREGUNTA al CHAT ===
-                $("#txtQuestion").text(command);
+            // Si no coincide con ningún comando, se trata como pregunta
+            if (comando) {
+                $("#txtQuestion").text(comando);
                 setTimeout(() => {
                     $("#chatForm").submit();
-
-                    setTimeout(() => {
-                        $("#txtQuestion").text("");
-                    }, 500);
+                    setTimeout(() => $("#txtQuestion").text(""), 500);
                 }, 1000);
             }
         };
 
         recognition.onend = function () {
-            console.log("Reconocimiento finalizado automáticamente.--------");
+            console.log("🔁 Reconocimiento finalizado automáticamente.--------");
             const autoListen = localStorage.getItem("chatListening") === "true";
-            autoListen ? startListening() : stopListening();
+            if (autoListen) {
+                isListening = false;
+                startListening();
+            } else {
+                isListening = true;
+                stopListening();
+            }
         };
 
         recognition.onerror = function (event) {
-            console.error("Error en reconocimiento:", event.error);
+            console.error("❌ Error en reconocimiento:", event.error);
+            const autoListen = localStorage.getItem("chatListening") === "true";
             if (autoListen && event.error === "no-speech") {
                 stopListening();
             }

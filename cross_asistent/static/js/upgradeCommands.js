@@ -1,5 +1,97 @@
-// ---------------- COMANDOS -----------------------
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SpeechRecognition) {
+    $("#chatMicrophone").remove();
+    $("#chatListeningGroup").remove();
+    $("#chatListeningAll").prop("checked", false);
+    return;
+}
 
+const recognition = new SpeechRecognition();
+recognition.lang = "es-ES";
+recognition.continuous = true;
+recognition.interimResults = false;
+
+let isListening = false;
+let autoListen = localStorage.getItem("chatListening") === "true";
+
+$("#chatListeningAll").prop("checked", autoListen);
+$("#chatListeningText").text(autoListen ? "Sí" : "No");
+
+function startListening() {
+    if (!isListening) {
+        recognition.start();
+        isListening = true;
+        $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
+        console.log("🎤 Iniciado reconocimiento de voz.");
+    }
+}
+
+function stopListening() {
+    if (isListening) {
+        recognition.stop();
+        isListening = false;
+        $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
+        console.log("🛑 Reconocimiento detenido.");
+    }
+}
+
+$("#chatMicrophone").on("click", () => (isListening ? stopListening() : startListening()));
+
+$("#chatListeningAll").on("change", function () {
+    const checked = $(this).is(":checked");
+    localStorage.setItem("chatListening", checked);
+    checked ? startListening() : stopListening();
+});
+
+if (autoListen) startListening();
+
+// ---------------- COMANDOS -----------------------
+const comandosVoz = [
+    {
+        nombre: "abrirMapa",
+        expresiones: [/abre el mapa/, /muestra el mapa/, /abrir mapa/],
+        accion: () => {
+            if (!$("body").hasClass("open_map")) $("#chatOpenMap").click();
+        },
+    },
+    {
+        nombre: "cerrarMapa",
+        expresiones: [/cerrar el mapa/, /ocultar el mapa/],
+        accion: () => {
+            if ($("body").hasClass("open_map")) $("#chatOpenMap").click();
+        },
+    },
+    {
+        nombre: "abrirChat",
+        expresiones: [/abre el chat/, /mostrar chat/, /abrir chat/],
+        accion: () => {
+            if (!$("body").hasClass("open_chat")) $("#chatOpen").click();
+        },
+    },
+    {
+        nombre: "cerrarChat",
+        expresiones: [/cerrar el chat/, /ocultar el chat/],
+        accion: () => {
+            if ($("body").hasClass("open_chat")) $("#chatOpen").click();
+        },
+    },
+    {
+        nombre: "iniciarRuta",
+        expresiones: [/cómo ir/, /como llegar/, /ruta a/, /indicaciones/],
+        accion: () => {
+            setTimeout(() => {
+                $("[data-route]").last().click();
+            }, 2000);
+        },
+    },
+    {
+        nombre: "borrarRuta",
+        expresiones: [/borrar ruta/, /eliminar ruta/, /borrar el camino/],
+        accion: () => {
+            $('[data-reset_form="form_route"]').click();
+        },
+    },
+];
 
 // ---------------- PROCESAMIENTO DE RECONOCIMIENTO -----------------------
 recognition.onresult = function (event) {
