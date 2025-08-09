@@ -96,10 +96,6 @@ $(document).ready(function () {
         let isListening = false;
         let autoListen = localStorage.getItem("chatListening") === "true";
 
-        // Estado inicial del checkbox
-        $("#chatListeningAll").prop("checked", autoListen);
-        $("#chatListeningText").text(autoListen ? "Si" : "No");
-
         // Función para iniciar y detener
         function startListening() {
             if (!isListening) {
@@ -204,9 +200,9 @@ $(document).ready(function () {
                 stopListening();
             }
             if (autoListen && event.error === "not-allowed") {
-                alertSToast("center", 8000, "error", "No se permiten permisos de micrófono. 😥");
-                $("#chatListeningAll").prop("checked", false);
                 localStorage.setItem("chatListening", false);
+                $("#chatListeningAll").prop("checked", false);
+                alertSToast("center", 8000, "error", "Habilita los permisos de micrófono para usar el reconocimiento de voz.");
             }
         };
 
@@ -217,7 +213,6 @@ $(document).ready(function () {
         });
         const chatCtrlsStorage = localStorage.getItem("chatCtrls") === "true";
         chatCtrlsStorage ? $("#chatForm").addClass("hidden_chat") : $("#chatForm").removeClass("hidden_chat");
-
     } catch (error) {
         console.error("Error Inesperado: ", error);
         alertSToast("center", 8000, "error", `😥 Ha ocurrido un error inesperado. código: #304`);
