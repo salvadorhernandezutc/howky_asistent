@@ -233,8 +233,7 @@ $(document).ready(function () {
             const autoListen = localStorage.getItem("chatListening") === "true";
             if (autoListen && event.error === "no-speech") {
                 stopListening();
-            }
-            if (autoListen && event.error === "not-allowed") {
+            } else if (autoListen && event.error === "not-allowed") {
                 localStorage.setItem("chatListening", false);
                 $("#chatListeningAll").prop("checked", false);
                 alertSToast("center", 8000, "error", "Habilita los permisos de micrófono para usar el reconocimiento de voz.");
