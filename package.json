@@ -1,0 +1,28 @@
+{
+  "name": "cross_django",
+  "version": "3.1.0",
+  "description": "Chatbot para la Universidad Tecnologica de Coahuila",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chava-utc/howky_asistent.git"
+  },
+  "keywords": [
+    "NODEJS",
+    "Gulp",
+    "Python",
+    "Website"
+  ],
+  "author": "Salvador A. Hernandez Cepeda @chava-utc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chava-utc/howky_asistent/issues"
+  },
+  "homepage": "https://github.com/chava-utc/howky_asistent#readme",
+  "dependencies": {
+    "gulp": "^5.0.1"
+  }
+}
