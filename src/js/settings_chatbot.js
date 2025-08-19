@@ -172,11 +172,31 @@ $(document).ready(function () {
                 },
             },
             {
-                nombre: "CambiarTema",
+                nombre: "TemaClaro",
                 expresiones: [/\btema (claro|diurno)\b/i],
                 accion: () => {
-                    $('[data-reset_form="form_route"]').click();
+                    const temaActual = $("html").attr("data-mdb-theme");
+                    console.log("tema actual:", temaActual);
+                    if (temaActual == "dark") {
+                        $("#switchTheme").click();
+                    }
                 },
+            },
+            {
+                nombre: "TemaOscuro",
+                expresiones: [/\btema (oscuro|nocturno)\b/i],
+                accion: () => {
+                    const temaActual = $("html").attr("data-mdb-theme");
+                    console.log("tema actual:", temaActual);
+                    if (temaActual == "light") {
+                        $("#switchTheme").click();
+                    }
+                },
+            },
+            {
+                nombre: "CambiarTema",
+                expresiones: [/\bcambia(r)?(\s+el)? tema\b/i],
+                accion: () => $("#switchTheme").click(),
             },
         ];
 
@@ -186,11 +206,16 @@ $(document).ready(function () {
             console.log("🗣️ Detectado:", raw);
 
             const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki", "houki", "asistente", "okay", "ok"];
-            const primeraPalabra = raw.split(" ")[0];
+            const isKeywordChecked = $("#keywordChatAll").is(":checked");
+            let palabras = raw.split(/\s+/);
+            const contieneClave = palabras.some(p => palabrasClave.includes(p));
 
-            if (!palabrasClave.includes(primeraPalabra)) return;
+            if (!isKeywordChecked && !contieneClave) {
+                console.log("❌ Palabra clave no detectada.");
+                return;
+            }
 
-            const comando = raw.replace(primeraPalabra, "").trim();
+            const comando = palabras.filter(p => !palabrasClave.includes(p)).join(" ").trim();
             console.log("🎯 Comando filtrado:", comando);
 
             let seEjecutoComando = false;
