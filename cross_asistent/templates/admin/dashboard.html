@@ -3,7 +3,7 @@
 {% block title %}Administracion {% if user.is_staff %}- Programacion{% endif %} | Inicio{% endblock %}
 {% block extra_head %}
 <script type="module" src="{% static 'libs/model-viewer.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/chatbot.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/chatbot.min.css' %}"/>
 {% endblock %}
 {% block link_home %}{% url 'admin' %}{% endblock %}
 {% block link_default %}
@@ -705,5 +705,5 @@
 {% block scripts_end %}
 <script src="{% static 'libs/jquery.validate.min.js' %}"></script>
 <script src="{% static 'js/validation.min.js' %}"></script>
-<script src="{% static 'js/settings_model.js' %}"></script>
+<script src="{% static 'js/settings_model.min.js' %}"></script>
 {% endblock %}

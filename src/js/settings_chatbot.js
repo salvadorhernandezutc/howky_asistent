@@ -171,6 +171,13 @@ $(document).ready(function () {
                     $('[data-reset_form="form_route"]').click();
                 },
             },
+            {
+                nombre: "CambiarTema",
+                expresiones: [/\btema (claro|diurno)\b/i],
+                accion: () => {
+                    $('[data-reset_form="form_route"]').click();
+                },
+            },
         ];
 
         // Procesamiento del reconocimiento
