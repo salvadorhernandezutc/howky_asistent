@@ -6,9 +6,6 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "gulp",
-        "css": "gulp scss",
-        "watchFiles": "gulp watchFiles",
-        "sass": "sass --watch static/scss:static/css",
         "django": "python manage.py runserver",
         "start": "concurrently \"npm run dev\" \"npm run django\""
     },

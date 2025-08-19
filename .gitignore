@@ -2,3 +2,5 @@
 venv
 __pycache__
 Halcon
+node_modules
+dist
