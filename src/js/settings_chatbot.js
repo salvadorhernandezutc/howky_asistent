@@ -118,7 +118,7 @@ $(document).ready(function () {
                 isListening = false;
                 $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
                 console.log("🛑 Detenido reconocimiento de voz.---------------------");
-                
+
                 var soundEnd = $("#recordingEndSound")[0];
                 soundEnd.currentTime = 0;
                 soundEnd.play();
@@ -217,14 +217,17 @@ $(document).ready(function () {
             const palabrasClave = ["howky", "hockey", "hawkie", "hawking", "hauki", "houki", "asistente", "okay", "ok"];
             const isKeywordChecked = $("#keywordChatAll").is(":checked");
             let palabras = raw.split(/\s+/);
-            const contieneClave = palabras.some(p => palabrasClave.includes(p));
+            const contieneClave = palabras.some((p) => palabrasClave.includes(p));
 
             if (!isKeywordChecked && !contieneClave) {
                 console.log("❌ Palabra clave no detectada.");
                 return;
             }
 
-            const comando = palabras.filter(p => !palabrasClave.includes(p)).join(" ").trim();
+            const comando = palabras
+                .filter((p) => !palabrasClave.includes(p))
+                .join(" ")
+                .trim();
             console.log("🎯 Comando filtrado:", comando);
 
             let seEjecutoComando = false;
@@ -270,7 +273,6 @@ $(document).ready(function () {
         };
 
         recognition.onerror = function (event) {
-            console.error("❌ Error en reconocimiento:", event.error);
             const autoListen = localStorage.getItem("chatListening") === "true";
             if (autoListen && event.error === "no-speech") {
                 stopListening();
