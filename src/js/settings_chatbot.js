@@ -266,9 +266,9 @@ $(document).ready(function () {
             if (autoListen) {
                 isListening = false;
                 startListening();
-            } else {
-                isListening = true;
-                stopListening();
+            // } else {
+            //     isListening = true;
+            //     stopListening();
             }
         };
 
