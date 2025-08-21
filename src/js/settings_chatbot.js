@@ -76,7 +76,7 @@ $(document).ready(function () {
             }
         });
 
-        // ChatGPT Submit ##################################################
+        // Chatbot Submit ##################################################
         $("#chatForm").submit(chatSubmit);
 
         // Reconocimiento de voz ##################################################
@@ -84,6 +84,7 @@ $(document).ready(function () {
         if (!SpeechRecognition) {
             $("#chatMicrophone").remove();
             $("#chatListeningGroup").remove();
+            $("#keywordChatGroup").remove();
             $("#chatListeningAll").prop("checked", false);
             return;
         }
@@ -104,6 +105,10 @@ $(document).ready(function () {
                 isListening = true;
                 $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
                 console.log("🎤 Iniciando reconocimiento de voz.---------------------");
+
+                var soundStart = $("#recordingStartSound")[0];
+                soundStart.currentTime = 0;
+                soundStart.play();
             }
         }
 
@@ -113,6 +118,10 @@ $(document).ready(function () {
                 isListening = false;
                 $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
                 console.log("🛑 Detenido reconocimiento de voz.---------------------");
+                
+                var soundEnd = $("#recordingEndSound")[0];
+                soundEnd.currentTime = 0;
+                soundEnd.play();
             }
         }
 
