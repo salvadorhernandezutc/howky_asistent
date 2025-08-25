@@ -486,6 +486,7 @@ window.addEventListener("load", () => {
                             galery_items: item.galery_items,
                             otheraction: item.otheraction,
                             door: item.door,
+                            tags: item.tags
                         },
                         geometry: {
                             type: "Polygon",
@@ -748,7 +749,7 @@ window.addEventListener("load", () => {
             // Abrir offcanvas: Informacion del edificio
             mapMapbox.on("click", "places-layer", (e) => {
                 const feature = e.features[0];
-                const { uuid, nombre, informacion, imagen_url, door, otherAction, galery_count, galery_items } = feature.properties;
+                const { nombre, informacion, imagen_url, door, otherAction, galery_count, galery_items } = feature.properties;
                 const { coordinates } = feature.geometry;
                 // let galeryObj = JSON.parse(galery_items);
 
@@ -776,7 +777,7 @@ window.addEventListener("load", () => {
 
                         $("#offcanvasContent input").removeClass("active is-invalid is-valid");
                         $(".error.bg-danger").slideUp("fast");
-                        const { color, uuid, label, ismarker } = feature.properties;
+                        const { color, uuid, label, ismarker, tags } = feature.properties;
 
                         $(".btnExistPlace").show();
                         $("[data-namePleace]").text(nombre);
@@ -804,6 +805,7 @@ window.addEventListener("load", () => {
                         $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>');
                         $("#polygonGroup").slideDown("fast");
                         $("#hideNameGroup").slideDown("fast");
+                        $("#tags").val(tags);
 
                         if (label === "") {
                             $("#checkHidename").attr("checked", "checked");

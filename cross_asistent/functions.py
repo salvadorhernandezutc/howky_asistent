@@ -469,6 +469,7 @@ def mapa_data(request):
             "coords": [json.loads(mapa.coords)] if mapa.coords else [],
             "door": json.loads(mapa.door) if mapa.door else [],
             "otheraction": mapa.otheraction,
+            "tags": mapa.tags,
         }
         data.append(item)
     return JsonResponse(data, safe=False)

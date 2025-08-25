@@ -95,6 +95,7 @@ $(document).ready(function () {
         recognition.interimResults = false;
 
         let isListening = false;
+        let isSound = true;
         const autoListen = localStorage.getItem("chatListening") === "true";
         if (autoListen) startListening();
 
@@ -105,10 +106,11 @@ $(document).ready(function () {
                 isListening = true;
                 $("#chatMicrophone").html('<i class="ic-solar litening_bars"></i>');
                 console.log("🎤 Iniciando reconocimiento de voz.---------------------");
-
-                var soundStart = $("#recordingStartSound")[0];
-                soundStart.currentTime = 0;
-                soundStart.play();
+                if (isSound) {
+                    var soundStart = $("#recordingStartSound")[0];
+                    soundStart.currentTime = 0;
+                    soundStart.play();
+                }
             }
         }
 
@@ -119,9 +121,11 @@ $(document).ready(function () {
                 $("#chatMicrophone").html('<i class="fa-solid fa-microphone"></i>');
                 console.log("🛑 Detenido reconocimiento de voz.---------------------");
 
-                var soundEnd = $("#recordingEndSound")[0];
-                soundEnd.currentTime = 0;
-                soundEnd.play();
+                if (isSound) {
+                    var soundEnd = $("#recordingEndSound")[0];
+                    soundEnd.currentTime = 0;
+                    soundEnd.play();
+                }
             }
         }
 
@@ -263,18 +267,20 @@ $(document).ready(function () {
         recognition.onend = function () {
             console.log("🔁 Reconocimiento finalizado automáticamente.--------");
             const autoListen = localStorage.getItem("chatListening") === "true";
+            isSound = false;
             if (autoListen) {
                 isListening = false;
                 startListening();
-            // } else {
-            //     isListening = true;
-            //     stopListening();
+            } else {
+                isListening = true;
+                stopListening();
             }
         };
 
         recognition.onerror = function (event) {
             const autoListen = localStorage.getItem("chatListening") === "true";
             if (autoListen && event.error === "no-speech") {
+                isSound = true;
                 stopListening();
             } else if (autoListen && event.error === "not-allowed") {
                 localStorage.setItem("chatListening", false);
@@ -288,6 +294,10 @@ $(document).ready(function () {
             const isChecked = $(this).is(":checked");
             isChecked ? $("#chatForm").addClass("hidden_chat") : $("#chatForm").removeClass("hidden_chat");
         });
+        if (isMobile) {
+            $("#chatCtrlsAll").prop("checked", true);
+            localStorage.setItem("chatCtrls", true);
+        }
         const chatCtrlsStorage = localStorage.getItem("chatCtrls") === "true";
         chatCtrlsStorage ? $("#chatForm").addClass("hidden_chat") : $("#chatForm").removeClass("hidden_chat");
     } catch (error) {

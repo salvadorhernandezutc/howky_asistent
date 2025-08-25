@@ -139,6 +139,7 @@ class Mapa(models.Model):
     otheraction = models.TextField(blank=True, null=True, help_text='Acciones adicionales')
     status = models.CharField(max_length=20, default='Activo')
     access_to = models.TextField(blank=True, null=True, help_text='Acceso desde ciertas ubicaciones, ej. "Caseta 1, Caseta 2"')
+    url = models.CharField(max_length=200, blank=True, null=True, help_text='URL del lugar')
     
     def get_tag_list(self):
         if self.tags:

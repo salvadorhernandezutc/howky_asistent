@@ -145,6 +145,17 @@
                                     <label class="form-label" for="sizemarker">Tamaño:</label>
                                 </div>
                             </div>
+                            <div class="mt-4 row tag-group">
+                                <div class="col-md-6">
+                                    <div class="form-outline mb-4" data-mdb-input-init>
+                                        <i class="fa-solid fa-tag trailing"></i>
+                                        <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
+                                        <label class="form-label" for="addTags">Etiquetas:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 row ps-4 pe-0 allTags" id="allTags" style="gap: 20px;"></div>
+                                <textarea id="tags" name="tags" class="d-none tags" required></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,22 +165,24 @@
             <div class="mt-2" id="textTinyGroup">
                 <textarea id="textTiny" class="form-control" name="contenidoWord" placeholder="Escribe a detalle sobre el lugar, puedes hacer listas, encabezados, parrafos y tablas"></textarea>
             </div>
-            <div id="submitEdificio" class="mt-4 row">
-                <div class="col-2 none btnExistPlace">
-                    <button title="Eliminar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
-                        <i class="fa-regular fa-trash-can tscale-1-4"></i>
-                    </button>
-                </div>
-                <div class="col-2 none btnExistPlace btnReset">
-                    <button title="Nuevo Lugar" type="button" id="newPlace" class="btn btn-info btn-block px-1" data-reset_form="infoLateral" data-toggle-class=".btnReset-none">
-                        <i class="fa-solid fa-delete-left tscale-1-4"></i>
-                    </button>
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn_detail btn-block px-1">
-                        <span id="submitText">Registrar Lugar</span> <i class="fa-regular fa-floppy-disk ms-1"></i>
-                    </button>
-                </div>
+        </div>
+    </div>
+    <div class="offcanvas-footer p-3 pt-1">
+        <div id="submitEdificio" class="row">
+            <div class="col-2 none btnExistPlace">
+                <button title="Eliminar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">
+                    <i class="fa-regular fa-trash-can tscale-1-4"></i>
+                </button>
+            </div>
+            <div class="col-2 none btnExistPlace btnReset">
+                <button title="Nuevo Lugar" type="button" id="newPlace" class="btn btn-info btn-block px-1" data-reset_form="infoLateral" data-toggle-class=".btnReset-none">
+                    <i class="fa-solid fa-delete-left tscale-1-4"></i>
+                </button>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn_detail btn-block px-1">
+                    <span id="submitText">Registrar Lugar</span> <i class="fa-regular fa-floppy-disk ms-1"></i>
+                </button>
             </div>
         </div>
     </div>
