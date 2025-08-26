@@ -301,7 +301,8 @@ def update_create_pleace_map(request):
     sizemarkerPost = request.POST.get('sizemarker')
     otheractionPost = request.POST.get('otheraction')
     imagenPost = request.FILES.get('fotoEdificio')
-    
+    tagsPost = request.POST.get('tags')
+
     if not nombrePost:
         return JsonResponse({'success': False, 'message': 'Al parecer no se enviaron datos. 😯🤔⚠️😥'}, status=400)
 
@@ -318,6 +319,7 @@ def update_create_pleace_map(request):
                 edificio.is_marker = bool(is_markerPost)
                 edificio.hide_name = bool(hide_namePost)
                 edificio.otheraction = otheractionPost
+                edificio.tags = tagsPost
                 edificio.save()
                 success_message = f'Se Actualizaron los datos de <span>"{nombrePost}"</span> en el mapa de forma exitosa 🧐😁🎈'
 
@@ -340,7 +342,8 @@ def update_create_pleace_map(request):
                 size_marker  =  sizemarkerPost,
                 is_marker = bool(is_markerPost),
                 hide_name = bool(hide_namePost),
-                otheraction = otheractionPost
+                otheraction = otheractionPost,
+                tags = tagsPost
             )
             
             models.Database.objects.create(

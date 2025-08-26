@@ -414,17 +414,19 @@ $(document).ready(function () {
         }
 
         // Cambiar min del siguiente inpput Date ######################################
-        $("[data-blur-min]").on("blur", function () {
-            const minValue = $(this).val();
-            const targetSelector = $(this).attr("data-blur-min");
-            $(targetSelector).attr("min", minValue);
+        $("[data-blur]").on("blur", function () {
+            const minValue = $(this).val(),
+                targetSplit = $(this).attr("data-blur").split(","),
+                targetSelector = targetSplit[0],
+                targetAttr = targetSplit[1];
+            $(targetSelector).attr(targetAttr, minValue);
         });
 
         // Sistema para Crear Tags / Etiquetas (Modulos) ######################################
         function initTagGroup($group) {
-            const $addTagsInput = $group.find(".addTags");
-            const $textareaTags = $group.find(".tags");
-            const $tagContainer = $group.find(".allTags");
+            const $addTagsInput = $group.find(".addTags"),
+               $textareaTags = $group.find(".tags"),
+               $tagContainer = $group.find(".allTags");
 
             function getTags() {
                 const val = $textareaTags.val().trim();

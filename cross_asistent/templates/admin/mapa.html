@@ -145,16 +145,14 @@
                                     <label class="form-label" for="sizemarker">Tamaño:</label>
                                 </div>
                             </div>
-                            <div class="mt-4 row tag-group">
-                                <div class="col-md-6">
-                                    <div class="form-outline mb-4" data-mdb-input-init>
-                                        <i class="fa-solid fa-tag trailing"></i>
-                                        <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
-                                        <label class="form-label" for="addTags">Etiquetas:</label>
-                                    </div>
+                            <div class="mt-4 tag-group">
+                                <div class="form-outline" data-mdb-input-init>
+                                    <i class="fa-solid fa-tag trailing"></i>
+                                    <input type="text" id="addTags" name="addTags" class="form-control form-icon-trailing addTags" />
+                                    <label class="form-label" for="addTags">Etiquetas:</label>
                                 </div>
-                                <div class="col-md-6 mb-4 row ps-4 pe-0 allTags" id="allTags" style="gap: 20px;"></div>
-                                <textarea id="tags" name="tags" class="d-noneeee tags" required></textarea>
+                                <div class="row px-3 mt-4 allTags" id="allTags" style="gap: 20px;"></div>
+                                <textarea id="tags" name="tags" class="d-none tags"></textarea>
                             </div>
                         </div>
                     </div>
@@ -167,7 +165,7 @@
             </div>
         </div>
     </div>
-    <div class="offcanvas-footer p-3 pt-1">
+    <div class="offcanvas-footer p-3">
         <div id="submitEdificio" class="row">
             <div class="col-2 none btnExistPlace">
                 <button title="Eliminar lugar" type="button" class="btn btn-danger btn-block px-1" data-bs-dismiss="offcanvas" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#deletePleace">

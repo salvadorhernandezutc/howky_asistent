@@ -486,7 +486,7 @@ window.addEventListener("load", () => {
                             galery_items: item.galery_items,
                             otheraction: item.otheraction,
                             door: item.door,
-                            tags: item.tags
+                            tags: item.tags,
                         },
                         geometry: {
                             type: "Polygon",
@@ -805,7 +805,7 @@ window.addEventListener("load", () => {
                         $("#btnPoligon").html('Modificar <i class="fa-solid fa-draw-polygon ms-1"></i>');
                         $("#polygonGroup").slideDown("fast");
                         $("#hideNameGroup").slideDown("fast");
-                        $("#tags").val(tags);
+                        $("#tags").val(tags).click();
 
                         if (label === "") {
                             $("#checkHidename").attr("checked", "checked");
@@ -1064,6 +1064,7 @@ window.addEventListener("load", () => {
         $("#polygonGroup").slideDown("fast");
         $("#hideNameGroup").slideDown("fast");
         $("#ismarkerGroup").addClass("none");
+        $("#tags").val("").click();
 
         const newUID = $("#uuid").data("new-uid");
         $("#uuid").removeClass("active").val(newUID);
