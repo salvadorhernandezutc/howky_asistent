@@ -245,7 +245,6 @@ def delete_files_on_object_delete(sender, instance, **kwargs):
     }
     delete_files(instance, fields_to_delete[sender])
 
-
 @receiver(post_delete, sender=UserProfile)
 def delete_profile_picture_on_delete(sender, instance, **kwargs):
     if instance.profile_picture:

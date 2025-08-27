@@ -17,7 +17,7 @@ def access_required(group_name):
         @wraps(view_func)
         @login_required
         def _wrapped_view(request, *args, **kwargs):
-            if request.user.is_superuser and request.user.groups.filter(name=group_name).exists():
+            if request.user.is_superuser or request.user.groups.filter(name=group_name).exists():
                 return view_func(request, *args, **kwargs)
             return redirect('singout')
         return _wrapped_view

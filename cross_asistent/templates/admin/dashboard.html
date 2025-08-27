@@ -546,6 +546,12 @@
       <div class="modal-body">
         <form method="POST" id="createuserprog" data-validate-createuser autocomplete="off">
           {% csrf_token %}
+          <select name="group" id="group" class="form-control mb-4">
+              <option disabled selected hidden>Rol:</option>
+              {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+              {% endfor %}
+          </select>
           <!-- Nombre de usuario -->
           <div data-mdb-input-init class="form-outline">
             <i class="fa-solid fa-circle-user trailing"></i>
@@ -592,7 +598,7 @@
 
           <!-- Activar usuario y Usuario Programador checkboxes -->
           <div class="row px-1">
-            <div class="col-md-6 mt-4 none">
+            <div class="col-md-6 mt-4">
               <div class="form-check">
                 <input class="form-check-input me-2" type="checkbox" name="is_active" value="1" id="userIsactive" checked />
                 <label class="form-check-label" for="userIsactive">
@@ -600,14 +606,14 @@
                 </label>
               </div>
             </div>
-            <div class="col-md-6 mt-4">
+            {% comment %} <div class="col-md-6 mt-4">
               <div class="form-check">
                 <input class="form-check-input me-2" type="checkbox" name="is_staff" value="1" id="userIsStaff" />
                 <label class="form-check-label" for="userIsStaff">
                   Usuario Programador
                 </label>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
 
           <!-- Submit button -->

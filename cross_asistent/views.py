@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models, transaction
+from .functions import access_required
 from django.http import JsonResponse
 from django.urls import reverse
 from . import functions, models
@@ -193,6 +194,7 @@ def singout(request):
 @never_cache
 def admin_dash(request):
     users = User.objects.all().order_by('-id')
+    groupsAll = Group.objects.all()
     configuraciones = obtener_configuraciones(idConfig)
     hawkySettings = obtener_configuraciones(idHawky)
     
@@ -220,6 +222,7 @@ def admin_dash(request):
         **configuraciones,
         **hawkySettings,
         'camera_orbit': orbit_string,
+        'groups': groupsAll,
     }
     
     if request.method == 'POST':
@@ -262,8 +265,8 @@ def database_page(request):
     return render(request, 'admin/database.html', context)
 
 # Calendario ----------------------------------------------------------
-@login_required
 @never_cache
+@access_required('lasalle')
 def calendario_page(request):
     configuraciones = obtener_configuraciones(1)
     context = {
