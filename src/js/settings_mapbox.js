@@ -191,12 +191,14 @@ window.addEventListener("load", () => {
         if (varLayer) {
             labelsLayer.forEach((label) => label.classList.remove("btn_detail", "text-white", "cursor-not"));
             inputsLayer.forEach((input) => input.removeAttribute("disabled"));
+            inputsLayer.forEach((input) => input.classList.remove("underline"));
 
             const label = document.querySelector(`label[for='${varLayer}']`);
             label.classList.add("btn_detail", "text-white", "cursor-not");
 
             const input = document.querySelector(`input#${varLayer}`);
             input.setAttribute("disabled", "disabled");
+            input.classList.add("underline");
 
             colorlabels = "#000";
             if (varLayer === "dark-v11") {
@@ -882,7 +884,13 @@ window.addEventListener("load", () => {
                 const seleccionOrigen = this.value;
 
                 selectDestiny.querySelectorAll("option").forEach((option) => {
-                    option.disabled = option.value === seleccionOrigen;
+                    if (option.value === seleccionOrigen) {
+                        option.disabled = true;
+                        option.classList.add("underline");
+                    } else {
+                        option.disabled = false;
+                        option.classList.remove("underline");
+                    }
                 });
 
                 const params = new URLSearchParams(window.location.search);
@@ -897,8 +905,14 @@ window.addEventListener("load", () => {
             selectDestiny.addEventListener("change", function () {
                 const seleccionDestino = this.value;
 
-                selectOrigin.querySelectorAll("option").forEach((option) => {
-                    option.disabled = option.value === seleccionDestino;
+                selectDestiny.querySelectorAll("option").forEach((option) => {
+                    if (option.value === seleccionDestino) {
+                        option.disabled = true;
+                        option.classList.add("underline");
+                    } else {
+                        option.disabled = false;
+                        option.classList.remove("underline");
+                    }
                 });
 
                 const params = new URLSearchParams(window.location.search);

@@ -1429,6 +1429,9 @@ img.img-rounded {
 }
 
 /* tamaño de fuente */
+.underline {
+    text-decoration: line-through;
+}
 .text-stoke {
     -webkit-text-stroke: 0.5px var(--mdb-surface-bg);
 }
