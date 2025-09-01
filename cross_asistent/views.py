@@ -172,10 +172,21 @@ def singinpage(request):
                 return JsonResponse({'success': False, 'functions': 'singin', 'message': 'Revisa el usuario o contraseña 😅.'}, status=200)
             else:
                 login(request, user)
-                pageRedirect = reverse('admin')
+                
+                group_names = list(user.groups.values_list('name', flat=True))
+
+                if "admin" in group_names:
+                    pageRedirect = reverse('admin')
+                elif "lasalle" in group_names:
+                    pageRedirect = reverse('lasalle')
+                elif "student" in group_names:
+                    pageRedirect = reverse('dashboard')
+                else:
+                    pageRedirect = reverse('home')
+                
                 return JsonResponse({'success': True, 'functions': 'singin', 'redirect_url': pageRedirect}, status=200)
         else:
-            return JsonResponse({'success': False, 'functions': 'singin', 'message': 'Usuario no registrado 😅. Verifica tu nombre de usuario o contraseña'}, status=200)
+            return JsonResponse({'success': False, 'functions': 'singin', 'message': 'Usuario no registrado 😅. Verifica tu nombre de usuario'}, status=200)
     else:
         configuraciones = obtener_configuraciones(idConfig)
         logout(request)
