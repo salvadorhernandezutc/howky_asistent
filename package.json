@@ -2,7 +2,7 @@
     "name": "cross_django",
     "version": "3.1.0",
     "description": "Chatbot para la Universidad Tecnologica de Coahuila",
-    "main": "index.js",
+    "main": "gulpfile.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "gulp",

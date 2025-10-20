@@ -4,7 +4,7 @@ MIT License
 
 ## LICENCIA DE USO PRIVADO / PRIVATE USE LICENSE
 
-### Copyright © 2024 @chava-utc, Universidad Tecnológica de Coahuila
+### Copyright © 2024 @salvadorhernandezutc, Universidad Tecnológica de Coahuila
 
 ### Versión: 1.0 | Fecha: 2025
 
